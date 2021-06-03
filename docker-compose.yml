@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  mongodb_server:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: pkstartdev
+      MONGO_INITDB_ROOT_USERNAME: pkstartdev
+      MONGO_INITDB_ROOT_PASSWORD: pkstartdev
+    ports:
+      - 27017:27017
+    volumes:
+      - ./dev-db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - mongodb_data_container:/data/db
+  
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8888:8081
+    restart: on-failure
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb_server
+      ME_CONFIG_MONGODB_ADMINUSERNAME: pkstartdev
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pkstartdev
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
+      ME_CONFIG_MONGODB_AUTH_DATABASE: admin
+      ME_CONFIG_MONGODB_AUTH_USERNAME: pkstartdev
+      ME_CONFIG_MONGODB_AUTH_PASSWORD: pkstartdev
+    depends_on:
+      - mongodb_server
+
+volumes:
+  mongodb_data_container:
