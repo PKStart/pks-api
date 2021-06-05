@@ -1,8 +1,8 @@
 {
-  "name": "@pk-start/common-types",
+  "name": "@pk-start/common",
   "version": "1.0.0",
-  "description": "Common types for Startpage 3",
-  "main": "index.js",
+  "description": "Common code for Startpage 3",
+  "main": "dist/index.js",
   "scripts": {
     "test": "-"
   },

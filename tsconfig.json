@@ -17,7 +17,7 @@
     "noUnusedLocals": true,
     "resolveJsonModule": true,
     "paths": {
-      "@pk-start/common-types": ["libs/common-types/src/index.ts"]
+      "@pk-start/common": ["libs/common/*"]
     }
   },
   "references": [
@@ -25,7 +25,7 @@
       "path": "apps/api"
     },
     {
-      "path": "libs/common-types"
+      "path": "libs/common"
     }
   ],
   "exclude": ["node_modules", "dist", "*.d.ts"]

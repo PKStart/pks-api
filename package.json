@@ -4,11 +4,13 @@
   "description": "Personal startpage/dashboard with notes",
   "main": "-",
   "scripts": {
-    "build:types": "tsc --build libs/common-types/tsconfig.json",
+    "build:common": "tsc --build libs/common/tsconfig.json",
     "test": "-",
     "start:db": "docker-compose up",
-    "start:api": "npm run start:dev -w apps/api",
-    "format": "prettier . --write"
+    "clear:db": "docker-compose down -v",
+    "dev:api": "npm run start:dev -w apps/api",
+    "format": "prettier . --write",
+    "postinstall": "tsc --build libs/common/tsconfig.json"
   },
   "repository": {
     "type": "git",
