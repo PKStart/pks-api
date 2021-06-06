@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { TestEnum, TestType } from '@pk-start/common'
+import { environment } from 'src/environments/environment'
 
 @Component({
   selector: 'pk-root',
@@ -34,15 +35,16 @@ import { TestEnum, TestType } from '@pk-start/common'
     <router-outlet></router-outlet>
   `,
   styles: [
+    //language=scss
     `
-      $darkred: darkred;
+      $myColor: darkred;
 
       .content {
         text-align: center;
 
         .title {
           display: block;
-          color: $darkred;
+          color: $myColor;
         }
       }
     `,
@@ -62,5 +64,6 @@ export class AppComponent {
     this.list = ['null']
     console.log(this.list)
     console.log(this.test)
+    console.log(environment.PK_TEST)
   }
 }
