@@ -1,7 +1,7 @@
 {
   "name": "@pk-start/api",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Backend for Startpage v3",
   "license": "MIT",
   "scripts": {

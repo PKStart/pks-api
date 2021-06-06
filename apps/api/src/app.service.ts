@@ -3,12 +3,12 @@ import { TestEnum, TestType } from '@pk-start/common'
 
 @Injectable()
 export class AppService {
+  public something: TestType = {
+    some: 'asd',
+    thing: 23,
+    more: TestEnum.THING,
+  }
   getHello(): string {
-    const something: TestType = {
-      some: 'asd',
-      thing: 23,
-      more: TestEnum.SOME,
-    }
-    return 'Hello World!' + something.some + something.more
+    return 'Hello World! ' + this.something.some
   }
 }

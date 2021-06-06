@@ -25,6 +25,9 @@
       "path": "apps/api"
     },
     {
+      "path": "apps/main"
+    },
+    {
       "path": "libs/common"
     }
   ],
