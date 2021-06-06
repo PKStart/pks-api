@@ -396,3 +396,6 @@ Temporary Items
 # Local
 .env
 dist
+
+apps/main/src/environments/environment.ts
+apps/main/src/environments/environment.prod.ts
