@@ -1,6 +1,15 @@
 export enum CustomApiError {
-  EMAIL_REGISTERED = 'Email is already registered',
-  INVALID_AUTH_TOKEN = 'Invalid authentication token',
-  EXPIRED_AUTH_TOKEN = 'This authentication token is expired',
-  UNABLE_TO_SEND = 'Unable to send email',
+  EMAIL_REGISTERED = 'EMAIL_REGISTERED',
+  INVALID_AUTH_TOKEN = 'INVALID_AUTH_TOKEN',
+  EXPIRED_AUTH_TOKEN = 'EXPIRED_AUTH_TOKEN',
+  UNABLE_TO_SEND = 'UNABLE_TO_SEND',
+}
+
+export enum CustomValidationError {
+  INVALID_EMAIL = 'INVALID_EMAIL',
+  INVALID_LOGIN_CODE = 'INVALID_LOGIN_CODE',
+  STRING_REQUIRED = 'STRING_REQUIRED',
+  MIN_LENGTH = 'MIN_LENGTH',
+  MAX_LENGTH = 'MAX_LENGTH',
+  INVALID_DATE = 'INVALID_DATE',
 }

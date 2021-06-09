@@ -1,14 +1,8 @@
-import { UUID } from '@pk-start/common'
-import { Column, Entity, ObjectIdColumn, PrimaryColumn } from 'typeorm'
+import { BaseEntity } from 'src/utils/base.entity'
+import { Column, Entity } from 'typeorm'
 
 @Entity('shortcuts')
-export class ShortcutEntity {
-  @ObjectIdColumn()
-  _id: string
-
-  @PrimaryColumn()
-  id: UUID
-
+export class ShortcutEntity extends BaseEntity {
   @Column()
   name: string
 }

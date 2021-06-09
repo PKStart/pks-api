@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { ShortcutModule } from 'src/shortcuts/shortcut.module'
+import { UserModule } from 'src/users/user.module'
 import { getDotEnv } from 'src/utils'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -16,7 +17,7 @@ const ormConfig: TypeOrmModuleOptions = {
 }
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ormConfig), ShortcutModule],
+  imports: [TypeOrmModule.forRoot(ormConfig), UserModule, ShortcutModule],
   controllers: [AppController],
   providers: [AppService],
 })
