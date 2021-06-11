@@ -23,10 +23,13 @@ export interface LoginCodeRequest {
   email: string
 }
 
-export interface LoginResponse {
+export interface TokenResponse {
+  token: string
+  expiresAt: Date
+}
+
+export interface LoginResponse extends TokenResponse {
   id: UUID
   name: string
   email: string
-  token: string
-  expiresAt: Date
 }

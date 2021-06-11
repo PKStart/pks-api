@@ -16,4 +16,7 @@ export class UserEntity extends BaseEntity implements User {
 
   @Column()
   loginCodeExpires?: Date
+
+  @Column()
+  salt: string
 }

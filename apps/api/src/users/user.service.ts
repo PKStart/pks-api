@@ -2,23 +2,29 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
-  NotImplementedException,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
-import { CustomApiError } from '@pk-start/common'
-import { add } from 'date-fns'
+import { EmailService } from 'src/shared/email.service'
+import { Repository } from 'typeorm'
+import { v4 as uuid } from 'uuid'
+import * as bcrypt from 'bcrypt'
+import { add, isBefore } from 'date-fns'
+import { CustomApiError, UUID } from '@pk-start/common'
 import { PkLogger } from 'src/shared/pk-logger.service'
 import {
+  JwtDecodedToken,
   LoginCodeRequestDto,
   LoginRequestDto,
   LoginResponseDto,
   SignupRequestDto,
   SignupResponseDto,
+  TokenResponseDto,
 } from 'src/users/user.dto'
 import { UserEntity } from 'src/users/user.entity'
 import { getDotEnv } from 'src/utils'
-import { Repository } from 'typeorm'
-import { v4 as uuid } from 'uuid'
 
 getDotEnv()
 
@@ -27,7 +33,9 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly logger: PkLogger
+    private readonly logger: PkLogger,
+    private readonly jwtService: JwtService,
+    private readonly emailService: EmailService
   ) {
     logger.setContext('UserService')
   }
@@ -51,17 +59,16 @@ export class UserService {
     }
   }
 
-  public async generateLoginCode({ email }: LoginCodeRequestDto): Promise<UserEntity> {
+  public async requestLoginCode({ email }: LoginCodeRequestDto): Promise<UserEntity> {
     try {
       const user = await this.userRepository.findOneOrFail({ email })
-      const loginCode = Math.floor(100000 + Math.random() * 900000).toString()
-      const loginCodeExpiresAt = add(new Date(), {
-        seconds: Number(process.env.PK_LOGIN_CODE_EXPIRY),
-      })
+      const { loginCode, loginCodeExpiresAt } = this.generateLoginCode()
+      const { hashedLoginCode, salt } = await this.getHashed(loginCode)
       const updatedUser = {
         ...user,
-        loginCode,
+        loginCode: hashedLoginCode,
         loginCodeExpiresAt,
+        salt,
       }
       return await this.userRepository.save(updatedUser)
     } catch (error) {
@@ -71,6 +78,82 @@ export class UserService {
   }
 
   public async login({ email, loginCode }: LoginRequestDto): Promise<LoginResponseDto> {
-    throw new NotImplementedException()
+    const user = await this.userRepository.findOne({ email })
+
+    if (!user) {
+      throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
+    }
+
+    const { id, name } = user
+    const loginCodeMatch = await this.validateLoginCode(loginCode, user.salt, user.loginCode)
+    const loginCodeValid = isBefore(new Date(), new Date(user.loginCodeExpires))
+
+    if (!loginCodeMatch) {
+      throw new UnauthorizedException(CustomApiError.INVALID_LOGIN_CODE)
+    } else if (!loginCodeValid) {
+      throw new UnauthorizedException(CustomApiError.EXPIRED_LOGIN_CODE)
+    }
+
+    const { token, expiresAt } = await this.getToken(email, id)
+
+    this.logger.log(`User logged in: ${email} with id ${id}`)
+
+    return {
+      id,
+      email,
+      name,
+      token,
+      expiresAt,
+    }
+  }
+
+  public async refreshToken(id: string): Promise<TokenResponseDto> {
+    const user = await this.userRepository.findOne({ id })
+
+    if (!user) {
+      throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
+    }
+
+    const { token, expiresAt } = await this.getToken(user.email, id)
+    return {
+      token,
+      expiresAt,
+    }
+  }
+
+  private async getToken(email: string, userId: UUID): Promise<{ token: string; expiresAt: Date }> {
+    const token = await this.jwtService.sign({ email, userId })
+    const expiresAt = new Date((this.jwtService.decode(token) as JwtDecodedToken).exp * 1000)
+    return {
+      token,
+      expiresAt,
+    }
+  }
+
+  private async getHashed(loginCode: string): Promise<{ hashedLoginCode: string; salt: string }> {
+    const salt = await bcrypt.genSalt()
+    const hashedLoginCode = await bcrypt.hash(loginCode, salt)
+    return {
+      hashedLoginCode,
+      salt,
+    }
+  }
+
+  private generateLoginCode(): { loginCode: string; loginCodeExpiresAt: Date } {
+    return {
+      loginCode: Math.floor(100000 + Math.random() * 900000).toString(),
+      loginCodeExpiresAt: add(new Date(), {
+        seconds: Number(process.env.PK_LOGIN_CODE_EXPIRY),
+      }),
+    }
+  }
+
+  private async validateLoginCode(
+    loginCode: string,
+    salt: string,
+    hashedLoginCode: string
+  ): Promise<boolean> {
+    const hash = await bcrypt.hash(loginCode, salt)
+    return hash === hashedLoginCode
   }
 }

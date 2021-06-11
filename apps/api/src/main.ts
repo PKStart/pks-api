@@ -6,6 +6,8 @@ getDotEnv()
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  await app.listen(8100)
+  app.enableCors()
+
+  await app.listen(process.env.PORT || 8100)
 }
 bootstrap()

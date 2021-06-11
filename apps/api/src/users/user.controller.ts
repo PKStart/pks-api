@@ -13,7 +13,7 @@ export class UsersController {
 
   @Post('/login-code')
   public async getLoginCode(@Body(ValidationPipe) request: LoginCodeRequestDto): Promise<void> {
-    await this.userService.generateLoginCode(request)
+    await this.userService.requestLoginCode(request)
     return
   }
 }

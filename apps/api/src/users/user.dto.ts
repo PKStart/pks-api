@@ -6,9 +6,10 @@ import {
   LoginResponse,
   SignupRequest,
   SignupResponse,
+  TokenResponse,
   UUID,
 } from '@pk-start/common'
-import { IsEmail, IsString, Length, Matches, MaxLength, MinLength } from 'class-validator'
+import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator'
 
 export class SignupRequestDto implements SignupRequest {
   @IsEmail({}, { message: CustomValidationError.INVALID_EMAIL })
@@ -35,10 +36,23 @@ export class LoginRequestDto extends LoginCodeRequestDto implements LoginRequest
   loginCode: string
 }
 
-export class LoginResponseDto implements LoginResponse {
-  email: string
+export class TokenResponseDto implements TokenResponse {
+  token: string
   expiresAt: Date
+}
+
+export class LoginResponseDto extends TokenResponseDto implements LoginResponse {
+  email: string
   id: UUID
   name: string
-  token: string
+}
+export interface JwtPayload {
+  email: string
+  userId: string
+}
+
+export interface JwtDecodedToken {
+  email: string
+  iat: number
+  exp: number
 }
