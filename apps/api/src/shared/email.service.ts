@@ -31,7 +31,14 @@ export class EmailService {
     })
   }
 
-  async sendPasswordResetEmail(name: string, email: string, loginCode: string): Promise<any> {
+  public async sendSignupNotification(email: string, name: string) {
+    const subject = 'A user signed up to Start'
+    const { html, text } = this.getSignupNotificationTemplates(email, name)
+    const data = new EmailData(process.env.PK_NOTIFICATION_EMAIL, subject, text, html)
+    return await this.sendMail(data)
+  }
+
+  public async sendLoginCode(name: string, email: string, loginCode: string): Promise<any> {
     const subject = 'Log in to Start'
     const { html, text } = this.getLoginCodeTemplates(name, loginCode)
     const data = new EmailData(email, subject, text, html)
@@ -47,7 +54,7 @@ export class EmailService {
   }
 
   private getLoginCodeTemplates(name: string, loginCode: string): EmailTemplates {
-    const expiresInMinutes = Number(process.env.PK_LOGIN_CODE_EXPIRES) / 60
+    const expiresInMinutes = Number(process.env.PK_LOGIN_CODE_EXPIRY) / 60
     const html = `
     <h3>Hello ${name}!</h3>
     <p>Please use the code below to log in, it expires in ${expiresInMinutes} minutes.</p>
@@ -57,6 +64,22 @@ export class EmailService {
     Hello ${name}!
     Your code to log in: ${loginCode}.
     You can use it within the next ${expiresInMinutes} minutes.
+    `
+    return { html, text }
+  }
+
+  private getSignupNotificationTemplates(email: string, name: string) {
+    const html = `
+    <h3>Hey Peter!</h3>
+    <p>A user just signed up to Startpage:</p>
+    <p>Name: ${name}</p>
+    <p>Email: ${email}</p>
+    `
+    const text = `
+    Hey Peter!
+    A user just signed up to Startpage:
+    Name: ${name}
+    Email: ${email}
     `
     return { html, text }
   }

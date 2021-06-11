@@ -7,8 +7,9 @@ import {
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
+import { BulkWriteError } from 'mongodb'
 import { EmailService } from 'src/shared/email.service'
-import { Repository } from 'typeorm'
+import { EntityNotFoundError, Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
 import * as bcrypt from 'bcrypt'
 import { add, isBefore } from 'date-fns'
@@ -49,10 +50,12 @@ export class UserService {
     }
     try {
       const user = await this.userRepository.save(this.userRepository.create(data))
+      this.logger.log(`User signed up: ${name} <${email}> with id ${user.id}`)
+      await this.emailService.sendSignupNotification(email, name)
       return { id: user.id }
     } catch (error) {
       this.logger.error(error)
-      if (error.message?.includes('duplicate key')) {
+      if (error instanceof BulkWriteError && error.message?.includes('duplicate key')) {
         throw new ConflictException(CustomApiError.EMAIL_REGISTERED)
       }
       throw new InternalServerErrorException(error.message)
@@ -62,18 +65,22 @@ export class UserService {
   public async requestLoginCode({ email }: LoginCodeRequestDto): Promise<UserEntity> {
     try {
       const user = await this.userRepository.findOneOrFail({ email })
-      const { loginCode, loginCodeExpiresAt } = this.generateLoginCode()
+      const { loginCode, loginCodeExpires } = this.generateLoginCode()
       const { hashedLoginCode, salt } = await this.getHashed(loginCode)
-      const updatedUser = {
+      const updatedUser: UserEntity = {
         ...user,
         loginCode: hashedLoginCode,
-        loginCodeExpiresAt,
+        loginCodeExpires,
         salt,
       }
+      await this.emailService.sendLoginCode(user.name, email, loginCode)
       return await this.userRepository.save(updatedUser)
     } catch (error) {
-      console.log(error)
-      // TODO handle error
+      this.logger.error(error)
+      if (error instanceof EntityNotFoundError) {
+        throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
+      }
+      throw new InternalServerErrorException(error.message)
     }
   }
 
@@ -139,11 +146,11 @@ export class UserService {
     }
   }
 
-  private generateLoginCode(): { loginCode: string; loginCodeExpiresAt: Date } {
+  private generateLoginCode(): { loginCode: string; loginCodeExpires: Date } {
     return {
       loginCode: Math.floor(100000 + Math.random() * 900000).toString(),
-      loginCodeExpiresAt: add(new Date(), {
-        seconds: Number(process.env.PK_LOGIN_CODE_EXPIRY),
+      loginCodeExpires: add(new Date(), {
+        minutes: Number(process.env.PK_LOGIN_CODE_EXPIRY),
       }),
     }
   }

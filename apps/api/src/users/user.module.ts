@@ -7,7 +7,10 @@ import { PkLoggerModule } from 'src/shared/pk-logger.module'
 import { UsersController } from 'src/users/user.controller'
 import { UserEntity } from 'src/users/user.entity'
 import { UserService } from 'src/users/user.service'
+import { getDotEnv } from 'src/utils'
 import { JwtStrategy } from './jwt.strategy'
+
+getDotEnv()
 
 @Module({
   imports: [

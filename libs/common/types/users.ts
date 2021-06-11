@@ -23,6 +23,10 @@ export interface LoginCodeRequest {
   email: string
 }
 
+export interface TokenRefreshRequest {
+  userId: UUID
+}
+
 export interface TokenResponse {
   token: string
   expiresAt: Date

@@ -6,10 +6,11 @@ import {
   LoginResponse,
   SignupRequest,
   SignupResponse,
+  TokenRefreshRequest,
   TokenResponse,
   UUID,
 } from '@pk-start/common'
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator'
+import { IsEmail, IsString, IsUUID, Matches, MaxLength, MinLength } from 'class-validator'
 
 export class SignupRequestDto implements SignupRequest {
   @IsEmail({}, { message: CustomValidationError.INVALID_EMAIL })
@@ -31,9 +32,14 @@ export class LoginCodeRequestDto implements LoginCodeRequest {
 }
 
 export class LoginRequestDto extends LoginCodeRequestDto implements LoginRequest {
-  @IsString()
+  @IsString({ message: CustomValidationError.STRING_REQUIRED })
   @Matches(LoginCodeRegex, { message: CustomValidationError.INVALID_LOGIN_CODE })
   loginCode: string
+}
+
+export class TokenRefreshRequestDto implements TokenRefreshRequest {
+  @IsUUID('4')
+  userId: UUID
 }
 
 export class TokenResponseDto implements TokenResponse {
