@@ -54,7 +54,7 @@ export class EmailService {
   }
 
   private getLoginCodeTemplates(name: string, loginCode: string): EmailTemplates {
-    const expiresInMinutes = Number(process.env.PK_LOGIN_CODE_EXPIRY) / 60
+    const expiresInMinutes = Number(process.env.PK_LOGIN_CODE_EXPIRY)
     const html = `
     <h3>Hello ${name}!</h3>
     <p>Please use the code below to log in, it expires in ${expiresInMinutes} minutes.</p>
