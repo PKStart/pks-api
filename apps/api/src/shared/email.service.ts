@@ -19,7 +19,7 @@ interface EmailTemplates {
 
 @Injectable()
 export class EmailService {
-  private transporter: Transporter
+  private readonly transporter: Transporter
 
   constructor() {
     this.transporter = createTransport({
@@ -39,7 +39,7 @@ export class EmailService {
   }
 
   public async sendLoginCode(name: string, email: string, loginCode: string): Promise<any> {
-    const subject = 'Log in to Start'
+    const subject = `${loginCode} - Log in to Start`
     const { html, text } = this.getLoginCodeTemplates(name, loginCode)
     const data = new EmailData(email, subject, text, html)
     return await this.sendMail(data)
