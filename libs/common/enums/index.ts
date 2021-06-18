@@ -1,2 +1,2 @@
 export * from './api-errors'
-export * from './TestEnum'
+export * from './shortcut-category'

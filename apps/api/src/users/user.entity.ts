@@ -18,5 +18,5 @@ export class UserEntity extends BaseEntity implements User {
   loginCodeExpires?: Date
 
   @Column()
-  salt: string
+  salt?: string
 }

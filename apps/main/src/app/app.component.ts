@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { TestEnum, TestType } from '@pk-start/common'
 import { environment } from 'src/environments/environment'
 
 @Component({
@@ -53,17 +52,11 @@ import { environment } from 'src/environments/environment'
 export class AppComponent {
   title = 'main'
 
-  public test: TestType = {
-    some: 'test',
-    thing: 23,
-    more: TestEnum.SOME,
-  }
   public list: string[]
 
   constructor() {
     this.list = ['null']
     console.log(this.list)
-    console.log(this.test)
     console.log(environment.PK_TEST)
   }
 }

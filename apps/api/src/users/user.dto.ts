@@ -45,7 +45,7 @@ export class LoginRequestDto extends LoginCodeRequestDto implements LoginRequest
 
 export class TokenRefreshRequestDto implements TokenRefreshRequest {
   @ApiProperty()
-  @IsUUID('4')
+  @IsUUID('4', { message: CustomValidationError.INVALID_UUID })
   userId: UUID
 }
 
