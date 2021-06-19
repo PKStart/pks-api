@@ -11,7 +11,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger'
-import { apiDocs } from 'src/shared/api-docs'
+import { apiDocs } from '../shared/api-docs'
 import {
   LoginCodeRequestDto,
   LoginRequestDto,
@@ -20,10 +20,10 @@ import {
   SignupResponseDto,
   TokenRefreshRequestDto,
   TokenResponseDto,
-} from 'src/users/user.dto'
-import { UserEntity } from 'src/users/user.entity'
-import { UserService } from 'src/users/user.service'
-import { UserInBody } from 'src/utils/user-in-body.decorator'
+} from './user.dto'
+import { UserEntity } from './user.entity'
+import { UserService } from './user.service'
+import { UserInBody } from '../utils/user-in-body.decorator'
 
 @ApiTags('Users & Auth')
 @Controller('users')

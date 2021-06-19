@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext, ForbiddenException } from '@nestjs/common'
-import { UserEntity } from 'src/users/user.entity'
+import { UserEntity } from '../users/user.entity'
 
 export const UserInBody = createParamDecorator(
   (data: string, ctx: ExecutionContext): UserEntity => {

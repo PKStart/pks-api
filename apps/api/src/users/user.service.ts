@@ -8,13 +8,13 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BulkWriteError } from 'mongodb'
-import { EmailService } from 'src/shared/email.service'
+import { EmailService } from '../shared/email.service'
 import { EntityNotFoundError, Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
 import * as bcrypt from 'bcrypt'
 import { add, isBefore } from 'date-fns'
 import { CustomApiError, UUID } from '@pk-start/common'
-import { PkLogger } from 'src/shared/pk-logger.service'
+import { PkLogger } from '../shared/pk-logger.service'
 import {
   JwtDecodedToken,
   LoginCodeRequestDto,
@@ -23,9 +23,9 @@ import {
   SignupRequestDto,
   SignupResponseDto,
   TokenResponseDto,
-} from 'src/users/user.dto'
-import { UserEntity } from 'src/users/user.entity'
-import { getDotEnv } from 'src/utils'
+} from './user.dto'
+import { UserEntity } from './user.entity'
+import { getDotEnv } from '../utils'
 
 getDotEnv()
 

@@ -1,11 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Strategy, ExtractJwt } from 'passport-jwt'
 import { PassportStrategy } from '@nestjs/passport'
 import { InjectRepository } from '@nestjs/typeorm'
-import { JwtPayload } from 'src/users/user.dto'
+import { JwtPayload } from './user.dto'
 import { Repository } from 'typeorm'
-import { Strategy, ExtractJwt } from 'passport-jwt'
-import { UserEntity } from 'src/users/user.entity'
-import { getDotEnv } from 'src/utils'
+import { UserEntity } from './user.entity'
+import { getDotEnv } from '../utils'
 
 getDotEnv()
 

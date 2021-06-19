@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { CreateShortcutRequestDto, ShortcutIdResponseDto } from 'src/shortcuts/shortcut.dto'
 import { Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
-import { ShortcutEntity } from 'src/shortcuts/shortcut.entity'
 import { UUID } from '@pk-start/common'
+import { CreateShortcutRequestDto, ShortcutIdResponseDto } from './shortcut.dto'
+import { ShortcutEntity } from './shortcut.entity'
 
 @Injectable()
 export class ShortcutService {
