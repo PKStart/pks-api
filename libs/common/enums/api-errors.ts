@@ -6,6 +6,7 @@ export enum CustomApiError {
   EXPIRED_LOGIN_CODE = 'EXPIRED_LOGIN_CODE',
   UNABLE_TO_SEND = 'UNABLE_TO_SEND',
   USER_NOT_FOUND = 'USER_NOT_FOUND',
+  ITEM_NOT_FOUND = 'ITEM_NOT_FOUND',
 }
 
 export enum CustomValidationError {

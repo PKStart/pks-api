@@ -1,8 +1,10 @@
-import { LoginResponseDto, SignupResponseDto, TokenResponseDto } from 'src/users/user.dto'
+import { ShortcutDto, ShortcutIdResponseDto } from '../shortcuts/shortcut.dto'
+import { LoginResponseDto, SignupResponseDto, TokenResponseDto } from '../users/user.dto'
 
 export const apiDocs = {
   generic: {
     userNotFound: { description: 'User not found' },
+    itemNotFound: { description: 'Item(s) not found' },
     validationError: { description: 'Validation error: request data is invalid' },
     unauthorized: { description: 'User is not authenticated' },
     forbidden: { description: 'User has no access rights to the requested content' },
@@ -38,6 +40,33 @@ export const apiDocs = {
         description: 'Create a new access token for a user',
       },
       ok: { type: TokenResponseDto, description: 'New token is generated' },
+    },
+  },
+  shortcuts: {
+    getAll: {
+      operation: {
+        summary: '[Shortcuts] Get all',
+        description: 'Get all shortcuts for a user',
+      },
+      ok: {
+        type: ShortcutDto,
+        isArray: true,
+        description: 'An array of Shortcuts',
+      },
+    },
+    create: {
+      operation: {
+        summary: '[Shortcuts] Create',
+        description: 'Create a shortcut',
+      },
+      created: { type: ShortcutIdResponseDto, description: 'Shortcut created' },
+    },
+    update: {
+      operation: {
+        summary: '[Shortcuts] Update',
+        description: 'Update a shortcut',
+      },
+      ok: { type: ShortcutIdResponseDto, description: 'Shortcut updated' },
     },
   },
 }

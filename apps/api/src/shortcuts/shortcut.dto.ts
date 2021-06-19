@@ -3,6 +3,7 @@ import {
   CreateShortcutRequest,
   CustomValidationError,
   DeleteShortcutRequest,
+  Shortcut,
   ShortcutCategory,
   ShortcutIdResponse,
   UpdateShortcutRequest,
@@ -20,11 +21,33 @@ import {
   MinLength,
 } from 'class-validator'
 
-export class CreateShortcutRequestDto implements CreateShortcutRequest {
+export class ShortcutDto implements Shortcut {
   @ApiProperty()
-  @IsUUID('4', { message: CustomValidationError.INVALID_UUID })
+  id: UUID
+
+  @ApiProperty()
   userId: UUID
 
+  @ApiProperty()
+  name: string
+
+  @ApiProperty()
+  url: string
+
+  @ApiProperty()
+  iconUrl: string
+
+  @ApiProperty({ enum: ShortcutCategory, enumName: 'ShortcutCategory' })
+  category: ShortcutCategory
+
+  @ApiProperty()
+  priority: number
+
+  @ApiProperty()
+  createdAt: Date
+}
+
+export class CreateShortcutRequestDto implements CreateShortcutRequest {
   @ApiProperty()
   @IsString({ message: CustomValidationError.STRING_REQUIRED })
   @MinLength(2, { message: CustomValidationError.MIN_LENGTH })
@@ -32,19 +55,19 @@ export class CreateShortcutRequestDto implements CreateShortcutRequest {
   name: string
 
   @ApiProperty()
-  @IsUrl(null, { message: CustomValidationError.INVALID_URL })
+  @IsUrl({}, { message: CustomValidationError.INVALID_URL })
   url: string
 
   @ApiProperty()
-  @IsUrl(null, { message: CustomValidationError.INVALID_URL })
+  @IsUrl({}, { message: CustomValidationError.INVALID_URL })
   iconUrl: string
 
-  @ApiProperty()
+  @ApiProperty({ enum: ShortcutCategory, enumName: 'ShortcutCategory' })
   @IsEnum(ShortcutCategory, { message: CustomValidationError.INVALID_CATEGORY })
   category: ShortcutCategory
 
   @ApiProperty()
-  @IsNumber(null, { message: CustomValidationError.NUMBER_REQUIRED })
+  @IsNumber({}, { message: CustomValidationError.NUMBER_REQUIRED })
   @Min(1, { message: CustomValidationError.MIN_VALUE })
   @Max(10, { message: CustomValidationError.MAX_VALUE })
   priority: number
@@ -56,6 +79,10 @@ export class UpdateShortcutRequestDto
   @ApiProperty()
   @IsUUID('4', { message: CustomValidationError.INVALID_UUID })
   id: UUID
+
+  @ApiProperty()
+  @IsUUID('4', { message: CustomValidationError.INVALID_UUID })
+  userId: UUID
 }
 
 export class DeleteShortcutRequestDto implements DeleteShortcutRequest {

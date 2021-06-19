@@ -1,4 +1,4 @@
-import { BaseEntity } from '../utils/base.entity'
+import { BaseEntity } from '../utils'
 import { Column, Entity } from 'typeorm'
 import { Shortcut, ShortcutCategory, UUID } from '@pk-start/common'
 

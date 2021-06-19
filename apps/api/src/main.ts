@@ -14,6 +14,8 @@ async function bootstrap() {
     .setTitle('Startpage v3')
     .setDescription('The Startpage v3 API documentation')
     .setVersion('1.0')
+    .addBearerAuth()
+    .addServer('http://localhost:8100')
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, document)

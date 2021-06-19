@@ -23,7 +23,7 @@ import {
 } from './user.dto'
 import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
-import { UserInBody } from '../utils/user-in-body.decorator'
+import { UserInBody } from '../utils'
 
 @ApiTags('Users & Auth')
 @Controller('users')
