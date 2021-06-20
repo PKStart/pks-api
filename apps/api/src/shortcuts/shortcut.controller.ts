@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Post,
@@ -13,6 +14,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -23,6 +25,7 @@ import { UserEntity } from '../users/user.entity'
 import { GetUser, UserInBody } from '../utils'
 import {
   CreateShortcutRequestDto,
+  DeleteShortcutRequestDto,
   ShortcutDto,
   ShortcutIdResponseDto,
   UpdateShortcutRequestDto,
@@ -65,10 +68,27 @@ export class ShortcutController {
   @ApiOkResponse(apiDocs.shortcuts.update.ok)
   @ApiNotFoundResponse(apiDocs.generic.itemNotFound)
   @ApiBadRequestResponse(apiDocs.generic.validationError)
+  @ApiForbiddenResponse(apiDocs.generic.forbidden)
   public async update(
     @UserInBody() _user: UserEntity,
     @Body(ValidationPipe) request: UpdateShortcutRequestDto
   ): Promise<ShortcutIdResponseDto> {
     return this.shortcutService.updateShortcut(request)
+  }
+
+  @Delete()
+  @UseGuards(AuthGuard())
+  @HttpCode(200)
+  @ApiBearerAuth()
+  @ApiOperation(apiDocs.shortcuts.delete.operation)
+  @ApiOkResponse(apiDocs.shortcuts.delete.ok)
+  @ApiNotFoundResponse(apiDocs.generic.itemNotFound)
+  @ApiBadRequestResponse(apiDocs.generic.validationError)
+  @ApiForbiddenResponse(apiDocs.generic.forbidden)
+  public async delete(
+    @GetUser() user: UserEntity,
+    @Body(ValidationPipe) request: DeleteShortcutRequestDto
+  ): Promise<ShortcutIdResponseDto> {
+    return this.shortcutService.deleteShortcut(request, user.id)
   }
 }

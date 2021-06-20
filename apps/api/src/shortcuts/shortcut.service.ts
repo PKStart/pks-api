@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { EntityNotFoundError, Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
@@ -7,6 +12,7 @@ import { PkLogger } from '../shared/pk-logger.service'
 import { omitObjectId } from '../utils'
 import {
   CreateShortcutRequestDto,
+  DeleteShortcutRequestDto,
   ShortcutDto,
   ShortcutIdResponseDto,
   UpdateShortcutRequestDto,
@@ -60,5 +66,20 @@ export class ShortcutService {
       }
       throw new InternalServerErrorException(error.message)
     }
+  }
+
+  public async deleteShortcut(
+    { id }: DeleteShortcutRequestDto,
+    userId: UUID
+  ): Promise<ShortcutIdResponseDto> {
+    const item = await this.shortcutRepository.findOne({ id })
+    if (!item) {
+      throw new NotFoundException(CustomApiError.ITEM_NOT_FOUND)
+    }
+    if (item.userId !== userId) {
+      throw new ForbiddenException()
+    }
+    await this.shortcutRepository.delete({ id })
+    return { id }
   }
 }

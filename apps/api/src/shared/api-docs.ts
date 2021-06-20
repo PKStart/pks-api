@@ -68,5 +68,12 @@ export const apiDocs = {
       },
       ok: { type: ShortcutIdResponseDto, description: 'Shortcut updated' },
     },
+    delete: {
+      operation: {
+        summary: '[Shortcuts] Delete',
+        description: 'Delete a shortcut',
+      },
+      ok: { type: ShortcutIdResponseDto, description: 'Shortcut deleted' },
+    },
   },
 }
