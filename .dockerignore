@@ -1,0 +1,4 @@
+node_modules/
+apps/api/node_modules/
+apps/main/node_modules/
+libs/common/node_modules/
