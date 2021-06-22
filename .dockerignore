@@ -1,4 +1,7 @@
 node_modules/
 apps/api/node_modules/
+apps/api/dist/
 apps/main/node_modules/
+apps/main/dist/
 libs/common/node_modules/
+libs/common/dist/

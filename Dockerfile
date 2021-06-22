@@ -1,23 +1,16 @@
 FROM node:16-alpine
 
-WORKDIR /app/libs/common
-COPY ./libs/common/ ./
-RUN npm ci
-RUN npm run build
-
-WORKDIR /app/apps/api
-COPY ./apps/api/package*.json ./
-RUN npm ci
-#RUN npm run build
-
 WORKDIR /app
 COPY ./apps/api/ ./apps/api/
-COPY ./package.json ./
+COPY ./libs/common/ ./libs/common/
+COPY ./package*.json ./
 COPY ./tsconfig.json ./
 COPY ./.env ./
 RUN npm ci
 
-CMD ["npm", "run", "dev:api"]
+WORKDIR /app/apps/api
+RUN npm ci
+RUN npm run build
 
-# docker build -t kinpeter/start-api .
-# docker run -p 8100:8100 kinpeter/start-api
+CMD ["npm", "run", "start:prod"]
+
