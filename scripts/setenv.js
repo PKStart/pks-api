@@ -15,12 +15,17 @@ const testVar = isProduction
   ? process.env.PK_TEST_PROD
   : process.env.PK_TEST_DEV;
 
+const apiUrl = isProduction
+  ? process.env.PK_API_URL_PROD
+  : process.env.PK_API_URL_DEV;
+
 // we have access to our environment variables
 // in the process.env object thanks to dotenv
 const environmentFileContent = `
 export const environment = {
    production: ${isProduction},
    PK_TEST: '${testVar}',
+   PK_API_URL: '${apiUrl}'
 }
 `;
 
