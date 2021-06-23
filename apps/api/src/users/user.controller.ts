@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post, UseGuards, ValidationPipe } from '@nestjs/common'
+import { Body, Controller, Delete, HttpCode, Post, UseGuards, ValidationPipe } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
@@ -23,7 +23,7 @@ import {
 } from './user.dto'
 import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
-import { UserInBody } from '../utils'
+import { GetUser, UserInBody } from '../utils'
 
 @ApiTags('Users & Auth')
 @Controller('users')
@@ -73,5 +73,16 @@ export class UsersController {
     @UserInBody() _user: UserEntity
   ): Promise<TokenResponseDto> {
     return this.userService.refreshToken(request.userId)
+  }
+
+  @Delete()
+  @HttpCode(200)
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
+  @ApiOperation(apiDocs.users.delete.operation)
+  @ApiOkResponse(apiDocs.users.delete.ok)
+  @ApiNotFoundResponse(apiDocs.generic.userNotFound)
+  public async deleteUser(@GetUser() user: UserEntity): Promise<void> {
+    return this.userService.deleteUser(user.id)
   }
 }

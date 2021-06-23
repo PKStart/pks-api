@@ -2,6 +2,13 @@ import { ShortcutDto, ShortcutIdResponseDto } from '../shortcuts/shortcut.dto'
 import { LoginResponseDto, SignupResponseDto, TokenResponseDto } from '../users/user.dto'
 
 export const apiDocs = {
+  wakeUp: {
+    operation: {
+      summary: '[WakeUp] Wake Up',
+      description: 'Just a dummy request to make sure the API is running',
+    },
+    ok: { description: 'The API is up and running!' },
+  },
   generic: {
     userNotFound: { description: 'User not found' },
     itemNotFound: { description: 'Item(s) not found' },
@@ -40,6 +47,13 @@ export const apiDocs = {
         description: 'Create a new access token for a user',
       },
       ok: { type: TokenResponseDto, description: 'New token is generated' },
+    },
+    delete: {
+      operation: {
+        summary: '[Users] Delete',
+        description: 'Delete a user by the id parsed from the JWT token',
+      },
+      ok: { description: 'User deleted' },
     },
   },
   shortcuts: {

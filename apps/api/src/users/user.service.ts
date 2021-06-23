@@ -128,6 +128,17 @@ export class UserService {
     }
   }
 
+  public async deleteUser(id: string): Promise<void> {
+    const user = await this.userRepository.findOne({ id })
+
+    if (!user) {
+      throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
+    }
+
+    // TODO Add cleanup from other collections
+    await this.userRepository.delete({ id })
+  }
+
   private async getToken(email: string, userId: UUID): Promise<{ token: string; expiresAt: Date }> {
     const token = await this.jwtService.sign({ email, userId })
     const expiresAt = new Date((this.jwtService.decode(token) as JwtDecodedToken).exp * 1000)
