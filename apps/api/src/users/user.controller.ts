@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, HttpCode, Post, UseGuards, ValidationPipe } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  HttpCode,
+  Post,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
@@ -84,5 +93,22 @@ export class UsersController {
   @ApiNotFoundResponse(apiDocs.generic.userNotFound)
   public async deleteUser(@GetUser() user: UserEntity): Promise<void> {
     return this.userService.deleteUser(user.id)
+  }
+
+  /**
+   * Only for testing purposes!
+   */
+  @Post('/debug/login-code')
+  @ApiOperation(apiDocs.users.debugLoginCode.operation)
+  @ApiCreatedResponse(apiDocs.users.debugLoginCode.created)
+  @ApiNotFoundResponse(apiDocs.generic.userNotFound)
+  @ApiBadRequestResponse(apiDocs.generic.validationError)
+  public async getDebugLoginCode(
+    @Body(ValidationPipe) request: LoginCodeRequestDto
+  ): Promise<{ loginCode: string }> {
+    if (process.env.PK_ENV !== 'development') {
+      throw new ForbiddenException()
+    }
+    return this.userService.getInstantLoginCode(request)
   }
 }

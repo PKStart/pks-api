@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -51,7 +52,9 @@ export class UserService {
     try {
       const user = await this.userRepository.save(this.userRepository.create(data))
       this.logger.log(`User signed up: ${name} <${email}> with id ${user.id}`)
-      await this.emailService.sendSignupNotification(email, name)
+      if (!email.includes('@test.com')) {
+        await this.emailService.sendSignupNotification(email, name)
+      }
       return { id: user.id }
     } catch (error) {
       this.logger.error(error)
@@ -64,17 +67,29 @@ export class UserService {
 
   public async requestLoginCode({ email }: LoginCodeRequestDto): Promise<UserEntity> {
     try {
-      const user = await this.userRepository.findOneOrFail({ email })
-      const { loginCode, loginCodeExpires } = this.generateLoginCode()
-      const { hashedLoginCode, salt } = await this.getHashed(loginCode)
-      const updatedUser: UserEntity = {
-        ...user,
-        loginCode: hashedLoginCode,
-        loginCodeExpires,
-        salt,
-      }
-      await this.emailService.sendLoginCode(user.name, email, loginCode)
+      const { updatedUser, loginCode } = await this.getLoginCodeAndUpdatedUser(email)
+      await this.emailService.sendLoginCode(updatedUser.name, email, loginCode)
       return await this.userRepository.save(updatedUser)
+    } catch (error) {
+      this.logger.error(error)
+      if (error instanceof EntityNotFoundError) {
+        throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
+      }
+      throw new InternalServerErrorException(error.message)
+    }
+  }
+
+  /**
+   * Only for testing purposes
+   */
+  public async getInstantLoginCode({ email }: LoginCodeRequestDto): Promise<{ loginCode: string }> {
+    if (process.env.PK_ENV !== 'development') {
+      throw new ForbiddenException()
+    }
+    try {
+      const { updatedUser, loginCode } = await this.getLoginCodeAndUpdatedUser(email)
+      await this.userRepository.save(updatedUser)
+      return { loginCode }
     } catch (error) {
       this.logger.error(error)
       if (error instanceof EntityNotFoundError) {
@@ -154,6 +169,24 @@ export class UserService {
     return {
       hashedLoginCode,
       salt,
+    }
+  }
+
+  private async getLoginCodeAndUpdatedUser(
+    email: string
+  ): Promise<{ updatedUser: UserEntity; loginCode: string }> {
+    const user = await this.userRepository.findOneOrFail({ email })
+    const { loginCode, loginCodeExpires } = this.generateLoginCode()
+    const { hashedLoginCode, salt } = await this.getHashed(loginCode)
+    const updatedUser: UserEntity = {
+      ...user,
+      loginCode: hashedLoginCode,
+      loginCodeExpires,
+      salt,
+    }
+    return {
+      updatedUser,
+      loginCode,
     }
   }
 

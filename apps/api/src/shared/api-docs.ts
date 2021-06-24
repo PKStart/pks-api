@@ -55,6 +55,13 @@ export const apiDocs = {
       },
       ok: { description: 'User deleted' },
     },
+    debugLoginCode: {
+      operation: {
+        summary: '[Users/Testing] Instant Login Code',
+        description: 'Send a login code instantly in the response',
+      },
+      created: { description: 'Login code is sent' },
+    },
   },
   shortcuts: {
     getAll: {

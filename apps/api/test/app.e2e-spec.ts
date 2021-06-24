@@ -19,7 +19,7 @@ describe('AppController (e2e)', () => {
     await app.close()
   })
 
-  it('/wakeup (GET)', () => {
+  it('Should respond for a wakeup call', () => {
     return request(app.getHttpServer()).get('/wakeup').expect(200).expect('API is up and running!')
   })
 })
