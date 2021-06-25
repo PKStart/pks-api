@@ -1,5 +1,5 @@
 import { User } from '@pk-start/common'
-import { BaseEntity } from '../utils/base.entity'
+import { BaseEntity } from '../utils'
 import { Column, Entity, Unique } from 'typeorm'
 
 @Entity('users')
