@@ -70,10 +70,10 @@ export class ShortcutController {
   @ApiBadRequestResponse(apiDocs.generic.validationError)
   @ApiForbiddenResponse(apiDocs.generic.forbidden)
   public async update(
-    @UserInBody() _user: UserEntity,
+    @GetUser() user: UserEntity,
     @Body(ValidationPipe) request: UpdateShortcutRequestDto
   ): Promise<ShortcutIdResponseDto> {
-    return this.shortcutService.updateShortcut(request)
+    return this.shortcutService.updateShortcut(request, user.id)
   }
 
   @Delete()

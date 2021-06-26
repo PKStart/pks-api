@@ -79,10 +79,6 @@ export class UpdateShortcutRequestDto
   @ApiProperty()
   @IsUUID('4', { message: CustomValidationError.INVALID_UUID })
   id: UUID
-
-  @ApiProperty()
-  @IsUUID('4', { message: CustomValidationError.INVALID_UUID })
-  userId: UUID
 }
 
 export class DeleteShortcutRequestDto implements DeleteShortcutRequest {

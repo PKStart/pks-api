@@ -11,7 +11,7 @@ export interface Shortcut extends BaseEntity {
 }
 
 export type CreateShortcutRequest = Omit<Shortcut, 'createdAt' | 'id' | 'userId'>
-export type UpdateShortcutRequest = Omit<Shortcut, 'createdAt'>
+export type UpdateShortcutRequest = Omit<Shortcut, 'createdAt' | 'userId'>
 
 interface ShortcutIdObject {
   id: UUID
