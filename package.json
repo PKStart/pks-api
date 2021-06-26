@@ -19,6 +19,7 @@
     "setenv": "node scripts/setenv.js",
     "test": "-",
     "test:api": "npm run test:e2e -w apps/api",
+    "test:api:docker": "docker-compose -f ./docker/api-test/docker-compose.api-test.yml up --build --exit-code-from api-test && docker-compose -f ./docker/api-test/docker-compose.api-test.yml down -v",
     "postinstall": "npm run build -w libs/common"
   },
   "repository": {
