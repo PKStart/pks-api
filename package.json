@@ -11,7 +11,6 @@
     "build:common": "npm run build -w libs/common",
     "build:api": "npm run build -w apps/api",
     "build:main": "npm run setenv -- --env=prod && npm run build -w apps/main",
-    "build": "npm run build --workspaces",
     "start:api": "npm run start -w apps/api",
     "docker:build": "docker build -t kinpeter/start-api .",
     "docker:run": "docker run -p 8100:8100 --name pk-start3 kinpeter/start-api",
