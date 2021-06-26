@@ -4,7 +4,9 @@
   "description": "Common code for Startpage v3",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rm -rf ./dist && tsc --build ./tsconfig.json"
+    "build": "rm -rf ./dist && tsc --build ./tsconfig.json",
+    "lint": "eslint \"{enums,types,utils,test}/**/*.ts\" --fix",
+    "format:check": "prettier --check \"{enums,types,utils,test}/**/*.{ts,scss,html,json}\""
   },
   "repository": {
     "type": "git",
