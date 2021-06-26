@@ -8,9 +8,10 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: pkstartdev
     ports:
       - 27017:27017
+    logging:
+      driver: none
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-#      - mongodb_data_container:/data/db
 
   api-test:
     build:
@@ -28,5 +29,3 @@ services:
     depends_on:
       - mongodb_server
 
-#volumes:
-#  mongodb_data_container:
