@@ -55,7 +55,11 @@ Running the Frontend - Main
 ### Environment variables
 The aim was to handle all environment variables required by all components from one central `.env` file in the root directory. However, since Angular uses its own logic of handling the environments, a little 'hack' was needed to achieve this.
 
-Basically we need to add both `DEV` and `PROD` variables of the frontend to the same `.env` file, differentiating them with a `_DEV` and `_PROD` suffix on their names (see as in the `.env.example` file). Then the `scripts/setenv.js` script will take care of creating the proper Angular environment files according to which mode we are just running or building. This also means we must not edit manually or commit the content of the `apps/main/src/environments/` folder, as they are always automatically generated 'on the fly'.
+There is a script (`scripts/setenv.js`) which will take care of generating the proper Angular environment files, but we need to take the below two steps every time we introduce a new variable:
+* Add both `DEV` and `PROD` variables of the frontend to the same `.env` file, differentiating them with a `_DEV` and `_PROD` suffix on their names (see as in the `.env.example` file).
+* Add the keys (names) of these variables to the `variables` array in the `scripts/setenv.js` file.
+
+This also means we must not edit manually or commit the content of the `apps/main/src/environments/` folder, as they are always automatically generated 'on the fly'.
 
 To make use of this trick it is essential to only run or build the main frontend app as described below.
 
