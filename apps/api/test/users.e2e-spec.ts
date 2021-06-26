@@ -35,7 +35,7 @@ describe('UserController (e2e)', () => {
     return request(app.getHttpServer())
       .post('/users/signup')
       .send(testUser)
-      .expect(200)
+      .expect(201)
       .expect(res => {
         expect(res.body).toHaveProperty('id')
         userId = res.body.id
