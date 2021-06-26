@@ -9,7 +9,6 @@ COPY ./.env.prod ./.env
 RUN npm ci
 
 WORKDIR /app/apps/api
-RUN npm ci
 RUN npm run build
 
 CMD ["npm", "run", "start:prod"]
