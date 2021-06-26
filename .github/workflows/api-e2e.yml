@@ -1,4 +1,4 @@
-name: Code check and build
+name: API e2e tests
 
 on:
   push:
