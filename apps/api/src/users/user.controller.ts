@@ -8,7 +8,6 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common'
-import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -21,6 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { apiDocs } from '../shared/api-docs'
+import { PkAuthGuard } from './pk-auth-guard'
 import {
   LoginCodeRequestDto,
   LoginRequestDto,
@@ -70,7 +70,7 @@ export class UsersController {
 
   @Post('/token-refresh')
   @HttpCode(200)
-  @UseGuards(AuthGuard())
+  @UseGuards(PkAuthGuard)
   @ApiBearerAuth()
   @ApiOperation(apiDocs.users.tokenRefresh.operation)
   @ApiOkResponse(apiDocs.users.tokenRefresh.ok)
@@ -86,7 +86,7 @@ export class UsersController {
 
   @Delete()
   @HttpCode(200)
-  @UseGuards(AuthGuard())
+  @UseGuards(PkAuthGuard)
   @ApiBearerAuth()
   @ApiOperation(apiDocs.users.delete.operation)
   @ApiOkResponse(apiDocs.users.delete.ok)
