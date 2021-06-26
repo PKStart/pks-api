@@ -4,8 +4,8 @@
   "description": "Personal startpage/dashboard with notes",
   "main": "-",
   "scripts": {
-    "start:db": "docker-compose -f ./dev-db/docker-compose.yml up",
-    "clear:db": "docker-compose -f ./dev-db/docker-compose.yml down -v",
+    "start:db": "docker-compose -f docker/dev-db/docker-compose.yml up",
+    "clear:db": "docker-compose -f docker/dev-db/docker-compose.yml down -v",
     "dev:api": "npm run start:dev -w apps/api",
     "dev:main": "npm run setenv -- --env=dev && npm run start -w apps/main",
     "build:common": "npm run build -w libs/common",

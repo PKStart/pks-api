@@ -30,7 +30,7 @@ Running the Database
 
 MongoDB for development is configured to run in Docker.
 
-The `dev-db/` folder holds the `docker-compose.yml` file with the required configuration and the initializer scripts.
+The `docker/dev-db/` folder holds the `docker-compose.yml` file with the required configuration and the initializer scripts.
 
 To start the dev database run `npm run start:db` from the root, or `docker-compose up` from the `dev-db/` directory. The data is kept using a docker volume, so as long as you don't delete the volume, it will persist.
 
