@@ -18,7 +18,7 @@ async function bootstrap() {
     .addServer('http://localhost:8100')
     .build()
   const document = SwaggerModule.createDocument(app as any, config)
-  SwaggerModule.setup('api', app, document)
+  SwaggerModule.setup('api', app as any, document)
 
   const port = process.env.PORT || 8100
 
