@@ -43,7 +43,6 @@
     "node": "16"
   },
   "devDependencies": {
-    "dotenv": "^10.0.0",
-    "yargs": "^17.0.1"
+    "dotenv": "^10.0.0"
   }
 }
