@@ -9,6 +9,7 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BulkWriteError } from 'mongodb'
+import { NoteEntity } from '../notes/note.entity'
 import { EmailService } from '../shared/email.service'
 import { EntityNotFoundError, Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
@@ -38,6 +39,8 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(ShortcutEntity)
     private readonly shortcutRepository: Repository<ShortcutEntity>,
+    @InjectRepository(NoteEntity)
+    private readonly noteRepository: Repository<NoteEntity>,
     private readonly logger: PkLogger,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService
@@ -156,6 +159,10 @@ export class UserService {
     const shortcuts = await this.shortcutRepository.find({ userId: id })
     if (shortcuts.length) {
       await this.shortcutRepository.remove(shortcuts)
+    }
+    const notes = await this.noteRepository.find({ userId: id })
+    if (notes.length) {
+      await this.noteRepository.remove(notes)
     }
     // TODO Add cleanup from other collections later
     await this.userRepository.delete({ id })

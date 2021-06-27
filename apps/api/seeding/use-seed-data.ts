@@ -1,11 +1,13 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import { NoteEntity } from '../src/notes/note.entity'
 import { ShortcutEntity } from '../src/shortcuts/shortcut.entity'
 import { UserEntity } from '../src/users/user.entity'
 
 type SeedDataType = {
   users: Partial<UserEntity>[]
   shortcuts: Partial<ShortcutEntity>[]
+  notes: Partial<NoteEntity>[]
 }
 
 export function useSeedData(): SeedDataType {

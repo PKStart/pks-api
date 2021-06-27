@@ -5,9 +5,10 @@ import { cleanup } from '../seeding'
 import { AppModule } from '../src/app.module'
 import { INestApplication } from '@nestjs/common'
 import { CustomApiError, CustomValidationError, UUID } from '@pk-start/common'
+import { NoteEntity } from '../src/notes/note.entity'
 import { ShortcutEntity } from '../src/shortcuts/shortcut.entity'
 import { UserEntity } from '../src/users/user.entity'
-import { shortcut1, shortcut2, testUser } from './test-data'
+import { note1, note2, shortcut1, shortcut2, testUser } from './test-data'
 
 describe('UserController (e2e)', () => {
   let app: INestApplication
@@ -189,7 +190,9 @@ describe('UserController (e2e)', () => {
 
   it('Should delete a user and all its related entities', async () => {
     const shortcutRepository = getRepository(ShortcutEntity)
-    const numberOfItemsBefore = await shortcutRepository.count({ userId })
+    const numberOfShortcutsBefore = await shortcutRepository.count({ userId })
+    const noteRepository = getRepository(NoteEntity)
+    const numberOfNotesBefore = await noteRepository.count({ userId })
 
     await request(app.getHttpServer())
       .post('/shortcuts')
@@ -202,8 +205,21 @@ describe('UserController (e2e)', () => {
       .send(shortcut2)
       .expect(201)
 
-    const numberOfItemsAfterAdd = await shortcutRepository.count({ userId })
-    expect(numberOfItemsAfterAdd).toEqual(numberOfItemsBefore + 2)
+    await request(app.getHttpServer())
+      .post('/notes')
+      .auth(token, { type: 'bearer' })
+      .send(note1)
+      .expect(201)
+    await request(app.getHttpServer())
+      .post('/notes')
+      .auth(token, { type: 'bearer' })
+      .send(note2)
+      .expect(201)
+
+    const numberOfShortcutsAfterAdd = await shortcutRepository.count({ userId })
+    expect(numberOfShortcutsAfterAdd).toEqual(numberOfShortcutsBefore + 2)
+    const numberOfNotesAfterAdd = await noteRepository.count({ userId })
+    expect(numberOfNotesAfterAdd).toEqual(numberOfNotesBefore + 2)
 
     return request(app.getHttpServer())
       .delete('/users')
@@ -215,8 +231,10 @@ describe('UserController (e2e)', () => {
         const count = await userRepository.count()
         expect(count).toEqual(countBeforeSignup)
 
-        const numberOfItemsAfter = await shortcutRepository.count({ userId })
-        expect(numberOfItemsAfter).toEqual(numberOfItemsBefore)
+        const numberOfShortcutsAfter = await shortcutRepository.count({ userId })
+        expect(numberOfShortcutsAfter).toEqual(numberOfShortcutsBefore)
+        const numberOfNotesAfter = await noteRepository.count({ userId })
+        expect(numberOfNotesAfter).toEqual(numberOfNotesBefore)
       })
   })
 })
