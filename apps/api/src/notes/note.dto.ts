@@ -9,12 +9,9 @@ import {
   UpdateNoteRequest,
   UUID,
 } from '@pk-start/common'
-import { Type } from 'class-transformer'
 import {
-  MinLength,
   IsString,
   IsArray,
-  ValidateNested,
   IsUrl,
   IsBoolean,
   IsNotEmpty,
