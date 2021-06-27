@@ -6,6 +6,8 @@
   "scripts": {
     "start:db": "docker-compose -f docker/dev-db/docker-compose.yml up",
     "clear:db": "docker-compose -f docker/dev-db/docker-compose.yml down -v",
+    "seed:db": "npm run db:seed -w apps/api",
+    "cleanup:db": "npm run db:clean -w apps/api",
     "dev:api": "npm run start:dev -w apps/api",
     "dev:main": "npm run setenv && npm run start -w apps/main",
     "build:common": "npm run build -w libs/common",

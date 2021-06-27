@@ -3,9 +3,9 @@ import { INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
 import { getRepository, Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
+import { cleanup } from '../seeding'
 import { AppModule } from '../src/app.module'
 import { ShortcutEntity } from '../src/shortcuts/shortcut.entity'
-import { cleanUpDb } from './commands/clean-up'
 import { signupAndLogin } from './commands/handle-user'
 import { CustomApiError, CustomValidationError } from '@pk-start/common'
 import { shortcut1, shortcut2, shortcut3, testUser, testUser2 } from './test-data'
@@ -17,6 +17,7 @@ describe('ShortcutController (e2e)', () => {
   let tokenOther: string
   let userId: string
   let shortcutId: string
+  let countBeforeAll: number
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
@@ -28,6 +29,8 @@ describe('ShortcutController (e2e)', () => {
 
     shortcutRepository = getRepository(ShortcutEntity)
 
+    countBeforeAll = await shortcutRepository.count()
+
     const userData = await signupAndLogin(app, testUser)
     token = userData.token
     userId = userData.userId
@@ -36,7 +39,7 @@ describe('ShortcutController (e2e)', () => {
   })
 
   afterAll(async () => {
-    await cleanUpDb()
+    await cleanup()
     await app.close()
   })
 
@@ -73,7 +76,7 @@ describe('ShortcutController (e2e)', () => {
       })
       .then(async () => {
         const count = await shortcutRepository.count()
-        expect(count).toEqual(2)
+        expect(count).toEqual(countBeforeAll + 2)
       })
   })
 
@@ -88,13 +91,13 @@ describe('ShortcutController (e2e)', () => {
       })
       .then(async () => {
         const count = await shortcutRepository.count()
-        expect(count).toEqual(3)
+        expect(count).toEqual(countBeforeAll + 3)
       })
   })
 
   it('Should get a list of proper objects only for the current user', async () => {
     const totalCount = await shortcutRepository.count()
-    expect(totalCount).toEqual(3)
+    expect(totalCount).toEqual(countBeforeAll + 3)
 
     return request(app.getHttpServer())
       .get('/shortcuts')
@@ -229,7 +232,7 @@ describe('ShortcutController (e2e)', () => {
       })
       .then(async () => {
         const count = await shortcutRepository.count()
-        expect(count).toEqual(2)
+        expect(count).toEqual(countBeforeAll + 2)
       })
   })
 })

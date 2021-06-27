@@ -398,5 +398,6 @@ Temporary Items
 .env.prod
 dist
 
+.seed-data.json
 apps/main/src/environments/environment.ts
 apps/main/src/environments/environment.prod.ts

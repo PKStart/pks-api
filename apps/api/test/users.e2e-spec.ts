@@ -1,11 +1,11 @@
 import * as request from 'supertest'
 import { Test } from '@nestjs/testing'
 import { getRepository, Repository } from 'typeorm'
+import { cleanup } from '../seeding'
 import { AppModule } from '../src/app.module'
 import { INestApplication } from '@nestjs/common'
 import { CustomApiError, CustomValidationError, UUID } from '@pk-start/common'
 import { UserEntity } from '../src/users/user.entity'
-import { cleanUpDb } from './commands/clean-up'
 import { testUser } from './test-data'
 
 describe('UserController (e2e)', () => {
@@ -29,7 +29,7 @@ describe('UserController (e2e)', () => {
   })
 
   afterAll(async () => {
-    await cleanUpDb()
+    await cleanup()
     await app.close()
   })
 
