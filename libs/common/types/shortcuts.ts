@@ -1,5 +1,5 @@
 import { ShortcutCategory } from '../enums'
-import { BaseEntity, UUID } from './misc'
+import { BaseEntity, IdObject, UUID } from './misc'
 
 export interface Shortcut extends BaseEntity {
   userId: UUID
@@ -13,9 +13,5 @@ export interface Shortcut extends BaseEntity {
 export type CreateShortcutRequest = Omit<Shortcut, 'createdAt' | 'id' | 'userId'>
 export type UpdateShortcutRequest = Omit<Shortcut, 'createdAt' | 'userId'>
 
-interface ShortcutIdObject {
-  id: UUID
-}
-
-export type ShortcutIdResponse = ShortcutIdObject
-export type DeleteShortcutRequest = ShortcutIdObject
+export type ShortcutIdResponse = IdObject
+export type DeleteShortcutRequest = IdObject

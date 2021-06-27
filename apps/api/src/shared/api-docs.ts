@@ -1,3 +1,4 @@
+import { NoteDto, NoteIdResponseDto } from '../notes/note.dto'
 import { ShortcutDto, ShortcutIdResponseDto } from '../shortcuts/shortcut.dto'
 import { LoginResponseDto, SignupResponseDto, TokenResponseDto } from '../users/user.dto'
 
@@ -95,6 +96,40 @@ export const apiDocs = {
         description: 'Delete a shortcut',
       },
       ok: { type: ShortcutIdResponseDto, description: 'Shortcut deleted' },
+    },
+  },
+  notes: {
+    getAll: {
+      operation: {
+        summary: '[Notes] Get all',
+        description: 'Get all notes for a user',
+      },
+      ok: {
+        type: NoteDto,
+        isArray: true,
+        description: 'An array of Notes',
+      },
+    },
+    create: {
+      operation: {
+        summary: '[Notes] Create',
+        description: 'Create a note',
+      },
+      created: { type: NoteIdResponseDto, description: 'Shortcut created' },
+    },
+    update: {
+      operation: {
+        summary: '[Notes] Update',
+        description: 'Update a note',
+      },
+      ok: { type: NoteIdResponseDto, description: 'Note updated' },
+    },
+    delete: {
+      operation: {
+        summary: '[Notes] Delete',
+        description: 'Delete a note',
+      },
+      ok: { type: NoteIdResponseDto, description: 'Note deleted' },
     },
   },
 }
