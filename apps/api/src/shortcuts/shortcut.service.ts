@@ -63,7 +63,7 @@ export class ShortcutService {
       throw new NotFoundException(CustomApiError.ITEM_NOT_FOUND)
     }
     if (shortcut.userId !== userId) {
-      throw new UnauthorizedException()
+      throw new ForbiddenException()
     }
     await this.shortcutRepository.update({ id: request.id }, request)
     return { id: request.id }

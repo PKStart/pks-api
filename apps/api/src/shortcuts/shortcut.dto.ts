@@ -11,6 +11,7 @@ import {
 } from '@pk-start/common'
 import {
   IsEnum,
+  IsNotEmpty,
   IsNumber,
   IsString,
   IsUrl,
@@ -77,12 +78,14 @@ export class UpdateShortcutRequestDto
   extends CreateShortcutRequestDto
   implements UpdateShortcutRequest {
   @ApiProperty()
+  @IsNotEmpty({ message: CustomValidationError.STRING_REQUIRED })
   @IsUUID('4', { message: CustomValidationError.INVALID_UUID })
   id: UUID
 }
 
 export class DeleteShortcutRequestDto implements DeleteShortcutRequest {
   @ApiProperty()
+  @IsNotEmpty({ message: CustomValidationError.STRING_REQUIRED })
   @IsUUID('4', { message: CustomValidationError.INVALID_UUID })
   id: UUID
 }
