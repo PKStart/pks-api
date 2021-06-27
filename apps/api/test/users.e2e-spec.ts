@@ -5,8 +5,9 @@ import { cleanup } from '../seeding'
 import { AppModule } from '../src/app.module'
 import { INestApplication } from '@nestjs/common'
 import { CustomApiError, CustomValidationError, UUID } from '@pk-start/common'
+import { ShortcutEntity } from '../src/shortcuts/shortcut.entity'
 import { UserEntity } from '../src/users/user.entity'
-import { testUser } from './test-data'
+import { shortcut1, shortcut2, testUser } from './test-data'
 
 describe('UserController (e2e)', () => {
   let app: INestApplication
@@ -186,7 +187,24 @@ describe('UserController (e2e)', () => {
     return request(app.getHttpServer()).delete('/users').expect(401)
   })
 
-  it('Should delete a user', () => {
+  it('Should delete a user and all its related entities', async () => {
+    const shortcutRepository = getRepository(ShortcutEntity)
+    const numberOfItemsBefore = await shortcutRepository.count({ userId })
+
+    await request(app.getHttpServer())
+      .post('/shortcuts')
+      .auth(token, { type: 'bearer' })
+      .send(shortcut1)
+      .expect(201)
+    await request(app.getHttpServer())
+      .post('/shortcuts')
+      .auth(token, { type: 'bearer' })
+      .send(shortcut2)
+      .expect(201)
+
+    const numberOfItemsAfterAdd = await shortcutRepository.count({ userId })
+    expect(numberOfItemsAfterAdd).toEqual(numberOfItemsBefore + 2)
+
     return request(app.getHttpServer())
       .delete('/users')
       .auth(token, { type: 'bearer' })
@@ -196,6 +214,9 @@ describe('UserController (e2e)', () => {
         expect(user).toBeUndefined()
         const count = await userRepository.count()
         expect(count).toEqual(countBeforeSignup)
+
+        const numberOfItemsAfter = await shortcutRepository.count({ userId })
+        expect(numberOfItemsAfter).toEqual(numberOfItemsBefore)
       })
   })
 })

@@ -16,6 +16,7 @@ import * as bcrypt from 'bcrypt'
 import { add, isBefore } from 'date-fns'
 import { CustomApiError, UUID } from '@pk-start/common'
 import { PkLogger } from '../shared/pk-logger.service'
+import { ShortcutEntity } from '../shortcuts/shortcut.entity'
 import {
   JwtDecodedToken,
   LoginCodeRequestDto,
@@ -35,6 +36,8 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(ShortcutEntity)
+    private readonly shortcutRepository: Repository<ShortcutEntity>,
     private readonly logger: PkLogger,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService
@@ -150,7 +153,11 @@ export class UserService {
       throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
     }
 
-    // TODO Add cleanup from other collections
+    const shortcuts = await this.shortcutRepository.find({ userId: id })
+    if (shortcuts.length) {
+      await this.shortcutRepository.remove(shortcuts)
+    }
+    // TODO Add cleanup from other collections later
     await this.userRepository.delete({ id })
   }
 
