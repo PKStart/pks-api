@@ -22,7 +22,7 @@ import {
 import { apiDocs } from '../shared/api-docs'
 import { PkAuthGuard } from '../users/pk-auth-guard'
 import { UserEntity } from '../users/user.entity'
-import { GetUser, UserInBody } from '../utils'
+import { GetUser } from '../utils'
 import {
   CreateShortcutRequestDto,
   DeleteShortcutRequestDto,
