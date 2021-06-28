@@ -8,7 +8,7 @@ import {
   UpdatePersonalDataRequest,
   UUID,
 } from '@pk-start/common'
-import { IsDate, IsDateString, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
+import { IsDateString, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
 
 export class PersonalDataDto implements PersonalData {
   @ApiProperty()
