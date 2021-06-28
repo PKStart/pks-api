@@ -1,5 +1,6 @@
 import { cleanup } from './seed/db-cleanup'
 import { seedNotes } from './seed/note.seed'
+import { seedPersonalData } from './seed/personal-data.seed'
 import { seedShortcuts } from './seed/shortcut.seed'
 import { seedUser } from './seed/user.seed'
 import { useConnection } from './use-connection'
@@ -18,6 +19,9 @@ async function seed(): Promise<void> {
 
   await seedNotes(userId)
   console.log('[Seed] Seeded NOTES.')
+
+  await seedPersonalData(userId)
+  console.log('[Seed] Seeded PERSONAL DATA.')
 
   await connection.close()
 }

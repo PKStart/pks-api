@@ -1,4 +1,5 @@
 import { NoteDto, NoteIdResponseDto } from '../notes/note.dto'
+import { PersonalDataDto, PersonalDataIdResponseDto } from '../personal-data/personal-data.dto'
 import { ShortcutDto, ShortcutIdResponseDto } from '../shortcuts/shortcut.dto'
 import { LoginResponseDto, SignupResponseDto, TokenResponseDto } from '../users/user.dto'
 
@@ -130,6 +131,40 @@ export const apiDocs = {
         description: 'Delete a note',
       },
       ok: { type: NoteIdResponseDto, description: 'Note deleted' },
+    },
+  },
+  personalData: {
+    getAll: {
+      operation: {
+        summary: '[PersonalData] Get all',
+        description: 'Get all personal data for a user',
+      },
+      ok: {
+        type: PersonalDataDto,
+        isArray: true,
+        description: 'An array of Personal Data objects',
+      },
+    },
+    create: {
+      operation: {
+        summary: '[PersonalData] Create',
+        description: 'Create a personal data object',
+      },
+      created: { type: PersonalDataIdResponseDto, description: 'Personal data object created' },
+    },
+    update: {
+      operation: {
+        summary: '[PersonalData] Update',
+        description: 'Update a personal data object',
+      },
+      ok: { type: PersonalDataIdResponseDto, description: 'Personal data object updated' },
+    },
+    delete: {
+      operation: {
+        summary: '[PersonalData] Delete',
+        description: 'Delete a personal data object',
+      },
+      ok: { type: PersonalDataIdResponseDto, description: 'Personal data object deleted' },
     },
   },
 }

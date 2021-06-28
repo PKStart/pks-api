@@ -6,9 +6,10 @@ import { AppModule } from '../src/app.module'
 import { INestApplication } from '@nestjs/common'
 import { CustomApiError, CustomValidationError, UUID } from '@pk-start/common'
 import { NoteEntity } from '../src/notes/note.entity'
+import { PersonalDataEntity } from '../src/personal-data/personal-data.entity'
 import { ShortcutEntity } from '../src/shortcuts/shortcut.entity'
 import { UserEntity } from '../src/users/user.entity'
-import { note1, note2, shortcut1, shortcut2, testUser } from './test-data'
+import { data1, data2, note1, note2, shortcut1, shortcut2, testUser } from './test-data'
 
 describe('UserController (e2e)', () => {
   let app: INestApplication
@@ -193,6 +194,8 @@ describe('UserController (e2e)', () => {
     const numberOfShortcutsBefore = await shortcutRepository.count({ userId })
     const noteRepository = getRepository(NoteEntity)
     const numberOfNotesBefore = await noteRepository.count({ userId })
+    const personalDataRepository = getRepository(PersonalDataEntity)
+    const numberOfDataBefore = await personalDataRepository.count({ userId })
 
     await request(app.getHttpServer())
       .post('/shortcuts')
@@ -216,10 +219,23 @@ describe('UserController (e2e)', () => {
       .send(note2)
       .expect(201)
 
+    await request(app.getHttpServer())
+      .post('/personal-data')
+      .auth(token, { type: 'bearer' })
+      .send(data1)
+      .expect(201)
+    await request(app.getHttpServer())
+      .post('/personal-data')
+      .auth(token, { type: 'bearer' })
+      .send(data2)
+      .expect(201)
+
     const numberOfShortcutsAfterAdd = await shortcutRepository.count({ userId })
     expect(numberOfShortcutsAfterAdd).toEqual(numberOfShortcutsBefore + 2)
     const numberOfNotesAfterAdd = await noteRepository.count({ userId })
     expect(numberOfNotesAfterAdd).toEqual(numberOfNotesBefore + 2)
+    const numberOfDataAfterAdd = await personalDataRepository.count({ userId })
+    expect(numberOfDataAfterAdd).toEqual(numberOfDataBefore + 2)
 
     return request(app.getHttpServer())
       .delete('/users')
@@ -235,6 +251,8 @@ describe('UserController (e2e)', () => {
         expect(numberOfShortcutsAfter).toEqual(numberOfShortcutsBefore)
         const numberOfNotesAfter = await noteRepository.count({ userId })
         expect(numberOfNotesAfter).toEqual(numberOfNotesBefore)
+        const numberOfDataAfter = await personalDataRepository.count({ userId })
+        expect(numberOfDataAfter).toEqual(numberOfDataBefore)
       })
   })
 })
