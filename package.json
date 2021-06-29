@@ -24,11 +24,12 @@
     "test": "-",
     "test:api": "npm run test:e2e -w apps/api",
     "test:api:docker": "docker-compose -f ./docker/api-test/docker-compose.api-test.yml up --build --exit-code-from api-test && docker-compose -f ./docker/api-test/docker-compose.api-test.yml down -v",
-    "postinstall": "npm run build -w libs/common"
+    "postinstall": "npm run build -w libs/common",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
-    "url": "-"
+    "url": "https://github.com/KinPeter/PK-Start"
   },
   "keywords": [
     "start",
@@ -45,6 +46,7 @@
     "node": "16"
   },
   "devDependencies": {
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "husky": "^6.0.0"
   }
 }
