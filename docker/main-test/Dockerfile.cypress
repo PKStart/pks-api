@@ -1,0 +1,9 @@
+FROM cypress/included:7.4.0
+
+WORKDIR /
+COPY ./apps/main/cypress/ ./cypress/
+COPY ./apps/main/cypress.json ./cypress.json
+COPY ./apps/main/tsconfig.json ./tsconfig.json
+RUN npm install typescript
+
+CMD ["npx", "cypress", "run", "--browser", "chrome", "--headless"]
