@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { AngularMaterialModule } from '../material/material.module'
+import { AngularMaterialModule } from './material.module'
 
 @NgModule({
   imports: [

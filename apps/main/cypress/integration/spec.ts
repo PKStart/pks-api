@@ -1,4 +1,4 @@
-it('loads examples', () => {
+it('Should redirect to auth', () => {
   cy.visit('/')
-  cy.contains('main app is running')
+  cy.url().should('contain', '/auth')
 })
