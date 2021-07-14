@@ -6,6 +6,15 @@ import { AuthService } from './auth.service'
   selector: 'pk-auth',
   template: `
     <div class="auth">
+      <div class="bg-container">
+        <pk-logo
+          pkFullSize
+          size="100%"
+          mainColor="var(--color-bg-dark)"
+          glow="var(--color-primary)"
+          opacity="0.5"
+        ></pk-logo>
+      </div>
       <div>
         <h1>Login</h1>
         <p>
@@ -19,6 +28,14 @@ import { AuthService } from './auth.service'
       .auth {
         width: 100%;
         height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .bg-container {
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
