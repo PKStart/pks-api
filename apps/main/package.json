@@ -9,7 +9,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "lint": "ng lint",
-    "format:check": "prettier --check  \"src/**/*.{ts,scss,html,json}\" \"cypress/**/*.{ts,scss,html,json}\""
+    "format:check": "prettier --check  \"src/**/*.{ts,scss,html,json}\" \"cypress/**/*.{ts,scss,html,json}\"",
+    "e2e:watch": "cypress open"
   },
   "dependencies": {
     "@angular/animations": "~12.0.3",

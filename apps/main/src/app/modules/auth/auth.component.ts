@@ -16,11 +16,18 @@ import { AuthService } from './auth.service'
         <ng-container *ngIf="step === 0">
           <mat-form-field appearance="outline" color="primary">
             <mat-label>Email</mat-label>
-            <input matInput type="email" [(ngModel)]="email" (keyup.enter)="onRequestLoginCode()" />
+            <input
+              matInput
+              type="email"
+              name="auth-email"
+              [(ngModel)]="email"
+              (keyup.enter)="onRequestLoginCode()"
+            />
             <button
               matSuffix
               mat-icon-button
               color="primary"
+              data-id="get-login-code-button"
               [disabled]="!email.length"
               (click)="onRequestLoginCode()"
             >
@@ -29,18 +36,27 @@ import { AuthService } from './auth.service'
           </mat-form-field>
           <p>
             <small>
-              <a [routerLink]="" (click)="step = 1">I already have a login code</a>
+              <a data-id="have-login-code-link" [routerLink]="" (click)="step = 1">
+                I already have a login code
+              </a>
             </small>
           </p>
         </ng-container>
         <ng-container *ngIf="step === 1">
           <mat-form-field appearance="outline" color="primary">
             <mat-label>Login code</mat-label>
-            <input matInput type="text" [(ngModel)]="loginCode" (keyup.enter)="onLogin()" />
+            <input
+              matInput
+              type="text"
+              name="auth-loginCode"
+              [(ngModel)]="loginCode"
+              (keyup.enter)="onLogin()"
+            />
             <button
               matSuffix
               mat-icon-button
               color="primary"
+              data-id="login-button"
               [disabled]="loginCode.length !== 6"
               (click)="onLogin()"
             >
@@ -49,7 +65,9 @@ import { AuthService } from './auth.service'
           </mat-form-field>
           <p>
             <small>
-              <a [routerLink]="" (click)="step = 0">I need a new login code</a>
+              <a data-id="need-login-code-link" [routerLink]="" (click)="step = 0">
+                I need a new login code
+              </a>
             </small>
           </p>
         </ng-container>
