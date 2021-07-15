@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  api-e2e:
+  main-e2e:
     name: Main frontend e2e tests
     runs-on: ubuntu-latest
 

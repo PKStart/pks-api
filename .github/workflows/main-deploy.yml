@@ -1,0 +1,41 @@
+name: Main deploy
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  main-deploy:
+    name: Main frontend deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build libs/common
+        run: npm run build:common
+
+      - name: Build apps/main
+        run: npm run build:main
+        env:
+          PK_API_URL_PROD: ${{ secrets.PROD_API_URL }}
+          PK_TEST_PROD: prod_from_the_action
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./apps/main/dist/main/
+          server-dir: ${{ secrets.PROD_MAIN_URL }}
+          dry-run: ${{ secrets.MAIN_DEPLOY_DRY_RUN }}
