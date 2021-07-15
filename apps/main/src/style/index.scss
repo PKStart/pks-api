@@ -16,4 +16,9 @@ body {
     background-color: var(--color-bg-light);
     color: var(--color-text-on-light);
   }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
 }

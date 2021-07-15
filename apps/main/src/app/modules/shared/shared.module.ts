@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { RouterModule } from '@angular/router'
 import { LogoComponent } from './components/logo.component'
-import { FullSizeDirective } from './directives/fullSize.directive'
 import { AngularMaterialModule } from './material.module'
 
 @NgModule({
@@ -13,6 +13,7 @@ import { AngularMaterialModule } from './material.module'
     ReactiveFormsModule,
     CommonModule,
     BrowserAnimationsModule,
+    RouterModule,
   ],
   exports: [
     AngularMaterialModule,
@@ -20,10 +21,10 @@ import { AngularMaterialModule } from './material.module'
     ReactiveFormsModule,
     CommonModule,
     BrowserAnimationsModule,
+    RouterModule,
     LogoComponent,
-    FullSizeDirective,
   ],
-  declarations: [LogoComponent, FullSizeDirective],
+  declarations: [LogoComponent],
   providers: [],
 })
 export class SharedModule {}
