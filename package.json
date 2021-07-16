@@ -16,7 +16,7 @@
     "start:api": "npm run start -w apps/api",
     "docker:build": "docker build -t kinpeter/start-api .",
     "docker:run": "docker run -p 8100:8100 --name start-api kinpeter/start-api",
-    "heroku:build": "heroku container:push web --app pk-start",
+    "heroku:build": "mv ./Dockerfile ./Dockerfile.temp && mv ./Dockerfile.prod-local ./Dockerfile && heroku container:push web --app pk-start && mv ./Dockerfile ./Dockerfile.prod-local && mv ./Dockerfile.temp ./Dockerfile",
     "heroku:deploy": "heroku container:release web --app pk-start",
     "setenv": "node scripts/setenv.js",
     "format:check": "npm run format:check --workspaces",

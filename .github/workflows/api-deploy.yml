@@ -1,0 +1,31 @@
+name: API deploy
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  main-deploy:
+    name: Backend API deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: pk-start
+          heroku_email: kinpeter85@gmail.com
+          usedocker: true
+        env:
+          PK_ENV: production
+          PK_DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+          PK_EMAIL_USER: ${{ secrets.API_EMAIL_USER }}
+          PK_EMAIL_PASS: ${{ secrets.API_EMAIL_PASS }}
+          PK_JWT_SECRET: ${{ secrets.API_JWT_SECRET }}
+          PK_LOGIN_CODE_EXPIRY: 15
+          PK_TOKEN_EXPIRY: 7d
+          PK_NOTIFICATION_EMAIL: kinpeter85@gmail.com
+
