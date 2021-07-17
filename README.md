@@ -1,6 +1,31 @@
 Startpage v3
 ============
 
+* [Development](#development)
+    * [NPM Workspaces](#npm-workspaces)
+    * [Common stuff](#common-stuff-in-the-pk-startcommon-package)
+    * [Running the Database](#running-the-database)
+    * [Running the Backend API](#running-the-backend-api)
+        * [API Documentation](#api-documentation)
+    * [Running the Frontend - Main](#running-the-frontend---main)
+        * [Environment variables](#environment-variables)
+        * [DEV Server](#dev-server)
+* [CI Pipelines and testing](#ci-pipelines-and-testing)
+    * [Github Actions](#github-actions)
+    * [Testing locally](#testing-locally)
+        * [Integration checks](#integration-checks)
+        * [API e2e / integration tests](#api-e2e--integration-tests)
+        * [Main frontend e2e tests](#main-frontend-e2e-tests)
+* [Deploying for production](#deploying-for-production)
+    * [Database](#database)
+    * [Backend API](#backend-api)
+        * [Docker, Heroku](#docker-heroku)
+        * [Automatic deployment](#heroku-automatic-deployment)
+        * [Manual deployment](#heroku-manual-deployment)
+    * [Main Frontend](#main-frontend)
+        * [Automatic deployment](#main-automatic-deployment)
+        * [Manual deployment](#main-manual-deployment)
+
 Development
 ============
 
@@ -67,6 +92,36 @@ To make use of this trick it is essential to only run or build the main frontend
 To run the development server for the frontend, simply use the `npm run dev:main` script and open your browser at [http://localhost:8200](http://localhost:8200).
 
 
+CI pipelines and testing
+========================
+
+Github actions
+--------------
+
+Github action workflows are set up for integration checks, build and testing. These pipelines are trigerred on each push and pull request for the `develop` and `master` branches, and also can be started manually on Github on any branch.
+
+* `code-check-build.yml`: This workflow is responsible for linting, format check and to make sure that builds are passing for each component.
+* `api-e2e.yml`: Runs the backend API e2e and integration tests in a fully dockerized environment.
+* `main-e2e.yml`: Runs the main frontend e2e tests in a fully dockerized environment.
+
+Testing locally
+---------------
+
+### Integration checks
+Husky is set up to run the linter and check code formatting before each commit.
+These checks however can also be run using the `npm run lint` and `npm run format:check` commands for the entire repository.
+
+### API e2e / integration tests
+API tests can run in two ways:
+* Against the actual dev environment using the `npm run test:api` command, in this case make sure a database is also running
+* In a dockerized environment using the `npm run test:api:docker` command
+
+### Main frontend e2e tests
+Frontend e2e tests can also run in two ways:
+* In "watch" mode using the `npm run test:e2e:watch` command during development, especially while writing the tests themselves. In this case make sure everything is running in the background (DB, API, main).
+* In a dockerized environment using the `npm run test:e2e:docker` command
+
+
 Deploying for production
 ========================
 
@@ -78,20 +133,37 @@ For production environment the database is provided by [MongoDB Atlas](https://c
 Backend API
 -----------
 
-### Docker
-The backend project is configured to run as a Docker container. Its configuration is in the root `Dockerfile`.
+### Docker, Heroku
+Production backend is hosted on [Heroku](https://dashboard.heroku.com/apps/pk-start/) as a Docker based application named `pk-start`, and currently using a free dyno.
+
+The backend project is configured to run as a Docker container. Its configuration is in the root `Dockerfile.prod-local`.
 
 Building the Docker image needs the production environment variables which should be in the `.env.prod` file in the root directory.
 
 Before deploy, it's possible to build and run it locally, but actually not necessary.
 To build and run the backend in Docker locally use the `npm run docker:build` and `npm run docker:run` scripts.
 
-### Heroku - manual deployment
-Production backend is hosted on [Heroku](https://dashboard.heroku.com/apps/pk-start/) as a Docker based application named `pk-start`, and currently using a free dyno.
+### Heroku Automatic deployment
+Automatic deployment is set up using Github Actions in the `api-deploy.yml` file under the workflows folder. For simplicity this action uses the root `Dockerfile` to build the API image. 
 
+The process will automatically run by pushing to the `master` branch or can be started manually on Github with the dispatch action. 
+
+Environment variables are stored on Github as repository secrets.
+
+### Heroku Manual deployment
 To make a deploy, use the Heroku CLI. First, log in to both Heroku and the Heroku Container Registry as described [here](https://devcenter.heroku.com/articles/container-registry-and-runtime). 
 
 Make sure the backend Docker image is working by running it locally as described above. Also make sure the production environment variables are all there in the `.env.prod` file.
 
 To process the deployment, use the `npm run heroku:build` command to build and push the image to the container registry, and then the `npm run heroku:deploy` command to finish the deployment.
 
+Main frontend
+-------------
+
+Frontend is hosted on a static private server.
+
+### Main automatic deployment
+Todo
+
+### Main manual deployment
+Simply use FTP as usual :) 
