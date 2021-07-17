@@ -19,6 +19,15 @@ jobs:
           heroku_app_name: pk-start
           heroku_email: kinpeter85@gmail.com
           usedocker: true
+          docker_build_args: |
+            PK_ENV
+            PK_DB_CONNECTION_STRING
+            PK_EMAIL_USER
+            PK_EMAIL_PASS
+            PK_JWT_SECRET
+            PK_LOGIN_CODE_EXPIRY
+            PK_TOKEN_EXPIRY
+            PK_NOTIFICATION_EMAIL
         env:
           PK_ENV: production
           PK_DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}

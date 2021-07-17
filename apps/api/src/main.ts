@@ -7,6 +7,8 @@ import { AppModule } from './app.module'
 getDotEnv()
 
 async function bootstrap() {
+  console.log(process.env.PK_DB_CONNECTION_STRING)
+  console.log(process.env.PK_JWT_SECRET)
   const app = await NestFactory.create(AppModule)
   app.enableCors()
 
