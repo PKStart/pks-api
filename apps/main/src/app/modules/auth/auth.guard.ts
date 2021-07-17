@@ -6,11 +6,11 @@ import {
   UrlTree,
 } from '@angular/router'
 import { Injectable } from '@angular/core'
-import { AuthService } from './auth.service'
+import { AuthStore } from './auth.store'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private router: Router, private auth: AuthService) {}
+  constructor(private router: Router, private auth: AuthStore) {}
 
   public canActivate(_route: ActivatedRouteSnapshot, _state: RouterStateSnapshot): true | UrlTree {
     if (this.auth.isAuth) {

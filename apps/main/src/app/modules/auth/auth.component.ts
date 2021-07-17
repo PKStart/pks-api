@@ -1,6 +1,8 @@
-import { Component } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
+import { Subscription } from 'rxjs'
 import { AuthService } from './auth.service'
+import { AuthStore } from './auth.store'
 
 @Component({
   selector: 'pk-auth',
@@ -35,11 +37,12 @@ import { AuthService } from './auth.service'
             </button>
           </mat-form-field>
           <p>
-            <small>
+            <small *ngIf="hasEmailSaved">
               <a data-id="have-login-code-link" [routerLink]="" (click)="step = 1">
                 I already have a login code
               </a>
             </small>
+            <small *ngIf="!hasEmailSaved" [ngStyle]="{ opacity: 0 }"> placeholder </small>
           </p>
         </ng-container>
         <ng-container *ngIf="step === 1">
@@ -95,19 +98,43 @@ import { AuthService } from './auth.service'
     `,
   ],
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit, OnDestroy {
+  private subscriptions = new Subscription()
   public email = ''
   public loginCode = ''
   public step = 0
+  public hasEmailSaved = false
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private authStore: AuthStore,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    this.subscriptions.add(this.authStore.email$.subscribe(email => (this.hasEmailSaved = !!email)))
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe()
+  }
 
   public onRequestLoginCode(): void {
-    this.step = 1
+    this.authService.requestLoginCode(this.email).subscribe({
+      next: () => (this.step = 1),
+      error: err => {
+        console.log(err)
+      },
+    })
+    this.email = ''
   }
 
   public onLogin(): void {
-    this.authService.isAuth = true
-    this.router.navigate(['/']).then()
+    this.authService.login(this.loginCode).subscribe({
+      next: () => this.router.navigate(['/']).then(),
+      error: err => {
+        console.log(err)
+      },
+    })
   }
 }

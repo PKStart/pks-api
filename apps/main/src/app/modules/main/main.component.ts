@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { environment } from '../../../environments/environment'
+import { AuthService } from '../auth/auth.service'
 
 @Component({
   selector: 'pk-main',
@@ -8,7 +9,7 @@ import { environment } from '../../../environments/environment'
       <h1>Welcome to {{ title }}!</h1>
       <button mat-flat-button color="primary" (click)="onClick()">GO</button>
       <button mat-flat-button color="accent" (click)="onClick()">GO</button>
-      <button mat-flat-button color="warn" (click)="onClick()">GO</button>
+      <button mat-flat-button color="warn" (click)="onLogout()">GO</button>
       <span class="title">{{ title }} app is running!</span>
       <img
         width="300"
@@ -41,7 +42,7 @@ export class MainComponent {
 
   public list: string[]
 
-  constructor() {
+  constructor(private authService: AuthService) {
     this.list = ['null']
     console.log(this.list)
     console.log(environment.PK_TEST)
@@ -52,5 +53,10 @@ export class MainComponent {
     document.body.classList.contains(lightThemeClass)
       ? document.body.classList.remove(lightThemeClass)
       : document.body.classList.add(lightThemeClass)
+  }
+
+  onLogout() {
+    this.authService.logout()
+    location.reload()
   }
 }

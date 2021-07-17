@@ -91,7 +91,7 @@ export class ApiService {
   }
 
   private setAuthorization(options: RequestOptions): void {
-    if (!this.auth.isAuth) return
+    if (!this.auth.isAuth || !this.auth.current.token) return
     const token = this.auth.current.token
 
     if (!options) {

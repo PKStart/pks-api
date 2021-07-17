@@ -3,25 +3,28 @@ import { Observable } from 'rxjs'
 import { LoginResponse } from '@pk-start/common'
 import { LocalStore } from '../../utils/store'
 
-interface AuthState {
+export interface AuthState {
   id: string | null
   email: string | null
+  name: string | null
   token: string | null
   expiresAt: Date | null
   isAuth: boolean
 }
 
 const initialState: AuthState = {
-  email: null,
-  expiresAt: null,
   id: null,
+  email: null,
+  name: null,
+  expiresAt: null,
   token: null,
   isAuth: false,
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthStore extends LocalStore<AuthState> {
   public isAuth$: Observable<boolean> = this.select(state => state.isAuth)
+  public email$: Observable<string | null> = this.select(state => state.email)
 
   constructor() {
     super('pk-start-auth', initialState)
@@ -35,10 +38,15 @@ export class AuthStore extends LocalStore<AuthState> {
     return this.state
   }
 
+  public setEmail(email: string): void {
+    this.setState({ email })
+  }
+
   public setLogin(res: LoginResponse): void {
     this.setState({
       id: res.id,
       email: res.email,
+      name: res.name,
       token: res.token,
       expiresAt: res.expiresAt,
       isAuth: true,
@@ -49,6 +57,7 @@ export class AuthStore extends LocalStore<AuthState> {
     this.setState({
       id: null,
       email: null,
+      name: null,
       token: null,
       expiresAt: null,
       isAuth: false,
