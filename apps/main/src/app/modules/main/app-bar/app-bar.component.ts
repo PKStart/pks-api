@@ -1,4 +1,5 @@
 import { Component, Renderer2 } from '@angular/core'
+import { LIGHT_THEME_CLASS } from '../../../constants/constants'
 import { AuthService } from '../../auth/auth.service'
 
 @Component({
@@ -9,14 +10,12 @@ import { AuthService } from '../../auth/auth.service'
         <mat-icon svgIcon="pLogoColor"></mat-icon>
       </a>
       <span class="spacer"></span>
-      <button *ngFor="let icon of weatherIcons" mat-icon-button [matTooltip]="icon">
-        <mat-icon [svgIcon]="icon"></mat-icon>
-      </button>
+      <pk-app-bar-weather></pk-app-bar-weather>
       <button mat-icon-button matTooltip="Korean">
         <mat-icon svgIcon="hangul"></mat-icon>
       </button>
       <button mat-icon-button matTooltip="Birthdays">
-        <mat-icon>today</mat-icon>
+        <mat-icon matBadge="1" matBadgeColor="accent" matBadgeSize="small">today</mat-icon>
       </button>
       <button mat-icon-button matTooltip="More..." [matMenuTriggerFor]="menu">
         <mat-icon>more_horiz</mat-icon>
@@ -56,32 +55,14 @@ import { AuthService } from '../../auth/auth.service'
 export class AppBarComponent {
   public isLightTheme = false
 
-  public weatherIcons = [
-    'clearDay',
-    'clearNight',
-    'cloudy',
-    'fog',
-    'hail',
-    'tempHighWarning',
-    'tempLowWarning',
-    'partlyCloudyDay',
-    'partlyCloudyNight',
-    'precip',
-    'rain',
-    'sleet',
-    'snow',
-    'thunderstorm',
-    'wind',
-  ]
-
   constructor(private authService: AuthService, private renderer: Renderer2) {}
 
   public switchTheme(): void {
     this.isLightTheme = !this.isLightTheme
     if (this.isLightTheme) {
-      this.renderer.addClass(document.body, 'pk-light-theme')
+      this.renderer.addClass(document.body, LIGHT_THEME_CLASS)
     } else {
-      this.renderer.removeClass(document.body, 'pk-light-theme')
+      this.renderer.removeClass(document.body, LIGHT_THEME_CLASS)
     }
   }
 
