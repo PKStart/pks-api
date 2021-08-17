@@ -9,3 +9,15 @@ html {
   --color-text-on-dark: #fff;
   --color-text-on-light: rgba(0, 0, 0, 0.87);
 }
+
+body {
+  --color-bg: var(--color-bg-dark);
+  --color-card-bg: var(--color-card-bg-dark);
+  --color-text: var(--color-text-on-dark);
+
+  &.pk-light-theme {
+    --color-bg: var(--color-bg-light);
+    --color-card-bg: var(--color-card-bg-light);
+    --color-text: var(--color-text-on-light);
+  }
+}
