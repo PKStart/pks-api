@@ -25,6 +25,10 @@ db.getCollection('users').insertOne({
   loginCode: '$2b$10$RnNHkTXygMXChtKP0feIt.dl4r0ZAGHrZo193qGtGJ3edeGgE3OQm', // 509950
   loginCodeExpires: new Date(2147483647000),
   salt: '$2b$10$RnNHkTXygMXChtKP0feIt.',
+  settings: {
+    weatherApiKey: null,
+    shortcutIconBaseUrl: 'https://stuff.p-kin.com/start-tile-icons/',
+  },
 })
 
 db.createCollection('notes')
