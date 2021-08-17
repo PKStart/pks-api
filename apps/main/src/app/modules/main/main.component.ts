@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service'
 @Component({
   selector: 'pk-main',
   template: `
+    <pk-app-bar></pk-app-bar>
     <div class="content">
       <h1>Welcome to {{ title }}!</h1>
       <button mat-flat-button color="primary" (click)="onClick()">GO</button>
