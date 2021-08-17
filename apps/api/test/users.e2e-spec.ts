@@ -9,7 +9,16 @@ import { NoteEntity } from '../src/notes/note.entity'
 import { PersonalDataEntity } from '../src/personal-data/personal-data.entity'
 import { ShortcutEntity } from '../src/shortcuts/shortcut.entity'
 import { UserEntity } from '../src/users/user.entity'
-import { data1, data2, note1, note2, shortcut1, shortcut2, testUser } from './test-data'
+import {
+  data1,
+  data2,
+  note1,
+  note2,
+  shortcut1,
+  shortcut2,
+  testUser,
+  userSettings,
+} from './test-data'
 
 describe('UserController (e2e)', () => {
   let app: INestApplication
@@ -113,7 +122,10 @@ describe('UserController (e2e)', () => {
         expect(res.body).toHaveProperty('expiresAt')
         expect(res.body).toHaveProperty('email')
         expect(res.body).toHaveProperty('id')
+        expect(res.body).toHaveProperty('settings')
         expect(res.body.email).toEqual(testUser.email)
+        expect(res.body.settings.weatherApiKey).toBeNull()
+        expect(res.body.settings.shortcutIconBaseUrl).toBeNull()
         expect(res.body.id).toEqual(userId)
         token = res.body.token
       })
@@ -182,6 +194,40 @@ describe('UserController (e2e)', () => {
         expect(res.body).toHaveProperty('expiresAt')
         expect(typeof res.body.token).toBe('string')
         expect(res.body.token).not.toEqual(token)
+      })
+  })
+
+  it('Should be able to add user settings', async () => {
+    return request(app.getHttpServer())
+      .post('/users/settings')
+      .auth(token, { type: 'bearer' })
+      .send({ ...userSettings })
+      .expect(201)
+      .expect(res => {
+        expect(res.body).toHaveProperty('weatherApiKey')
+        expect(res.body).toHaveProperty('shortcutIconBaseUrl')
+        expect(res.body.weatherApiKey).toEqual('weatherApiKey')
+        expect(res.body.shortcutIconBaseUrl).toEqual('https://icons.com')
+      })
+  })
+
+  it('Should get new settings after login', async () => {
+    const user = await userRepository.findOne({ id: userId })
+    await userRepository.update(
+      { id: userId },
+      {
+        ...user,
+        loginCodeExpires: new Date('2099.06.25.'),
+      }
+    )
+    return request(app.getHttpServer())
+      .post('/users/login')
+      .send({ email: testUser.email, loginCode })
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toHaveProperty('settings')
+        expect(res.body.settings.weatherApiKey).toEqual('weatherApiKey')
+        expect(res.body.settings.shortcutIconBaseUrl).toEqual('https://icons.com')
       })
   })
 

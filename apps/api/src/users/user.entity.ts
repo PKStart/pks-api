@@ -1,6 +1,7 @@
 import { User } from '@pk-start/common'
 import { BaseEntity } from '../utils'
 import { Column, Entity, Unique } from 'typeorm'
+import { UserSettings } from './user.dto'
 
 @Entity('users')
 @Unique(['email'])
@@ -19,4 +20,7 @@ export class UserEntity extends BaseEntity implements User {
 
   @Column()
   salt?: string
+
+  @Column()
+  settings: UserSettings
 }

@@ -1,7 +1,12 @@
 import { NoteDto, NoteIdResponseDto } from '../notes/note.dto'
 import { PersonalDataDto, PersonalDataIdResponseDto } from '../personal-data/personal-data.dto'
 import { ShortcutDto, ShortcutIdResponseDto } from '../shortcuts/shortcut.dto'
-import { LoginResponseDto, SignupResponseDto, TokenResponseDto } from '../users/user.dto'
+import {
+  LoginResponseDto,
+  SignupResponseDto,
+  TokenResponseDto,
+  UserSettings,
+} from '../users/user.dto'
 
 export const apiDocs = {
   wakeUp: {
@@ -49,6 +54,10 @@ export const apiDocs = {
         description: 'Create a new access token for a user',
       },
       ok: { type: TokenResponseDto, description: 'New token is generated' },
+    },
+    addSettings: {
+      operation: { summary: '[Users] Add settings', description: 'Add/update settings of a user' },
+      created: { type: UserSettings, description: 'Settings added successfully' },
     },
     delete: {
       operation: {

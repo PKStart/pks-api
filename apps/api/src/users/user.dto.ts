@@ -57,6 +57,14 @@ export class TokenResponseDto implements TokenResponse {
   expiresAt: Date
 }
 
+export class UserSettings {
+  @ApiProperty()
+  weatherApiKey: string | null
+
+  @ApiProperty()
+  shortcutIconBaseUrl: string | null
+}
+
 export class LoginResponseDto extends TokenResponseDto implements LoginResponse {
   @ApiProperty()
   email: string
@@ -66,6 +74,9 @@ export class LoginResponseDto extends TokenResponseDto implements LoginResponse 
 
   @ApiProperty()
   name: string
+
+  @ApiProperty()
+  settings: UserSettings
 }
 export interface JwtPayload {
   email: string

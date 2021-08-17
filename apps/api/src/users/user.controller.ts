@@ -29,6 +29,7 @@ import {
   SignupResponseDto,
   TokenRefreshRequestDto,
   TokenResponseDto,
+  UserSettings,
 } from './user.dto'
 import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
@@ -82,6 +83,22 @@ export class UsersController {
     @UserInBody() _user: UserEntity
   ): Promise<TokenResponseDto> {
     return this.userService.refreshToken(request.userId)
+  }
+
+  @Post('/settings')
+  @HttpCode(201)
+  @UseGuards(PkAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation(apiDocs.users.addSettings.operation)
+  @ApiOkResponse(apiDocs.users.addSettings.created)
+  @ApiNotFoundResponse(apiDocs.generic.userNotFound)
+  @ApiBadRequestResponse(apiDocs.generic.validationError)
+  @ApiForbiddenResponse(apiDocs.generic.forbidden)
+  public async addSettings(
+    @Body(ValidationPipe) request: UserSettings,
+    @GetUser() user: UserEntity
+  ): Promise<UserSettings> {
+    return this.userService.updateSettings(user.id, request)
   }
 
   @Delete()

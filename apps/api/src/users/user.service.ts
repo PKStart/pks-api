@@ -27,6 +27,7 @@ import {
   SignupRequestDto,
   SignupResponseDto,
   TokenResponseDto,
+  UserSettings,
 } from './user.dto'
 import { UserEntity } from './user.entity'
 import { getDotEnv } from '../utils'
@@ -57,6 +58,10 @@ export class UserService {
       createdAt: new Date(),
       email,
       name,
+      settings: {
+        weatherApiKey: null,
+        shortcutIconBaseUrl: null,
+      },
     }
     try {
       const user = await this.userRepository.save(this.userRepository.create(data))
@@ -115,7 +120,7 @@ export class UserService {
       throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
     }
 
-    const { id, name } = user
+    const { id, name, settings } = user
     const loginCodeMatch = await this.validateLoginCode(loginCode, user.salt, user.loginCode)
     const loginCodeValid = isBefore(new Date(), new Date(user.loginCodeExpires))
 
@@ -135,10 +140,11 @@ export class UserService {
       name,
       token,
       expiresAt,
+      settings,
     }
   }
 
-  public async refreshToken(id: string): Promise<TokenResponseDto> {
+  public async refreshToken(id: UUID): Promise<TokenResponseDto> {
     const user = await this.userRepository.findOne({ id })
 
     if (!user) {
@@ -152,7 +158,23 @@ export class UserService {
     }
   }
 
-  public async deleteUser(id: string): Promise<void> {
+  public async updateSettings(id: UUID, settings: UserSettings): Promise<UserSettings> {
+    const user = await this.userRepository.findOne({ id })
+
+    if (!user) {
+      throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
+    }
+
+    const updated: UserEntity = {
+      ...user,
+      settings,
+    }
+
+    await this.userRepository.update({ id }, updated)
+    return settings
+  }
+
+  public async deleteUser(id: UUID): Promise<void> {
     const user = await this.userRepository.findOne({ id })
 
     if (!user) {
