@@ -8,3 +8,17 @@ export enum ApiRoutes {
   NOTES = '/notes',
   PERSONAL_DATA = '/personal-data',
 }
+
+export const publicApiRoutes = [
+  ApiRoutes.USERS_SIGNUP,
+  ApiRoutes.USERS_LOGIN_CODE,
+  ApiRoutes.USERS_LOGIN,
+]
+
+export const authenticatedApiRoutes = [
+  ApiRoutes.USERS,
+  ApiRoutes.USERS_TOKEN_REFRESH,
+  ApiRoutes.SHORTCUTS,
+  ApiRoutes.NOTES,
+  ApiRoutes.PERSONAL_DATA,
+]

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
-import { LoginResponse } from '@pk-start/common'
+import { LoginResponse, TokenResponse, UUID } from '@pk-start/common'
 import { LocalStore } from '../../utils/store'
 
 export interface AuthState {
-  id: string | null
+  id: UUID | null
   email: string | null
   name: string | null
   token: string | null
@@ -62,5 +62,9 @@ export class AuthStore extends LocalStore<AuthState> {
       expiresAt: null,
       isAuth: false,
     })
+  }
+
+  public setNewToken({ token, expiresAt }: TokenResponse): void {
+    this.setState({ token, expiresAt })
   }
 }

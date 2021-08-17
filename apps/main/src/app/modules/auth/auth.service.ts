@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core'
 import { Observable, of } from 'rxjs'
-import { LoginCodeRequest, LoginRequest, LoginResponse } from '@pk-start/common'
+import { differenceInHours, isAfter, parseISO } from 'date-fns'
+import {
+  LoginCodeRequest,
+  LoginRequest,
+  LoginResponse,
+  TokenRefreshRequest,
+  TokenResponse,
+  UUID,
+} from '@pk-start/common'
 import { tap } from 'rxjs/operators'
 import { ApiRoutes } from '../shared/services/api-routes'
 import { ApiService } from '../shared/services/api.service'
@@ -8,6 +16,9 @@ import { AuthState, AuthStore } from './auth.store'
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  // @ts-ignore
+  private refreshTimer: NodeJs.Timeout
+
   constructor(private authStore: AuthStore, private api: ApiService) {}
 
   public get store(): AuthState {
@@ -16,7 +27,9 @@ export class AuthService {
 
   public requestLoginCode(email: string): Observable<void> {
     this.authStore.setEmail(email)
-    if (email === 'main@test.com') return of(undefined) // for testing purposes, since email authentication is hard to test
+    // for testing purposes, since email authentication is hard to test
+    if (email === 'main@test.com') return of(undefined)
+    // ---
     return this.api.post<LoginCodeRequest, void>(ApiRoutes.USERS_LOGIN_CODE, { email })
   }
 
@@ -30,13 +43,60 @@ export class AuthService {
       .pipe(
         tap((res: LoginResponse) => {
           this.authStore.setLogin(res)
-          // TODO schedule token refresh
+          const expires = parseISO(res.expiresAt as unknown as string)
+          this.scheduleTokenRefresh(expires, res.id)
         })
       )
   }
 
   public logout(): void {
     this.authStore.setLogout()
-    // TODO clear token refresh
+    this.unscheduleTokenRefresh()
+  }
+
+  public autoLogin(): void {
+    const { expiresAt, id } = this.authStore.current
+    const expires = parseISO(expiresAt as unknown as string)
+    if (!expires || !id || isAfter(new Date(), expires)) {
+      this.logout()
+      return
+    }
+    this.scheduleTokenRefresh(expires, id)
+  }
+
+  private scheduleTokenRefresh(expiresAt: Date, userId: UUID): void {
+    this.unscheduleTokenRefresh()
+    const now = new Date()
+    const hoursLeft = differenceInHours(expiresAt, now)
+    if (hoursLeft < 48) {
+      this.refreshToken(userId)
+    } else {
+      this.refreshTimer = setTimeout(() => {
+        this.refreshToken(userId)
+      }, (hoursLeft - 48) * 60 * 60 * 1000)
+    }
+  }
+
+  private unscheduleTokenRefresh(): void {
+    if (this.refreshTimer) {
+      clearTimeout(this.refreshTimer)
+      this.refreshTimer = undefined
+    }
+  }
+
+  private refreshToken(userId: UUID): void {
+    this.api
+      .post<TokenRefreshRequest, TokenResponse>(ApiRoutes.USERS_TOKEN_REFRESH, { userId })
+      .subscribe({
+        next: res => {
+          this.authStore.setNewToken(res)
+          const expires = parseISO(res.expiresAt as unknown as string)
+          this.scheduleTokenRefresh(expires, this.authStore.current.id!)
+        },
+        error: err => {
+          console.log('Token refresh error', err)
+          // TODO handle error properly
+        },
+      })
   }
 }
