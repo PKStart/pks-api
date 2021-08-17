@@ -10,6 +10,7 @@ import {
   TokenRefreshRequest,
   TokenResponse,
   UUID,
+  UserSettings as IUserSettings,
 } from '@pk-start/common'
 import { IsEmail, IsString, IsUUID, Matches, MaxLength, MinLength } from 'class-validator'
 
@@ -57,7 +58,7 @@ export class TokenResponseDto implements TokenResponse {
   expiresAt: Date
 }
 
-export class UserSettings {
+export class UserSettings implements IUserSettings {
   @ApiProperty()
   weatherApiKey: string | null
 

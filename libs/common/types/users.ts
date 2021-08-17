@@ -3,6 +3,7 @@ import { BaseEntity, UUID } from './misc'
 export interface User extends BaseEntity {
   name: string
   email: string
+  settings: UserSettings
 }
 
 export interface SignupRequest {
@@ -36,4 +37,10 @@ export interface LoginResponse extends TokenResponse {
   id: UUID
   name: string
   email: string
+  settings: UserSettings
+}
+
+export interface UserSettings {
+  weatherApiKey: string | null
+  shortcutIconBaseUrl: string | null
 }
