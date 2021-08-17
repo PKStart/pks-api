@@ -9,19 +9,36 @@ import { AuthService } from '../../auth/auth.service'
         <mat-icon svgIcon="pLogoColor"></mat-icon>
       </a>
       <span class="spacer"></span>
-      <button
-        mat-icon-button
-        [matTooltip]="'Switch to ' + (isLightTheme ? 'dark theme' : 'light theme')"
-        (click)="switchTheme()"
-      >
-        <mat-icon>{{ isLightTheme ? 'dark_mode' : 'light_mode' }}</mat-icon>
+      <button *ngFor="let icon of weatherIcons" mat-icon-button [matTooltip]="icon">
+        <mat-icon [svgIcon]="icon"></mat-icon>
       </button>
-      <button mat-icon-button matTooltip="Log out" (click)="logout()">
-        <mat-icon>logout</mat-icon>
+      <button mat-icon-button matTooltip="Korean">
+        <mat-icon svgIcon="hangul"></mat-icon>
       </button>
-      <button mat-icon-button matTooltip="More...">
+      <button mat-icon-button matTooltip="Birthdays">
+        <mat-icon>today</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="More..." [matMenuTriggerFor]="menu">
         <mat-icon>more_horiz</mat-icon>
       </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="switchTheme()">
+          <mat-icon>{{ isLightTheme ? 'dark_mode' : 'light_mode' }}</mat-icon>
+          <span>{{ isLightTheme ? 'Dark theme' : 'Light theme' }}</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>cloud_download</mat-icon>
+          <span>Data backup</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Log out</span>
+        </button>
+      </mat-menu>
     </mat-toolbar>
   `,
   styles: [
@@ -38,6 +55,24 @@ import { AuthService } from '../../auth/auth.service'
 })
 export class AppBarComponent {
   public isLightTheme = false
+
+  public weatherIcons = [
+    'clearDay',
+    'clearNight',
+    'cloudy',
+    'fog',
+    'hail',
+    'tempHighWarning',
+    'tempLowWarning',
+    'partlyCloudyDay',
+    'partlyCloudyNight',
+    'precip',
+    'rain',
+    'sleet',
+    'snow',
+    'thunderstorm',
+    'wind',
+  ]
 
   constructor(private authService: AuthService, private renderer: Renderer2) {}
 

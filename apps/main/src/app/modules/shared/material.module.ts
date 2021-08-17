@@ -18,7 +18,25 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { DomSanitizer } from '@angular/platform-browser'
+import { hangul } from '../../../assets/icons/hangul'
 import { pLogo, pLogoColor } from '../../../assets/icons/p-logo'
+import {
+  clearDay,
+  clearNight,
+  cloudy,
+  fog,
+  hail,
+  partlyCloudyDay,
+  partlyCloudyNight,
+  precip,
+  rain,
+  sleet,
+  snow,
+  tempHighWarning,
+  tempLowWarning,
+  thunderstorm,
+  wind,
+} from '../../../assets/icons/weather'
 
 @NgModule({
   imports: [
@@ -67,10 +85,27 @@ import { pLogo, pLogoColor } from '../../../assets/icons/p-logo'
 })
 export class AngularMaterialModule {
   constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
-    matIconRegistry.addSvgIconLiteral('pLogo', domSanitizer.bypassSecurityTrustHtml(pLogo))
-    matIconRegistry.addSvgIconLiteral(
-      'pLogoColor',
-      domSanitizer.bypassSecurityTrustHtml(pLogoColor)
-    )
+    matIconRegistry
+      .addSvgIconLiteral('pLogo', domSanitizer.bypassSecurityTrustHtml(pLogo))
+      .addSvgIconLiteral('pLogoColor', domSanitizer.bypassSecurityTrustHtml(pLogoColor))
+      .addSvgIconLiteral('hangul', domSanitizer.bypassSecurityTrustHtml(hangul))
+      .addSvgIconLiteral('clearDay', domSanitizer.bypassSecurityTrustHtml(clearDay))
+      .addSvgIconLiteral('clearNight', domSanitizer.bypassSecurityTrustHtml(clearNight))
+      .addSvgIconLiteral('cloudy', domSanitizer.bypassSecurityTrustHtml(cloudy))
+      .addSvgIconLiteral('fog', domSanitizer.bypassSecurityTrustHtml(fog))
+      .addSvgIconLiteral('hail', domSanitizer.bypassSecurityTrustHtml(hail))
+      .addSvgIconLiteral('tempHighWarning', domSanitizer.bypassSecurityTrustHtml(tempHighWarning))
+      .addSvgIconLiteral('tempLowWarning', domSanitizer.bypassSecurityTrustHtml(tempLowWarning))
+      .addSvgIconLiteral('partlyCloudyDay', domSanitizer.bypassSecurityTrustHtml(partlyCloudyDay))
+      .addSvgIconLiteral(
+        'partlyCloudyNight',
+        domSanitizer.bypassSecurityTrustHtml(partlyCloudyNight)
+      )
+      .addSvgIconLiteral('precip', domSanitizer.bypassSecurityTrustHtml(precip))
+      .addSvgIconLiteral('rain', domSanitizer.bypassSecurityTrustHtml(rain))
+      .addSvgIconLiteral('sleet', domSanitizer.bypassSecurityTrustHtml(sleet))
+      .addSvgIconLiteral('snow', domSanitizer.bypassSecurityTrustHtml(snow))
+      .addSvgIconLiteral('thunderstorm', domSanitizer.bypassSecurityTrustHtml(thunderstorm))
+      .addSvgIconLiteral('wind', domSanitizer.bypassSecurityTrustHtml(wind))
   }
 }
