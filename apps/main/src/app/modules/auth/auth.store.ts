@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 import { LoginResponse, TokenResponse, UUID } from '@pk-start/common'
+import { StoreKeys } from '../../constants/constants'
 import { LocalStore } from '../../utils/store'
 
 export interface AuthState {
@@ -27,7 +28,7 @@ export class AuthStore extends LocalStore<AuthState> {
   public email$: Observable<string | null> = this.select(state => state.email)
 
   constructor() {
-    super('pk-start-auth', initialState)
+    super(StoreKeys.AUTH, initialState)
   }
 
   public get isAuth(): boolean {

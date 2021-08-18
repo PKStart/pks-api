@@ -10,8 +10,10 @@ import {
   UUID,
 } from '@pk-start/common'
 import { tap } from 'rxjs/operators'
+import { omit } from '../../utils/objects'
 import { ApiRoutes } from '../shared/services/api-routes'
 import { ApiService } from '../shared/services/api.service'
+import { SettingsStore } from '../shared/services/settings.store'
 import { AuthState, AuthStore } from './auth.store'
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +21,11 @@ export class AuthService {
   // @ts-ignore
   private refreshTimer: NodeJs.Timeout
 
-  constructor(private authStore: AuthStore, private api: ApiService) {}
+  constructor(
+    private authStore: AuthStore,
+    private api: ApiService,
+    private settingsStore: SettingsStore
+  ) {}
 
   public get store(): AuthState {
     return Object.freeze({ ...this.authStore.current })
@@ -42,7 +48,10 @@ export class AuthService {
       .post<LoginRequest, LoginResponse>(ApiRoutes.USERS_LOGIN, { email, loginCode })
       .pipe(
         tap((res: LoginResponse) => {
-          this.authStore.setLogin(res)
+          const authInfo = omit(res, ['settings'])
+          const { settings } = res
+          this.authStore.setLogin(authInfo)
+          this.settingsStore.setSettings(settings)
           const expires = parse(res.expiresAt as unknown as string)
           this.scheduleTokenRefresh(expires, res.id)
         })
