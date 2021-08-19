@@ -8,7 +8,7 @@ import { AppBarService } from './app-bar.service'
   template: `
     <mat-toolbar>
       <a mat-icon-button matTooltip="P-kin.com" href="https://www.p-kin.com" target="_blank">
-        <mat-icon svgIcon="pLogoColor"></mat-icon>
+        <mat-icon class="p-logo-icon" svgIcon="pLogoColor"></mat-icon>
       </a>
       <span class="spacer"></span>
       <pk-app-bar-weather
@@ -48,6 +48,9 @@ import { AppBarService } from './app-bar.service'
     `
       mat-toolbar {
         border-bottom: 1px solid var(--color-primary);
+      }
+      .p-logo-icon {
+        transform: scale(1.5);
       }
       .spacer {
         flex: 1 1 auto;
