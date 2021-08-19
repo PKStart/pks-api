@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Observable, of } from 'rxjs'
-import { differenceInHours, isAfter, parse } from 'date-fns'
+import { differenceInHours, isAfter, parseISO } from 'date-fns'
 import {
   LoginCodeRequest,
   LoginRequest,
@@ -52,7 +52,7 @@ export class AuthService {
           const { settings } = res
           this.authStore.setLogin(authInfo)
           this.settingsStore.setSettings(settings)
-          const expires = parse(res.expiresAt as unknown as string)
+          const expires = parseISO(res.expiresAt as unknown as string)
           this.scheduleTokenRefresh(expires, res.id)
         })
       )
@@ -66,7 +66,7 @@ export class AuthService {
 
   public autoLogin(): void {
     const { expiresAt, id } = this.authStore.current
-    const expires = parse(expiresAt as unknown as string)
+    const expires = parseISO(expiresAt as unknown as string)
     if (!expires || !id || isAfter(new Date(), expires)) {
       this.logout()
       return
@@ -100,7 +100,7 @@ export class AuthService {
       .subscribe({
         next: res => {
           this.authStore.setNewToken(res)
-          const expires = parse(res.expiresAt as unknown as string)
+          const expires = parseISO(res.expiresAt as unknown as string)
           this.scheduleTokenRefresh(expires, this.authStore.current.id!)
         },
         error: err => {

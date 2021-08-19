@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core'
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 import { BehaviorSubject } from 'rxjs'
 import { SettingsStore } from '../../shared/services/settings.store'
-
-export interface LocationIqResponse {
-  address: {
-    city: string
-    district?: string
-  }
-}
+import { SnackbarService } from '../../shared/services/snackbar.service'
+import { LocationIqResponse, Weather, WeatherResponse } from './weather.types'
+import { transformWeather } from './weather.utils'
 
 @Injectable({ providedIn: 'root' })
 export class WeatherService {
@@ -19,22 +15,34 @@ export class WeatherService {
    */
   private locationApiKey: string | null = null
   private weatherApiKey: string | null = null
+  private coords: GeolocationCoordinates | undefined
   private location = new BehaviorSubject<string>('')
+  private weather = new BehaviorSubject<Weather | undefined>(undefined)
+  private fetchTimer = 0
+
   public location$ = this.location.asObservable()
-  private weather = new BehaviorSubject<string>('')
   public weather$ = this.weather.asObservable()
 
-  constructor(private http: HttpClient, private settingsStore: SettingsStore) {
+  constructor(
+    private http: HttpClient,
+    private settingsStore: SettingsStore,
+    private snackbar: SnackbarService
+  ) {
     settingsStore.apiKeys.subscribe(keys => {
       this.weatherApiKey = keys.weatherApiKey ?? null
       this.locationApiKey = keys.locationApiKey ?? null
     })
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        this.onBrowserPosition.bind(this),
-        this.onBrowserPositionError.bind(this)
+        position => this.getLocation(position.coords),
+        err => this.snackbar.showError(err.message)
       )
     }
+  }
+
+  public refetchWeather(): void {
+    this.fetchWeather()
+    this.setFetchTimer()
   }
 
   private getLocation(coords: GeolocationCoordinates): void {
@@ -52,46 +60,43 @@ export class WeatherService {
       })
       .subscribe({
         next: (res: LocationIqResponse) => this.onGetLocation(res, coords),
-        error: err => this.onGetLocationError(err),
+        error: err => this.snackbar.showError('Could not get location: ' + err.message),
       })
   }
 
-  private onBrowserPosition(position: GeolocationPosition): void {
-    console.log('position', position)
-    this.getLocation(position.coords)
-  }
-  private onBrowserPositionError(error: GeolocationPositionError): void {
-    // TODO Handle error
-    console.log('position error', error.message)
-  }
-
   private onGetLocation(location: LocationIqResponse, coords: GeolocationCoordinates): void {
+    this.coords = coords
     this.location.next(
       location.address.city + (location.address.district ? `, ${location.address.district}` : '')
     )
-    if (!this.weatherApiKey) return
+    this.fetchWeather()
+    this.setFetchTimer()
+  }
+
+  private fetchWeather(): void {
+    if (!this.weatherApiKey || !this.coords) return
     this.http
-      .get('https://api.openweathermap.org/data/2.5/onecall', {
+      .get<WeatherResponse>('https://api.openweathermap.org/data/2.5/onecall', {
         params: {
-          lat: coords.latitude,
-          lon: coords.longitude,
+          lat: this.coords.latitude,
+          lon: this.coords.longitude,
           appId: this.weatherApiKey,
           exclude: 'minutely',
           units: 'metric',
         },
       })
       .subscribe({
-        next: (res: any) => {
-          console.log('weather res', res)
-          this.weather.next(res.current.weather[0].description)
-        },
-        error: err => {
-          console.log('weather err', err)
-        },
+        next: (res: WeatherResponse) => this.onGetWeather(res),
+        error: err => this.snackbar.showError('Could not get weather: ' + err.message),
       })
   }
-  private onGetLocationError(error: HttpErrorResponse): void {
-    // TODO Handle error
-    console.log('location error', error.message)
+
+  private onGetWeather(res: WeatherResponse): void {
+    this.weather.next(transformWeather(res))
+  }
+
+  private setFetchTimer(): void {
+    if (this.fetchTimer) clearInterval(this.fetchTimer)
+    this.fetchTimer = setInterval(() => this.fetchWeather(), 1000 * 60 * 60)
   }
 }

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { environment } from '../../../environments/environment'
 import { AuthService } from '../auth/auth.service'
 
 @Component({
@@ -25,14 +24,11 @@ import { AuthService } from '../auth/auth.service'
   styles: [
     //language=scss
     `
-      $myColor: darkred;
-
       .content {
         text-align: center;
 
         .title {
           display: block;
-          color: $myColor;
         }
       }
     `,
@@ -41,13 +37,7 @@ import { AuthService } from '../auth/auth.service'
 export class MainComponent {
   title = 'main'
 
-  public list: string[]
-
-  constructor(private authService: AuthService) {
-    this.list = ['null']
-    console.log(this.list)
-    console.log(environment.PK_TEST)
-  }
+  constructor(private authService: AuthService) {}
 
   onClick() {
     const lightThemeClass = 'pk-light-theme'
