@@ -22,6 +22,12 @@ describe('AppController (e2e)', () => {
   })
 
   it('Should respond for a wakeup call', () => {
-    return request(app.getHttpServer()).get('/wakeup').expect(200).expect('API is up and running!')
+    return request(app.getHttpServer())
+      .get('/wakeup')
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toHaveProperty('result')
+        expect(res.body.result).toEqual('API is up and running!')
+      })
   })
 })

@@ -7,12 +7,14 @@ export enum ApiRoutes {
   SHORTCUTS = '/shortcuts',
   NOTES = '/notes',
   PERSONAL_DATA = '/personal-data',
+  WAKEUP = '/wakeup',
 }
 
 export const publicApiRoutes = [
   ApiRoutes.USERS_SIGNUP,
   ApiRoutes.USERS_LOGIN_CODE,
   ApiRoutes.USERS_LOGIN,
+  ApiRoutes.WAKEUP,
 ]
 
 export const authenticatedApiRoutes = [
