@@ -12,6 +12,11 @@ export interface LocationIqResponse {
 
 @Injectable({ providedIn: 'root' })
 export class WeatherService {
+  /**
+   * API docs:
+   * LocationIQ: https://locationiq.com/docs
+   * OpenWeatherMap: https://openweathermap.org/api/one-call-api
+   */
   private locationApiKey: string | null = null
   private weatherApiKey: string | null = null
   private location = new BehaviorSubject<string>('')
