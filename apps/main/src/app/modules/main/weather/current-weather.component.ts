@@ -61,6 +61,10 @@ import {
   styles: [
     // language=scss
     `
+      mat-card {
+        margin-bottom: 0.5rem;
+      }
+
       .current-weather {
         header {
           display: flex;

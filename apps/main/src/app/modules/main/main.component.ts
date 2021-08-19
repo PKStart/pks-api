@@ -27,6 +27,7 @@ import { AppBarService } from './app-bar/app-bar.service'
         > div {
           padding: 1rem;
           width: auto;
+          height: 100%;
         }
 
         .main-center {

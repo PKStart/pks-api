@@ -29,6 +29,7 @@ import { WeatherService } from './weather.service'
         <mat-spinner diameter="32" color="accent"></mat-spinner>
       </div>
       <pk-current-weather></pk-current-weather>
+      <pk-daily-weather></pk-daily-weather>
     </div>
   `,
   styles: [],

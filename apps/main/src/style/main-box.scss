@@ -1,6 +1,8 @@
 .main-box {
   width: 420px;
   max-width: 90vw;
+  max-height: 100%;
+  overflow-y: auto;
   background-color: var(--color-bg-alt);
   border-radius: 8px;
   padding: 0.5rem;
@@ -28,7 +30,7 @@
   }
 
   .main-box-loading {
-    padding: 1rem;
+    padding: 3rem 0;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core'
-import { combineLatest } from 'rxjs'
+import { Component, OnDestroy } from '@angular/core'
+import { combineLatest, Subscription } from 'rxjs'
 import { AppBarService } from '../app-bar/app-bar.service'
 import {
   CurrentWeather,
@@ -54,7 +54,7 @@ import { WeatherService } from './weather.service'
     `,
   ],
 })
-export class AppBarWeatherComponent {
+export class AppBarWeatherComponent implements OnDestroy {
   public thresholds = {
     high: HIGH_TEMP_WARNING_THRESHOLD,
     low: LOW_TEMP_WARNING_THRESHOLD,
@@ -63,15 +63,23 @@ export class AppBarWeatherComponent {
   public summary: string = 'No weather data'
   public loading$ = this.weatherService.loading$
 
+  private subscription = new Subscription()
+
   constructor(private weatherService: WeatherService, private appBarService: AppBarService) {
-    combineLatest([weatherService.location$, weatherService.weather$]).subscribe(
-      ([location, weather]) => {
-        if (!location || !weather) return
-        this.summary = `${location}: ${weather.current.description}`
-        this.weather = weather.current
-        console.log('weather', weather)
-      }
+    this.subscription.add(
+      combineLatest([weatherService.location$, weatherService.weather$]).subscribe(
+        ([location, weather]) => {
+          if (!location || !weather) return
+          this.summary = `${location}: ${weather.current.description}`
+          this.weather = weather.current
+          console.log('weather', weather)
+        }
+      )
     )
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe()
   }
 
   public onClick(): void {
