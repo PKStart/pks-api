@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core'
+import { combineLatest } from 'rxjs'
 import { WeatherIcons } from './weather-icons'
+import { WeatherService } from './weather.service'
 
 @Component({
   selector: 'pk-app-bar-weather',
@@ -43,12 +45,18 @@ export class AppBarWeatherComponent implements OnInit {
   public weatherIcon: WeatherIcons = WeatherIcons.CLEAR_DAY
   public summary: string = ''
 
-  constructor() {}
+  constructor(private weatherService: WeatherService) {
+    combineLatest([weatherService.location$, weatherService.weather$]).subscribe(
+      ([location, weather]) => {
+        console.log('component subscribe', location, weather)
+        this.summary = `${location}: ${weather}`
+      }
+    )
+  }
 
   ngOnInit(): void {
     this.temperature = 29
     this.weatherIcon = WeatherIcons.CLOUDY
-    this.summary = 'Mostly cloudy throughout the day.'
   }
 
   public onClick(): void {

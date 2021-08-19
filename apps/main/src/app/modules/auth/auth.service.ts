@@ -60,6 +60,7 @@ export class AuthService {
 
   public logout(): void {
     this.authStore.setLogout()
+    this.settingsStore.clearSettings()
     this.unscheduleTokenRefresh()
   }
 

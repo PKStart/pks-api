@@ -125,6 +125,7 @@ describe('UserController (e2e)', () => {
         expect(res.body).toHaveProperty('settings')
         expect(res.body.email).toEqual(testUser.email)
         expect(res.body.settings.weatherApiKey).toBeNull()
+        expect(res.body.settings.locationApiKey).toBeNull()
         expect(res.body.settings.shortcutIconBaseUrl).toBeNull()
         expect(res.body.id).toEqual(userId)
         token = res.body.token
@@ -207,6 +208,7 @@ describe('UserController (e2e)', () => {
         expect(res.body).toHaveProperty('weatherApiKey')
         expect(res.body).toHaveProperty('shortcutIconBaseUrl')
         expect(res.body.weatherApiKey).toEqual('weatherApiKey')
+        expect(res.body.locationApiKey).toEqual('locationApiKey')
         expect(res.body.shortcutIconBaseUrl).toEqual('https://icons.com')
       })
   })

@@ -14,4 +14,5 @@ export const testUser2: Partial<User> = {
 export const userSettings: UserSettings = {
   shortcutIconBaseUrl: 'https://icons.com',
   weatherApiKey: 'weatherApiKey',
+  locationApiKey: 'locationApiKey',
 }

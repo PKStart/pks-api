@@ -27,6 +27,7 @@ db.getCollection('users').insertOne({
   salt: '$2b$10$RnNHkTXygMXChtKP0feIt.',
   settings: {
     weatherApiKey: null,
+    locationApiKey: null,
     shortcutIconBaseUrl: 'https://stuff.p-kin.com/start-tile-icons/',
   },
 })

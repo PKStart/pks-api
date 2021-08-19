@@ -42,5 +42,6 @@ export interface LoginResponse extends TokenResponse {
 
 export interface UserSettings {
   weatherApiKey: string | null
+  locationApiKey: string | null
   shortcutIconBaseUrl: string | null
 }

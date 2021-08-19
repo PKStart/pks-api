@@ -59,6 +59,7 @@ export class UserService {
       email,
       name,
       settings: {
+        locationApiKey: null,
         weatherApiKey: null,
         shortcutIconBaseUrl: null,
       },

@@ -60,6 +60,9 @@ export class TokenResponseDto implements TokenResponse {
 
 export class UserSettings implements IUserSettings {
   @ApiProperty()
+  locationApiKey: string | null
+
+  @ApiProperty()
   weatherApiKey: string | null
 
   @ApiProperty()
