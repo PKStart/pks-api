@@ -4,6 +4,10 @@
 html,
 body {
   height: 100%;
+
+  *:not(mat-icon) {
+    box-sizing: border-box;
+  }
 }
 body {
   margin: 0;
@@ -22,3 +26,5 @@ body {
     text-decoration: none;
   }
 }
+
+@import './main-box';

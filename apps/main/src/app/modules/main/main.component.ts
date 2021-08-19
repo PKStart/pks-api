@@ -1,53 +1,41 @@
 import { Component } from '@angular/core'
 import { AuthService } from '../auth/auth.service'
+import { AppBarService } from './app-bar/app-bar.service'
 
 @Component({
   selector: 'pk-main',
   template: `
     <pk-app-bar></pk-app-bar>
-    <div class="content">
-      <h1>Welcome to {{ title }}!</h1>
-      <button mat-flat-button color="primary" (click)="onClick()">GO</button>
-      <button mat-flat-button color="accent" (click)="onClick()">GO</button>
-      <button mat-flat-button color="warn" (click)="onLogout()">GO</button>
-      <span class="title">{{ title }} app is running!</span>
-      <img
-        width="300"
-        alt="Angular Logo"
-        src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="
-      />
+    <div class="main-content">
+      <div class="main-left">notes</div>
+      <div class="main-center"></div>
+      <div class="main-right">
+        <pk-weather *ngIf="appBarService.weatherOpen$ | async"></pk-weather>
+      </div>
     </div>
-    <mat-card>
-      <mat-card-title>Card title</mat-card-title>
-    </mat-card>
   `,
   styles: [
     //language=scss
     `
-      .content {
-        text-align: center;
+      .main-content {
+        width: 100%;
+        height: calc(100% - 64px);
+        display: flex;
+        flex-wrap: wrap;
+        overflow-y: auto;
 
-        .title {
-          display: block;
+        > div {
+          padding: 1rem;
+          width: auto;
+        }
+
+        .main-center {
+          flex: 1 1 auto;
         }
       }
     `,
   ],
 })
 export class MainComponent {
-  title = 'main'
-
-  constructor(private authService: AuthService) {}
-
-  onClick() {
-    const lightThemeClass = 'pk-light-theme'
-    document.body.classList.contains(lightThemeClass)
-      ? document.body.classList.remove(lightThemeClass)
-      : document.body.classList.add(lightThemeClass)
-  }
-
-  onLogout() {
-    this.authService.logout()
-    location.reload()
-  }
+  constructor(private authService: AuthService, public appBarService: AppBarService) {}
 }

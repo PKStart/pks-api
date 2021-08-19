@@ -18,10 +18,12 @@ export class WeatherService {
   private coords: GeolocationCoordinates | undefined
   private location = new BehaviorSubject<string>('')
   private weather = new BehaviorSubject<Weather | undefined>(undefined)
+  private loading = new BehaviorSubject<boolean>(true)
   private fetchTimer = 0
 
   public location$ = this.location.asObservable()
   public weather$ = this.weather.asObservable()
+  public loading$ = this.loading.asObservable()
 
   constructor(
     private http: HttpClient,
@@ -65,6 +67,7 @@ export class WeatherService {
   }
 
   private onGetLocation(location: LocationIqResponse, coords: GeolocationCoordinates): void {
+    this.loading.next(false)
     this.coords = coords
     this.location.next(
       location.address.city + (location.address.district ? `, ${location.address.district}` : '')
@@ -75,6 +78,7 @@ export class WeatherService {
 
   private fetchWeather(): void {
     if (!this.weatherApiKey || !this.coords) return
+    this.loading.next(true)
     this.http
       .get<WeatherResponse>('https://api.openweathermap.org/data/2.5/onecall', {
         params: {
@@ -88,6 +92,7 @@ export class WeatherService {
       .subscribe({
         next: (res: WeatherResponse) => this.onGetWeather(res),
         error: err => this.snackbar.showError('Could not get weather: ' + err.message),
+        complete: () => this.loading.next(false),
       })
   }
 

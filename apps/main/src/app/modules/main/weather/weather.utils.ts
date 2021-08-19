@@ -18,18 +18,16 @@ export function transformWeather(res: WeatherResponse): Weather {
     wind: getWindScale(res.current.wind_speed),
     alerts: res.alerts?.map(a => a.description) ?? [],
   }
-  const daily: DailyWeather[] = res.daily
-    .map(day => ({
-      dayOfWeek: format(new Date(day.dt * 1000), 'dddd'),
-      date: format(new Date(day.dt * 1000), 'MMMM D.'),
-      wind: getWindScale(day.wind_speed),
-      description: capitalize(day.weather[0].description),
-      icon: getIconForWeatherId(day.weather[0].icon),
-      precipitation: getPrecipitation(day),
-      tempMin: Math.round(day.temp.min),
-      tempMax: Math.round(day.temp.max),
-    }))
-    .slice(1)
+  const daily: DailyWeather[] = res.daily.map(day => ({
+    dayOfWeek: format(new Date(day.dt * 1000), 'dddd'),
+    date: format(new Date(day.dt * 1000), 'MMMM D.'),
+    wind: getWindScale(day.wind_speed),
+    description: capitalize(day.weather[0].description),
+    icon: getIconForWeatherId(day.weather[0].icon),
+    precipitation: getPrecipitation(day),
+    tempMin: Math.round(day.temp.min),
+    tempMax: Math.round(day.temp.max),
+  }))
   const hourly: HourlyWeather[] = res.hourly
     .map(hour => ({
       time: format(new Date(hour.dt * 1000), 'ha'),

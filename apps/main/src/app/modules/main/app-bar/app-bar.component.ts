@@ -1,6 +1,7 @@
 import { Component, Renderer2 } from '@angular/core'
 import { LIGHT_THEME_CLASS } from '../../../constants/constants'
 import { AuthService } from '../../auth/auth.service'
+import { AppBarService } from './app-bar.service'
 
 @Component({
   selector: 'pk-app-bar',
@@ -10,7 +11,9 @@ import { AuthService } from '../../auth/auth.service'
         <mat-icon svgIcon="pLogoColor"></mat-icon>
       </a>
       <span class="spacer"></span>
-      <pk-app-bar-weather></pk-app-bar-weather>
+      <pk-app-bar-weather
+        *ngIf="(appBarService.weatherOpen$ | async) === false"
+      ></pk-app-bar-weather>
       <button mat-icon-button matTooltip="Korean">
         <mat-icon svgIcon="hangul"></mat-icon>
       </button>
@@ -55,7 +58,11 @@ import { AuthService } from '../../auth/auth.service'
 export class AppBarComponent {
   public isLightTheme = false
 
-  constructor(private authService: AuthService, private renderer: Renderer2) {}
+  constructor(
+    private authService: AuthService,
+    public appBarService: AppBarService,
+    private renderer: Renderer2
+  ) {}
 
   public switchTheme(): void {
     this.isLightTheme = !this.isLightTheme

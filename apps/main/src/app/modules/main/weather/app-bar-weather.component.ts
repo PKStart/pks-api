@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { combineLatest } from 'rxjs'
+import { AppBarService } from '../app-bar/app-bar.service'
 import {
   CurrentWeather,
   HIGH_TEMP_WARNING_THRESHOLD,
@@ -11,10 +12,13 @@ import { WeatherService } from './weather.service'
   selector: 'pk-app-bar-weather',
   template: `
     <button mat-button class="wrapper" [matTooltip]="summary" (click)="onClick()">
-      <ng-container *ngIf="!weather">
+      <ng-container *ngIf="loading$ | async">
+        <mat-spinner diameter="24" color="accent"></mat-spinner>
+      </ng-container>
+      <ng-container *ngIf="!weather && (loading$ | async) === false">
         <mat-icon>block</mat-icon>
       </ng-container>
-      <ng-container *ngIf="weather">
+      <ng-container *ngIf="weather && (loading$ | async) === false">
         <mat-icon
           *ngIf="(weather.temperature ?? 0) > thresholds.high"
           class="weather-icon temp-high-warning"
@@ -57,8 +61,9 @@ export class AppBarWeatherComponent {
   }
   public weather: CurrentWeather | undefined
   public summary: string = 'No weather data'
+  public loading$ = this.weatherService.loading$
 
-  constructor(private weatherService: WeatherService) {
+  constructor(private weatherService: WeatherService, private appBarService: AppBarService) {
     combineLatest([weatherService.location$, weatherService.weather$]).subscribe(
       ([location, weather]) => {
         if (!location || !weather) return
@@ -70,6 +75,6 @@ export class AppBarWeatherComponent {
   }
 
   public onClick(): void {
-    console.log('Weather clicked / open weather widget')
+    this.appBarService.toggleWeather()
   }
 }
