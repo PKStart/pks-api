@@ -20,6 +20,7 @@ services:
     environment:
       PK_ENV: development
       PK_DB_CONNECTION_STRING: mongodb://pkstartdev:pkstartdev@mongodb_server:27017/pkstartdev
+      PK_EMAIL_HOST: smtp.gmail.com
       PK_EMAIL_USER: xz@gmail.com
       PK_EMAIL_PASS: abc
       PK_JWT_SECRET: test-secret

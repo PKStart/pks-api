@@ -22,6 +22,7 @@ jobs:
           docker_build_args: |
             ARG_PK_ENV
             ARG_PK_DB_CONNECTION_STRING
+            ARG_PK_EMAIL_HOST
             ARG_PK_EMAIL_USER
             ARG_PK_EMAIL_PASS
             ARG_PK_JWT_SECRET
@@ -31,6 +32,7 @@ jobs:
         env:
           ARG_PK_ENV: production
           ARG_PK_DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+          ARG_PK_EMAIL_HOST: ${{ secrets.API_EMAIL_HOST }}
           ARG_PK_EMAIL_USER: ${{ secrets.API_EMAIL_USER }}
           ARG_PK_EMAIL_PASS: ${{ secrets.API_EMAIL_PASS }}
           ARG_PK_JWT_SECRET: ${{ secrets.API_JWT_SECRET }}

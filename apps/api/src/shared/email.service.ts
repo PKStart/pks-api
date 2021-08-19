@@ -23,10 +23,15 @@ export class EmailService {
 
   constructor() {
     this.transporter = createTransport({
-      service: 'gmail',
+      host: process.env.PK_EMAIL_HOST,
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.PK_EMAIL_USER,
         pass: process.env.PK_EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     })
   }
