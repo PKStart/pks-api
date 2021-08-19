@@ -64,6 +64,7 @@ export class AppBarWeatherComponent {
         if (!location || !weather) return
         this.summary = `${location}: ${weather.current.description}`
         this.weather = weather.current
+        console.log('weather', weather)
       }
     )
   }
