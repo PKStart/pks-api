@@ -38,12 +38,13 @@ import { AppBarService } from './app-bar/app-bar.service'
           flex: 1 1 auto;
         }
 
-        .main-right {
-          display: flex;
-          flex-direction: column;
-          flex-wrap: wrap-reverse;
-          gap: 1rem;
-        }
+        //.main-right {
+        //  display: flex;
+        //  flex-direction: column;
+        //  flex-wrap: wrap-reverse;
+        //  gap: 1rem;
+        //  max-height: 100%;
+        //}
       }
     `,
   ],

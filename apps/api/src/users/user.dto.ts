@@ -84,7 +84,7 @@ export class LoginResponseDto extends TokenResponseDto implements LoginResponse 
 }
 export interface JwtPayload {
   email: string
-  userId: string
+  userId: UUID
 }
 
 export interface JwtDecodedToken {

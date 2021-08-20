@@ -108,13 +108,15 @@ export class WeatherService extends Store<WeatherState> {
       })
       .subscribe({
         next: (res: WeatherResponse) => this.onGetWeather(res),
-        error: err => this.snackbar.showError('Could not get weather: ' + err.message),
-        complete: () => this.setState({ loading: false }),
+        error: err => {
+          this.snackbar.showError('Could not get weather: ' + err.message)
+          this.setState({ loading: false })
+        },
       })
   }
 
   private onGetWeather(res: WeatherResponse): void {
-    this.setState({ weather: transformWeather(res) })
+    this.setState({ weather: transformWeather(res), loading: false })
   }
 
   private setFetchTimer(): void {

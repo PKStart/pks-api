@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core'
-import { Note } from '@pk-start/common'
+import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { Note, UUID } from '@pk-start/common'
+import { NoteToggleEvent } from './notes.types'
 
 @Component({
   selector: 'pk-note-card',
@@ -16,19 +17,32 @@ import { Note } from '@pk-start/common'
         <footer>
           <span class="date">{{ note.createdAt | date: 'yyyy.M.d H:m' }}</span>
           <div class="actions">
-            <button mat-icon-button>
+            <button mat-icon-button (click)="edit.emit(note.id)">
               <mat-icon>edit_note</mat-icon>
             </button>
-            <button mat-icon-button [disabled]="note.archived">
+            <button
+              mat-icon-button
+              [disabled]="note.archived"
+              (click)="pin.emit({ id: note.id, newValue: !note.pinned })"
+            >
               <mat-icon [class.material-icons-outlined]="!note.pinned">push_pin</mat-icon>
             </button>
-            <button *ngIf="!note.archived" mat-icon-button [disabled]="note.pinned">
+            <button
+              *ngIf="!note.archived"
+              mat-icon-button
+              [disabled]="note.pinned"
+              (click)="archive.emit({ id: note.id, newValue: true })"
+            >
               <mat-icon class="material-icons-outlined">inventory_2</mat-icon>
             </button>
-            <button *ngIf="note.archived" mat-icon-button>
+            <button
+              *ngIf="note.archived"
+              mat-icon-button
+              (click)="archive.emit({ id: note.id, newValue: false })"
+            >
               <mat-icon class="material-icons-outlined">unarchive</mat-icon>
             </button>
-            <button mat-icon-button>
+            <button mat-icon-button (click)="delete.emit(note.id)">
               <mat-icon class="material-icons-outlined">delete</mat-icon>
             </button>
           </div>
@@ -91,6 +105,11 @@ import { Note } from '@pk-start/common'
 })
 export class NoteCardComponent {
   @Input() note!: Note
+
+  @Output() pin = new EventEmitter<NoteToggleEvent>()
+  @Output() archive = new EventEmitter<NoteToggleEvent>()
+  @Output() edit = new EventEmitter<UUID>()
+  @Output() delete = new EventEmitter<UUID>()
 
   constructor() {}
 }

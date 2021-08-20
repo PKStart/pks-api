@@ -1,11 +1,11 @@
 import { INestApplication } from '@nestjs/common'
-import { User } from '@pk-start/common'
+import { User, UUID } from '@pk-start/common'
 import * as request from 'supertest'
 
 export async function signupAndLogin(
   app: INestApplication,
   user: Partial<User>
-): Promise<{ token: string; userId: string }> {
+): Promise<{ token: string; userId: UUID }> {
   const { id } = await request(app.getHttpServer())
     .post('/users/signup')
     .send(user)

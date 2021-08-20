@@ -1,8 +1,11 @@
 import { Component, OnDestroy } from '@angular/core'
-import { Note } from '@pk-start/common'
+import { Note, UUID } from '@pk-start/common'
+import { parse } from 'date-fns'
 import { Subscription } from 'rxjs'
+import { SnackbarService } from '../../shared/services/snackbar.service'
 import { AppBarService } from '../app-bar/app-bar.service'
 import { NotesService } from './notes.service'
+import { NoteToggleEvent } from './notes.types'
 
 @Component({
   selector: 'pk-notes',
@@ -30,8 +33,15 @@ import { NotesService } from './notes.service'
       <div *ngIf="(loading$ | async) === false && !notes.length" class="main-box-message">
         No notes.
       </div>
-      <div class="notes" *ngIf="notes.length">
-        <pk-note-card *ngFor="let note of notes" [note]="note"></pk-note-card>
+      <div class="notes" *ngIf="(loading$ | async) === false && notes.length">
+        <pk-note-card
+          *ngFor="let note of notes"
+          [note]="note"
+          (edit)="onEdit($event)"
+          (pin)="onPin($event)"
+          (archive)="onArchive($event)"
+          (delete)="onDelete($event)"
+        ></pk-note-card>
       </div>
     </main>
   </div>`,
@@ -51,10 +61,15 @@ export class NotesComponent implements OnDestroy {
 
   private subscription = new Subscription()
 
-  constructor(private notesService: NotesService, public appBarService: AppBarService) {
+  constructor(
+    private notesService: NotesService,
+    public appBarService: AppBarService,
+    private snackbarService: SnackbarService
+  ) {
     this.subscription.add(
       notesService.notes$.subscribe(notes => {
         this.notes = notes
+          .sort((a, b) => parse(b.createdAt).getTime() - parse(a.createdAt).getTime())
           .sort((a, b) => (a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1))
           .sort((a, b) => (a.archived === b.archived ? 0 : a.archived ? 1 : -1))
       })
@@ -67,5 +82,34 @@ export class NotesComponent implements OnDestroy {
 
   public onAddNote(): void {
     console.log('Add note')
+  }
+
+  public onEdit(id: UUID): void {
+    const note = this.notes.find(n => n.id === id)
+    if (!note) return
+    console.log('edit', note)
+  }
+
+  public onPin(e: NoteToggleEvent): void {
+    const note = this.notes.find(n => n.id === e.id)
+    if (!note) return
+    this.updateNote({ ...note, pinned: e.newValue })
+  }
+
+  public onArchive(e: NoteToggleEvent): void {
+    const note = this.notes.find(n => n.id === e.id)
+    if (!note) return
+    this.updateNote({ ...note, archived: e.newValue })
+  }
+
+  public onDelete(id: UUID): void {
+    console.log('delete', id)
+  }
+
+  private updateNote(note: Note): void {
+    this.notesService.updateNote(note).subscribe({
+      next: () => this.notesService.fetchNotes(),
+      error: e => this.snackbarService.showError('Could not update note. ' + e.error.message),
+    })
   }
 }
