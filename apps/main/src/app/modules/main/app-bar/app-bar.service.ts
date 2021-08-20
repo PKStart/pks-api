@@ -12,7 +12,7 @@ export interface AppBarState {
 const initialState: AppBarState = {
   birthdaysOpen: false,
   koreanOpen: false,
-  notesOpen: false,
+  notesOpen: true,
   weatherOpen: false,
 }
 

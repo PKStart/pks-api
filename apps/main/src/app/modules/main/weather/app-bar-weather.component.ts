@@ -15,7 +15,7 @@ import { WeatherService } from './weather.service'
       <ng-container *ngIf="loading$ | async">
         <mat-spinner diameter="24" color="accent"></mat-spinner>
       </ng-container>
-      <ng-container *ngIf="!weather && (loading$ | async) === false">
+      <ng-container *ngIf="(disabled$ | async) && (loading$ | async) === false">
         <mat-icon>block</mat-icon>
       </ng-container>
       <ng-container *ngIf="weather && (loading$ | async) === false">
@@ -39,6 +39,7 @@ import { WeatherService } from './weather.service'
       .wrapper {
         display: flex;
         align-items: center;
+        justify-content: center;
         padding: 0;
       }
       .temp-high-warning {
@@ -62,6 +63,7 @@ export class AppBarWeatherComponent implements OnDestroy {
   public weather: CurrentWeather | undefined
   public summary: string = 'No weather data'
   public loading$ = this.weatherService.loading$
+  public disabled$ = this.weatherService.disabled$
 
   private subscription = new Subscription()
 
@@ -72,7 +74,6 @@ export class AppBarWeatherComponent implements OnDestroy {
           if (!location || !weather) return
           this.summary = `${location}: ${weather.current.description}`
           this.weather = weather.current
-          console.log('weather', weather)
         }
       )
     )

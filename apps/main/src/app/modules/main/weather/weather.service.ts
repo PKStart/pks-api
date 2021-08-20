@@ -10,12 +10,14 @@ export interface WeatherState {
   location: string
   weather: Weather | undefined
   loading: boolean
+  disabled: boolean
 }
 
 const initialState: WeatherState = {
   location: '',
   weather: undefined,
   loading: true,
+  disabled: false,
 }
 
 @Injectable({ providedIn: 'root' })
@@ -33,6 +35,7 @@ export class WeatherService extends Store<WeatherState> {
   public location$ = this.select(state => state.location)
   public weather$ = this.select(state => state.weather)
   public loading$ = this.select(state => state.loading)
+  public disabled$ = this.select(state => state.disabled)
 
   constructor(
     private http: HttpClient,
@@ -43,6 +46,9 @@ export class WeatherService extends Store<WeatherState> {
     settingsStore.apiKeys.subscribe(keys => {
       this.weatherApiKey = keys.weatherApiKey ?? null
       this.locationApiKey = keys.locationApiKey ?? null
+      if (!keys.weatherApiKey || !keys.locationApiKey) {
+        this.setState({ loading: false, disabled: true })
+      }
     })
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(

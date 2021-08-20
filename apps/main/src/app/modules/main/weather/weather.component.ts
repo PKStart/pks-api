@@ -16,7 +16,7 @@ import { WeatherService } from './weather.service'
             [matTooltip]="updatedText"
             matTooltipPosition="left"
             (click)="refetch()"
-            [disabled]="loading$ | async"
+            [disabled]="(loading$ | async) || (disabled$ | async)"
           >
             <mat-icon>sync</mat-icon>
           </button>
@@ -29,9 +29,14 @@ import { WeatherService } from './weather.service'
         <div *ngIf="loading$ | async" class="main-box-loading">
           <mat-spinner diameter="32" color="accent"></mat-spinner>
         </div>
-        <pk-current-weather></pk-current-weather>
-        <pk-daily-weather></pk-daily-weather>
-        <pk-hourly-weather></pk-hourly-weather>
+        <div *ngIf="disabled$ | async" class="main-box-loading">
+          Weather service is not available.
+        </div>
+        <ng-container *ngIf="(disabled$ | async) === false">
+          <pk-current-weather></pk-current-weather>
+          <pk-daily-weather></pk-daily-weather>
+          <pk-hourly-weather></pk-hourly-weather>
+        </ng-container>
       </main>
     </div>
   `,
@@ -40,6 +45,7 @@ import { WeatherService } from './weather.service'
 export class WeatherComponent implements OnDestroy {
   public updatedText = 'Updated just now'
   public loading$ = this.weatherService.loading$
+  public disabled$ = this.weatherService.disabled$
 
   private updatedMinutes = 0
   private updatedTimer = 0
