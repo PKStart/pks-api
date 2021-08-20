@@ -8,7 +8,7 @@ import { WeatherService } from './weather.service'
   selector: 'pk-weather',
   template: `
     <div class="main-box">
-      <div class="main-box-header">
+      <header class="main-box-header">
         <h1 class="main-box-title">Weather</h1>
         <div class="main-box-actions">
           <button
@@ -24,12 +24,14 @@ import { WeatherService } from './weather.service'
             <mat-icon>close</mat-icon>
           </button>
         </div>
-      </div>
-      <div *ngIf="loading$ | async" class="main-box-loading">
-        <mat-spinner diameter="32" color="accent"></mat-spinner>
-      </div>
-      <pk-current-weather></pk-current-weather>
-      <pk-daily-weather></pk-daily-weather>
+      </header>
+      <main class="main-box-content">
+        <div *ngIf="loading$ | async" class="main-box-loading">
+          <mat-spinner diameter="32" color="accent"></mat-spinner>
+        </div>
+        <pk-current-weather></pk-current-weather>
+        <pk-daily-weather></pk-daily-weather>
+      </main>
     </div>
   `,
   styles: [],

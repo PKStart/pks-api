@@ -1,13 +1,25 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { BehaviorSubject } from 'rxjs'
+import { Store } from '../../../utils/store'
 import { SettingsStore } from '../../shared/services/settings.store'
 import { SnackbarService } from '../../shared/services/snackbar.service'
 import { LocationIqResponse, Weather, WeatherResponse } from './weather.types'
 import { transformWeather } from './weather.utils'
 
+export interface WeatherState {
+  location: string
+  weather: Weather | undefined
+  loading: boolean
+}
+
+const initialState: WeatherState = {
+  location: '',
+  weather: undefined,
+  loading: true,
+}
+
 @Injectable({ providedIn: 'root' })
-export class WeatherService {
+export class WeatherService extends Store<WeatherState> {
   /**
    * API docs:
    * LocationIQ: https://locationiq.com/docs
@@ -16,20 +28,18 @@ export class WeatherService {
   private locationApiKey: string | null = null
   private weatherApiKey: string | null = null
   private coords: GeolocationCoordinates | undefined
-  private location = new BehaviorSubject<string>('')
-  private weather = new BehaviorSubject<Weather | undefined>(undefined)
-  private loading = new BehaviorSubject<boolean>(true)
   private fetchTimer = 0
 
-  public location$ = this.location.asObservable()
-  public weather$ = this.weather.asObservable()
-  public loading$ = this.loading.asObservable()
+  public location$ = this.select(state => state.location)
+  public weather$ = this.select(state => state.weather)
+  public loading$ = this.select(state => state.loading)
 
   constructor(
     private http: HttpClient,
     private settingsStore: SettingsStore,
     private snackbar: SnackbarService
   ) {
+    super(initialState)
     settingsStore.apiKeys.subscribe(keys => {
       this.weatherApiKey = keys.weatherApiKey ?? null
       this.locationApiKey = keys.locationApiKey ?? null
@@ -67,18 +77,19 @@ export class WeatherService {
   }
 
   private onGetLocation(location: LocationIqResponse, coords: GeolocationCoordinates): void {
-    this.loading.next(false)
+    this.setState({ loading: false })
     this.coords = coords
-    this.location.next(
-      location.address.city + (location.address.district ? `, ${location.address.district}` : '')
-    )
+    this.setState({
+      location:
+        location.address.city + (location.address.district ? `, ${location.address.district}` : ''),
+    })
     this.fetchWeather()
     this.setFetchTimer()
   }
 
   private fetchWeather(): void {
     if (!this.weatherApiKey || !this.coords) return
-    this.loading.next(true)
+    this.setState({ loading: true })
     this.http
       .get<WeatherResponse>('https://api.openweathermap.org/data/2.5/onecall', {
         params: {
@@ -92,12 +103,12 @@ export class WeatherService {
       .subscribe({
         next: (res: WeatherResponse) => this.onGetWeather(res),
         error: err => this.snackbar.showError('Could not get weather: ' + err.message),
-        complete: () => this.loading.next(false),
+        complete: () => this.setState({ loading: false }),
       })
   }
 
   private onGetWeather(res: WeatherResponse): void {
-    this.weather.next(transformWeather(res))
+    this.setState({ weather: transformWeather(res) })
   }
 
   private setFetchTimer(): void {
