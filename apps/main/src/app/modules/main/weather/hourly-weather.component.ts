@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core'
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core'
 import { Subscription } from 'rxjs'
 import { WeatherService } from './weather.service'
 import { HourlyWeather } from './weather.types'
@@ -6,8 +6,8 @@ import { HourlyWeather } from './weather.types'
 @Component({
   selector: 'pk-hourly-weather',
   template: `
-    <mat-card *ngIf="(loading$ | async) === false">
-      <mat-card-content>
+    <mat-card *ngIf="(loading$ | async) === false" (wheel)="onScroll($event)">
+      <mat-card-content #content>
         <div class="hourly-wrapper">
           <div *ngFor="let hour of hourly" class="hour">
             <p class="time">{{ hour.time }}</p>
@@ -67,6 +67,8 @@ import { HourlyWeather } from './weather.types'
   ],
 })
 export class HourlyWeatherComponent implements OnDestroy {
+  @ViewChild('content') content: ElementRef | undefined
+
   public hourly: HourlyWeather[] = []
   public loading$ = this.weatherService.loading$
 
@@ -83,5 +85,12 @@ export class HourlyWeatherComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe()
+  }
+
+  public onScroll(e: WheelEvent): void {
+    if (!this.content) return
+    e.preventDefault()
+    if (e.deltaY > 0) this.content.nativeElement.scrollLeft += 60
+    else this.content.nativeElement.scrollLeft -= 60
   }
 }
