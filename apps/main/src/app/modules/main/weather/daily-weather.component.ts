@@ -102,7 +102,7 @@ export class DailyWeatherComponent implements OnDestroy {
     this.subscription.add(
       weatherService.weather$.subscribe(weather => {
         if (!weather) return
-        this.daily = weather.daily.slice(1)
+        this.daily = weather.daily.slice(1, weather.daily.length - 1)
       })
     )
   }

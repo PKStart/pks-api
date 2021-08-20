@@ -31,6 +31,7 @@ import { WeatherService } from './weather.service'
         </div>
         <pk-current-weather></pk-current-weather>
         <pk-daily-weather></pk-daily-weather>
+        <pk-hourly-weather></pk-hourly-weather>
       </main>
     </div>
   `,

@@ -17,6 +17,7 @@ body * {
 /* Works on Chrome/Edge/Safari */
 *::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 body::-webkit-scrollbar-track {
   background: $scrollbarBgColor1;
