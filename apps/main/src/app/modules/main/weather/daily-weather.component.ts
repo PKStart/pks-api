@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Component, OnDestroy } from '@angular/core'
 import { Subscription } from 'rxjs'
 import { WeatherService } from './weather.service'
 import { DailyWeather } from './weather.types'
@@ -85,7 +85,7 @@ import { DailyWeather } from './weather.types'
           > mat-icon {
             width: 36px;
             height: 36px;
-            margin-left: 1rem;
+            margin-left: 0.5rem;
           }
         }
       }
