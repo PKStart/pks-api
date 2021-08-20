@@ -23,8 +23,13 @@ export class AppBarService extends LocalStore<AppBarState> {
   }
 
   public weatherOpen$ = this.select(state => state.weatherOpen)
+  public notesOpen$ = this.select(state => state.notesOpen)
 
   public toggleWeather(): void {
     this.setState({ weatherOpen: !this.state.weatherOpen })
+  }
+
+  public toggleNotes(): void {
+    this.setState({ notesOpen: !this.state.notesOpen })
   }
 }

@@ -14,6 +14,14 @@ import { AppBarService } from './app-bar.service'
       <pk-app-bar-weather
         *ngIf="(appBarService.weatherOpen$ | async) === false"
       ></pk-app-bar-weather>
+      <button
+        mat-icon-button
+        matTooltip="Notes"
+        *ngIf="(appBarService.notesOpen$ | async) === false"
+        (click)="appBarService.toggleNotes()"
+      >
+        <mat-icon>notes</mat-icon>
+      </button>
       <button mat-icon-button matTooltip="Korean">
         <mat-icon svgIcon="hangul"></mat-icon>
       </button>

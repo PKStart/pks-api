@@ -7,7 +7,9 @@ import { AppBarService } from './app-bar/app-bar.service'
   template: `
     <pk-app-bar></pk-app-bar>
     <div class="main-content">
-      <div class="main-left">notes</div>
+      <div class="main-left">
+        <pk-notes *ngIf="appBarService.notesOpen$ | async"></pk-notes>
+      </div>
       <div class="main-center"></div>
       <div class="main-right">
         <pk-weather *ngIf="appBarService.weatherOpen$ | async"></pk-weather>
@@ -22,16 +24,25 @@ import { AppBarService } from './app-bar/app-bar.service'
         height: calc(100% - 64px);
         display: flex;
         flex-wrap: wrap;
+        gap: 1rem;
         overflow-y: auto;
+        padding: 1rem;
 
         > div {
-          padding: 1rem;
           width: auto;
-          height: 100%;
+          height: auto;
+          max-height: 100%;
         }
 
         .main-center {
           flex: 1 1 auto;
+        }
+
+        .main-right {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap-reverse;
+          gap: 1rem;
         }
       }
     `,

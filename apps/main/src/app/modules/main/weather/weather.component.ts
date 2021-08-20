@@ -20,7 +20,7 @@ import { WeatherService } from './weather.service'
           >
             <mat-icon>sync</mat-icon>
           </button>
-          <button mat-icon-button (click)="appBarService.toggleWeather()">
+          <button mat-icon-button matTooltip="Close" (click)="appBarService.toggleWeather()">
             <mat-icon>close</mat-icon>
           </button>
         </div>
@@ -29,7 +29,7 @@ import { WeatherService } from './weather.service'
         <div *ngIf="loading$ | async" class="main-box-loading">
           <mat-spinner diameter="32" color="accent"></mat-spinner>
         </div>
-        <div *ngIf="disabled$ | async" class="main-box-loading">
+        <div *ngIf="disabled$ | async" class="main-box-message">
           Weather service is not available.
         </div>
         <ng-container *ngIf="(disabled$ | async) === false">
