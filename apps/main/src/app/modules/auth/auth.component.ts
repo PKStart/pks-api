@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { Subscription } from 'rxjs'
+import { SnackbarService } from '../shared/services/snackbar.service'
 import { AuthService } from './auth.service'
 import { AuthStore } from './auth.store'
 
@@ -15,7 +16,10 @@ import { AuthStore } from './auth.store'
           glow="var(--color-primary)"
           opacity="0.5"
         ></pk-logo>
-        <ng-container *ngIf="step === 0">
+        <div class="loading" *ngIf="loading">
+          <mat-spinner diameter="32" color="accent"></mat-spinner>
+        </div>
+        <ng-container *ngIf="!loading && step === 0">
           <mat-form-field appearance="outline" color="primary">
             <mat-label>Email</mat-label>
             <input
@@ -45,7 +49,7 @@ import { AuthStore } from './auth.store'
             <small *ngIf="!hasEmailSaved" [ngStyle]="{ opacity: 0 }"> placeholder </small>
           </p>
         </ng-container>
-        <ng-container *ngIf="step === 1">
+        <ng-container *ngIf="!loading && step === 1">
           <mat-form-field appearance="outline" color="primary">
             <mat-label>Login code</mat-label>
             <input
@@ -95,6 +99,12 @@ import { AuthStore } from './auth.store'
         width: 350px;
         max-width: 90%;
       }
+      .loading {
+        height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     `,
   ],
 })
@@ -104,11 +114,13 @@ export class AuthComponent implements OnInit, OnDestroy {
   public loginCode = ''
   public step = 0
   public hasEmailSaved = false
+  public loading = false
 
   constructor(
     private authService: AuthService,
     private authStore: AuthStore,
-    private router: Router
+    private router: Router,
+    private snackbarService: SnackbarService
   ) {}
 
   ngOnInit() {
@@ -120,20 +132,30 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   public onRequestLoginCode(): void {
+    this.loading = true
     this.authService.requestLoginCode(this.email).subscribe({
-      next: () => (this.step = 1),
+      next: () => {
+        this.step = 1
+        this.loading = false
+      },
       error: err => {
-        console.log(err)
+        this.snackbarService.showError('Could not request login code. ' + err.error.message)
+        this.loading = false
       },
     })
     this.email = ''
   }
 
   public onLogin(): void {
+    this.loading = true
     this.authService.login(this.loginCode).subscribe({
-      next: () => this.router.navigate(['/']).then(),
+      next: () => {
+        this.loading = false
+        this.router.navigate(['/']).then()
+      },
       error: err => {
-        console.log(err)
+        this.snackbarService.showError('Login failed. ' + err.error.message)
+        this.loading = false
       },
     })
   }
