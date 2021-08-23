@@ -2,6 +2,8 @@ import { Component, OnDestroy } from '@angular/core'
 import { Note, UUID } from '@pk-start/common'
 import { parse } from 'date-fns'
 import { Subscription } from 'rxjs'
+import { filter, switchMap } from 'rxjs/operators'
+import { ConfirmationService } from '../../shared/services/confirmation.service'
 import { SnackbarService } from '../../shared/services/snackbar.service'
 import { AppBarService } from '../app-bar/app-bar.service'
 import { NotesService } from './notes.service'
@@ -64,6 +66,7 @@ export class NotesComponent implements OnDestroy {
   constructor(
     private notesService: NotesService,
     public appBarService: AppBarService,
+    private confirmationService: ConfirmationService,
     private snackbarService: SnackbarService
   ) {
     this.subscription.add(
@@ -103,7 +106,16 @@ export class NotesComponent implements OnDestroy {
   }
 
   public onDelete(id: UUID): void {
-    console.log('delete', id)
+    this.confirmationService
+      .question('Do you really want to delete this note?')
+      .pipe(
+        filter(isConfirmed => isConfirmed),
+        switchMap(() => this.notesService.deleteNote(id))
+      )
+      .subscribe({
+        next: () => this.notesService.fetchNotes(),
+        error: e => this.snackbarService.showError('Could not delete note. ' + e.error.message),
+      })
   }
 
   private updateNote(note: Note): void {

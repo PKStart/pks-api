@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
+import { ConfirmationDialogComponent } from './components/confirmation-dialog.component'
 import { LogoComponent } from './components/logo.component'
 import { AngularMaterialModule } from './material.module'
 
@@ -26,8 +27,9 @@ import { AngularMaterialModule } from './material.module'
     RouterModule,
     HttpClientModule,
     LogoComponent,
+    ConfirmationDialogComponent,
   ],
-  declarations: [LogoComponent],
+  declarations: [LogoComponent, ConfirmationDialogComponent],
   providers: [],
 })
 export class SharedModule {}

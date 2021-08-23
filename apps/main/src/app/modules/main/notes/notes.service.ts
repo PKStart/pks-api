@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Note, NoteIdResponse, UpdateNoteRequest } from '@pk-start/common'
+import { DeleteNoteRequest, Note, NoteIdResponse, UpdateNoteRequest, UUID } from '@pk-start/common'
 import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { omit } from '../../../utils/objects'
@@ -22,7 +22,6 @@ const initialState: NotesState = {
 export class NotesService extends Store<NotesState> {
   constructor(private apiService: ApiService, private snackbarService: SnackbarService) {
     super(initialState)
-
     this.fetchNotes()
   }
 
@@ -49,6 +48,16 @@ export class NotesService extends Store<NotesState> {
     this.setState({ loading: true })
     const request: UpdateNoteRequest = omit(note, ['createdAt', 'userId'])
     return this.apiService.put<UpdateNoteRequest, NoteIdResponse>(ApiRoutes.NOTES, request).pipe(
+      tap(
+        () => this.setState({ loading: false }),
+        () => this.setState({ loading: false })
+      )
+    )
+  }
+
+  public deleteNote(id: UUID): Observable<NoteIdResponse> {
+    this.setState({ loading: true })
+    return this.apiService.delete<DeleteNoteRequest, NoteIdResponse>(ApiRoutes.NOTES, { id }).pipe(
       tap(
         () => this.setState({ loading: false }),
         () => this.setState({ loading: false })

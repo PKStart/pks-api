@@ -1,0 +1,38 @@
+import { Component, Inject } from '@angular/core'
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
+
+@Component({
+  selector: 'pk-confirmation-dialog',
+  template: `
+    <div mat-dialog-content>{{ data.message }}</div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-button color="accent" (click)="onOk()">OK</button>
+    </div>
+  `,
+  styles: [
+    `
+      div[mat-dialog-content] {
+        margin-bottom: 0.5rem;
+      }
+
+      div[mat-dialog-actions] {
+        justify-content: flex-end;
+      }
+    `,
+  ],
+})
+export class ConfirmationDialogComponent {
+  constructor(
+    private dialogRef: MatDialogRef<ConfirmationDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { message: string }
+  ) {}
+
+  public onCancel(): void {
+    this.dialogRef.close(false)
+  }
+
+  public onOk(): void {
+    this.dialogRef.close(true)
+  }
+}
