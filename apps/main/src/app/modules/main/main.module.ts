@@ -3,6 +3,7 @@ import { SharedModule } from '../shared/shared.module'
 import { MainComponent } from './main.component'
 import { AppBarComponent } from './app-bar/app-bar.component'
 import { NoteCardComponent } from './notes/note-card.component'
+import { NoteDialogComponent } from './notes/note-dialog.component'
 import { NotesComponent } from './notes/notes.component'
 import { AppBarWeatherComponent } from './weather/app-bar-weather.component'
 import { CurrentWeatherComponent } from './weather/current-weather.component'
@@ -23,6 +24,7 @@ import { WeatherComponent } from './weather/weather.component'
     HourlyWeatherComponent,
     NotesComponent,
     NoteCardComponent,
+    NoteDialogComponent,
   ],
   providers: [],
 })

@@ -6,8 +6,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
   template: `
     <div mat-dialog-content>{{ data.message }}</div>
     <div mat-dialog-actions>
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-button color="accent" (click)="onOk()">OK</button>
+      <button mat-button data-test-id="confirmation-cancel-btn" (click)="onCancel()">CANCEL</button>
+      <button mat-button data-test-id="confirmation-ok-btn" color="accent" (click)="onOk()">
+        OK
+      </button>
     </div>
   `,
   styles: [

@@ -1,11 +1,14 @@
 import { Component, OnDestroy } from '@angular/core'
+import { MatDialog } from '@angular/material/dialog'
 import { Note, UUID } from '@pk-start/common'
 import { parse } from 'date-fns'
 import { Subscription } from 'rxjs'
-import { filter, switchMap } from 'rxjs/operators'
+import { filter, map, switchMap } from 'rxjs/operators'
+import { defaultDialogConfig } from '../../../constants/constants'
 import { ConfirmationService } from '../../shared/services/confirmation.service'
 import { SnackbarService } from '../../shared/services/snackbar.service'
 import { AppBarService } from '../app-bar/app-bar.service'
+import { NoteDialogComponent } from './note-dialog.component'
 import { NotesService } from './notes.service'
 import { NoteToggleEvent } from './notes.types'
 
@@ -64,10 +67,11 @@ export class NotesComponent implements OnDestroy {
   private subscription = new Subscription()
 
   constructor(
-    private notesService: NotesService,
     public appBarService: AppBarService,
+    private notesService: NotesService,
     private confirmationService: ConfirmationService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private matDialog: MatDialog
   ) {
     this.subscription.add(
       notesService.notes$.subscribe(notes => {
@@ -84,13 +88,44 @@ export class NotesComponent implements OnDestroy {
   }
 
   public onAddNote(): void {
-    console.log('Add note')
+    this.matDialog
+      .open(NoteDialogComponent, defaultDialogConfig)
+      .afterClosed()
+      .pipe(
+        filter(values => values),
+        map(values => ({
+          ...values,
+          text: values.text || null,
+          links: values?.links?.length ? values.links : null,
+        })),
+        switchMap(request => this.notesService.createNote(request))
+      )
+      .subscribe({
+        next: () => this.notesService.fetchNotes(),
+        error: e => this.snackbarService.showError('Could not create note. ' + e.error.message),
+      })
   }
 
   public onEdit(id: UUID): void {
     const note = this.notes.find(n => n.id === id)
     if (!note) return
-    console.log('edit', note)
+    this.matDialog
+      .open(NoteDialogComponent, { ...defaultDialogConfig, data: note })
+      .afterClosed()
+      .pipe(
+        filter(values => values),
+        map(values => ({
+          ...note,
+          ...values,
+          text: values.text || null,
+          links: values?.links?.length ? values.links : null,
+        })),
+        switchMap(request => this.notesService.updateNote(request))
+      )
+      .subscribe({
+        next: () => this.notesService.fetchNotes(),
+        error: e => this.snackbarService.showError('Could not update note. ' + e.error.message),
+      })
   }
 
   public onPin(e: NoteToggleEvent): void {
