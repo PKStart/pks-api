@@ -46,11 +46,13 @@ export function transformWeather(res: WeatherResponse): Weather {
   }
 }
 
-function getPrecipitationLh<T extends { rain?: { lh: number }; snow?: { lh: number } }>(
+function getPrecipitationLh<T extends { rain?: { '1h': number }; snow?: { '1h': number } }>(
   obj: T
 ): string | undefined {
-  if (obj.rain) return `${obj.rain.lh !== 0 && obj.rain.lh < 1 ? '<1' : Math.round(obj.rain.lh)}mm`
-  if (obj.snow) return `${obj.snow.lh !== 0 && obj.snow.lh < 1 ? '<1' : Math.round(obj.snow.lh)}mm`
+  if (obj.rain)
+    return `${obj.rain['1h'] !== 0 && obj.rain['1h'] < 1 ? '<1' : Math.round(obj.rain['1h'])}mm`
+  if (obj.snow)
+    return `${obj.snow['1h'] !== 0 && obj.snow['1h'] < 1 ? '<1' : Math.round(obj.snow['1h'])}mm`
   return undefined
 }
 

@@ -25,7 +25,7 @@ import {
             </p>
             <p>
               <mat-icon svgIcon="precip" color="primary"></mat-icon>
-              {{ current?.precipitation ?? '0mm' }}
+              {{ daily[0].precipitation ?? '0mm' }}
             </p>
             <p>
               <mat-icon svgIcon="wind" color="primary"></mat-icon>

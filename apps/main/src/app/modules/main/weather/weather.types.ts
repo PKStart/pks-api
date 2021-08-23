@@ -53,10 +53,10 @@ export interface WeatherResponse {
     weather: WeatherData[]
     wind_speed: number
     rain?: {
-      lh: number
+      '1h': number
     }
     snow?: {
-      lh: number
+      '1h': number
     }
   }
   daily: {
@@ -72,10 +72,10 @@ export interface WeatherResponse {
     temp: number
     wind_speed: number
     rain?: {
-      lh: number
+      '1h': number
     }
     snow?: {
-      lh: number
+      '1h': number
     }
     weather: WeatherData[]
   }[]
