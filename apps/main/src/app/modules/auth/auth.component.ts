@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { Subscription } from 'rxjs'
-import { SnackbarService } from '../shared/services/snackbar.service'
+import { NotificationService } from '../shared/services/notification.service'
 import { AuthService } from './auth.service'
 import { AuthStore } from './auth.store'
 
@@ -120,7 +120,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private authStore: AuthStore,
     private router: Router,
-    private snackbarService: SnackbarService
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -139,7 +139,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         this.loading = false
       },
       error: err => {
-        this.snackbarService.showError('Could not request login code. ' + err.error.message)
+        this.notificationService.showError('Could not request login code. ' + err.error.message)
         this.loading = false
       },
     })
@@ -154,7 +154,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']).then()
       },
       error: err => {
-        this.snackbarService.showError('Login failed. ' + err.error.message)
+        this.notificationService.showError('Login failed. ' + err.error.message)
         this.loading = false
       },
     })

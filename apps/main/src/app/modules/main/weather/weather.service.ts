@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Store } from '../../../utils/store'
 import { SettingsStore } from '../../shared/services/settings.store'
-import { SnackbarService } from '../../shared/services/snackbar.service'
+import { NotificationService } from '../../shared/services/notification.service'
 import { LocationIqResponse, Weather, WeatherResponse } from './weather.types'
 import { transformWeather } from './weather.utils'
 
@@ -40,7 +40,7 @@ export class WeatherService extends Store<WeatherState> {
   constructor(
     private http: HttpClient,
     private settingsStore: SettingsStore,
-    private snackbar: SnackbarService
+    private notificationService: NotificationService
   ) {
     super(initialState)
     settingsStore.apiKeys.subscribe(keys => {
@@ -53,7 +53,7 @@ export class WeatherService extends Store<WeatherState> {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         position => this.getLocation(position.coords),
-        err => this.snackbar.showError(err.message)
+        err => this.notificationService.showError(err.message)
       )
     }
   }
@@ -78,7 +78,7 @@ export class WeatherService extends Store<WeatherState> {
       })
       .subscribe({
         next: (res: LocationIqResponse) => this.onGetLocation(res, coords),
-        error: err => this.snackbar.showError('Could not get location: ' + err.message),
+        error: err => this.notificationService.showError('Could not get location: ' + err.message),
       })
   }
 
@@ -109,7 +109,7 @@ export class WeatherService extends Store<WeatherState> {
       .subscribe({
         next: (res: WeatherResponse) => this.onGetWeather(res),
         error: err => {
-          this.snackbar.showError('Could not get weather: ' + err.message)
+          this.notificationService.showError('Could not get weather: ' + err.message)
           this.setState({ loading: false })
         },
       })

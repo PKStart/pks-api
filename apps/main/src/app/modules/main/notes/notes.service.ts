@@ -13,7 +13,7 @@ import { omit } from '../../../utils/objects'
 import { Store } from '../../../utils/store'
 import { ApiRoutes } from '../../shared/services/api-routes'
 import { ApiService } from '../../shared/services/api.service'
-import { SnackbarService } from '../../shared/services/snackbar.service'
+import { NotificationService } from '../../shared/services/notification.service'
 
 interface NotesState {
   notes: Note[]
@@ -27,7 +27,7 @@ const initialState: NotesState = {
 
 @Injectable({ providedIn: 'root' })
 export class NotesService extends Store<NotesState> {
-  constructor(private apiService: ApiService, private snackbarService: SnackbarService) {
+  constructor(private apiService: ApiService, private notificationService: NotificationService) {
     super(initialState)
     this.fetchNotes()
   }
@@ -45,7 +45,7 @@ export class NotesService extends Store<NotesState> {
         })
       },
       error: err => {
-        this.snackbarService.showError('Could not fetch notes. ' + err.message)
+        this.notificationService.showError('Could not fetch notes. ' + err.message)
         this.setState({ loading: false })
       },
     })

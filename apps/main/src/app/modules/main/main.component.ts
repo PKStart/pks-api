@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { AuthService } from '../auth/auth.service'
 import { AppBarService } from './app-bar/app-bar.service'
 
 @Component({
@@ -50,5 +49,5 @@ import { AppBarService } from './app-bar/app-bar.service'
   ],
 })
 export class MainComponent {
-  constructor(private authService: AuthService, public appBarService: AppBarService) {}
+  constructor(public appBarService: AppBarService) {}
 }

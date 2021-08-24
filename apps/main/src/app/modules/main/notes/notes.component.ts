@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs'
 import { filter, map, switchMap } from 'rxjs/operators'
 import { defaultDialogConfig } from '../../../constants/constants'
 import { ConfirmationService } from '../../shared/services/confirmation.service'
-import { SnackbarService } from '../../shared/services/snackbar.service'
+import { NotificationService } from '../../shared/services/notification.service'
 import { AppBarService } from '../app-bar/app-bar.service'
 import { NoteDialogComponent } from './note-dialog.component'
 import { NotesService } from './notes.service'
@@ -70,7 +70,7 @@ export class NotesComponent implements OnDestroy {
     public appBarService: AppBarService,
     private notesService: NotesService,
     private confirmationService: ConfirmationService,
-    private snackbarService: SnackbarService,
+    private notificationService: NotificationService,
     private matDialog: MatDialog
   ) {
     this.subscription.add(
@@ -102,7 +102,7 @@ export class NotesComponent implements OnDestroy {
       )
       .subscribe({
         next: () => this.notesService.fetchNotes(),
-        error: e => this.snackbarService.showError('Could not create note. ' + e.error.message),
+        error: e => this.notificationService.showError('Could not create note. ' + e.error.message),
       })
   }
 
@@ -124,7 +124,7 @@ export class NotesComponent implements OnDestroy {
       )
       .subscribe({
         next: () => this.notesService.fetchNotes(),
-        error: e => this.snackbarService.showError('Could not update note. ' + e.error.message),
+        error: e => this.notificationService.showError('Could not update note. ' + e.error.message),
       })
   }
 
@@ -149,14 +149,14 @@ export class NotesComponent implements OnDestroy {
       )
       .subscribe({
         next: () => this.notesService.fetchNotes(),
-        error: e => this.snackbarService.showError('Could not delete note. ' + e.error.message),
+        error: e => this.notificationService.showError('Could not delete note. ' + e.error.message),
       })
   }
 
   private updateNote(note: Note): void {
     this.notesService.updateNote(note).subscribe({
       next: () => this.notesService.fetchNotes(),
-      error: e => this.snackbarService.showError('Could not update note. ' + e.error.message),
+      error: e => this.notificationService.showError('Could not update note. ' + e.error.message),
     })
   }
 }

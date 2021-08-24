@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { RouterModule } from '@angular/router'
 import { ConfirmationDialogComponent } from './components/confirmation-dialog.component'
 import { LogoComponent } from './components/logo.component'
+import { SnackbarComponent } from './components/snackbar.component'
 import { AngularMaterialModule } from './material.module'
 
 @NgModule({
@@ -28,8 +29,9 @@ import { AngularMaterialModule } from './material.module'
     HttpClientModule,
     LogoComponent,
     ConfirmationDialogComponent,
+    SnackbarComponent,
   ],
-  declarations: [LogoComponent, ConfirmationDialogComponent],
+  declarations: [LogoComponent, ConfirmationDialogComponent, SnackbarComponent],
   providers: [],
 })
 export class SharedModule {}
