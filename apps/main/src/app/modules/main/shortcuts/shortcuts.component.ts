@@ -14,7 +14,11 @@ import { ShortcutsService } from './shortcuts.service'
     ></pk-shortcuts-menu>
     <div *ngIf="showShortcuts" class="shortcuts-backdrop" (click)="onClickBackdrop()"></div>
     <div class="shortcuts" *ngIf="showShortcuts && (shortcuts | async)">
-      <p *ngFor="let sc of (shortcuts | async)![selectedCategory]">{{ sc.name }}</p>
+      <pk-shortcut
+        *ngFor="let sc of (shortcuts | async)![selectedCategory]"
+        [shortcut]="sc"
+        (clicked)="onClickBackdrop()"
+      ></pk-shortcut>
     </div>
   `,
   styles: [
@@ -33,9 +37,22 @@ import { ShortcutsService } from './shortcuts.service'
 
       .shortcuts {
         position: absolute;
-        top: 0;
-        left: 0;
         z-index: 2;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        top: calc(100vh / 2 - 300px);
+        left: calc(100vw / 2 - 200px);
+        max-width: 400px;
+        max-height: 600px;
+        overflow-y: auto;
+
+        @media (min-width: 800px) {
+          top: calc(100vh / 2 - 190px);
+          left: calc(100vw / 2 - 385px);
+          max-width: 770px;
+          max-height: 380px;
+        }
       }
     `,
   ],
