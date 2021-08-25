@@ -14,18 +14,23 @@ import { AppBarService } from './app-bar/app-bar.service'
         <pk-weather *ngIf="appBarService.weatherOpen$ | async"></pk-weather>
       </div>
     </div>
+    <pk-shortcuts></pk-shortcuts>
   `,
   styles: [
     //language=scss
     `
       .main-content {
         width: 100%;
-        height: calc(100% - 64px);
+        height: calc(100% - 64px - 58px);
         display: flex;
         flex-wrap: wrap;
         gap: 1rem;
         overflow-y: auto;
         padding: 1rem;
+
+        @media (min-width: 1200px) {
+          height: calc(100% - 64px);
+        }
 
         > div {
           width: auto;

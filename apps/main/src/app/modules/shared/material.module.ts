@@ -19,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { DomSanitizer } from '@angular/platform-browser'
+import { google } from '../../../assets/icons/google'
 import { hangul } from '../../../assets/icons/hangul'
 import { pLogo, pLogoColor } from '../../../assets/icons/p-logo'
 import {
@@ -110,5 +111,6 @@ export class AngularMaterialModule {
       .addSvgIconLiteral('snow', domSanitizer.bypassSecurityTrustHtml(snow))
       .addSvgIconLiteral('thunderstorm', domSanitizer.bypassSecurityTrustHtml(thunderstorm))
       .addSvgIconLiteral('wind', domSanitizer.bypassSecurityTrustHtml(wind))
+      .addSvgIconLiteral('google', domSanitizer.bypassSecurityTrustHtml(google))
   }
 }

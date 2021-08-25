@@ -6,6 +6,8 @@ import { AppBarComponent } from './app-bar/app-bar.component'
 import { NoteCardComponent } from './notes/note-card.component'
 import { NoteDialogComponent } from './notes/note-dialog.component'
 import { NotesComponent } from './notes/notes.component'
+import { ShortcutsMenuComponent } from './shortcuts/shortcuts-menu.component'
+import { ShortcutsComponent } from './shortcuts/shortcuts.component'
 import { AppBarWeatherComponent } from './weather/app-bar-weather.component'
 import { CurrentWeatherComponent } from './weather/current-weather.component'
 import { DailyWeatherComponent } from './weather/daily-weather.component'
@@ -27,6 +29,8 @@ import { WeatherComponent } from './weather/weather.component'
     NoteCardComponent,
     NoteDialogComponent,
     NotificationsComponent,
+    ShortcutsComponent,
+    ShortcutsMenuComponent,
   ],
   providers: [],
 })
