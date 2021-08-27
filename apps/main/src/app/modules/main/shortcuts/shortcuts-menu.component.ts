@@ -1,45 +1,49 @@
 import { Component, Output, EventEmitter } from '@angular/core'
 import { ShortcutCategory } from '@pk-start/common'
+import { ShortcutsService } from './shortcuts.service'
 
 @Component({
   selector: 'pk-shortcuts-menu',
   template: `
     <div class="shortcuts-menu">
-      <button
-        (click)="clickMenu.emit(category.TOP)"
-        (mouseenter)="enterMenu.emit(category.TOP)"
-        (mouseleave)="mouseLeave.emit()"
-      >
-        <mat-icon>star</mat-icon>
-      </button>
-      <button
-        (click)="clickMenu.emit(category.CODING)"
-        (mouseenter)="enterMenu.emit(category.CODING)"
-        (mouseleave)="mouseLeave.emit()"
-      >
-        <mat-icon>code</mat-icon>
-      </button>
-      <button
-        (click)="clickMenu.emit(category.GOOGLE)"
-        (mouseenter)="enterMenu.emit(category.GOOGLE)"
-        (mouseleave)="mouseLeave.emit()"
-      >
-        <mat-icon svgIcon="google" class="google"></mat-icon>
-      </button>
-      <button
-        (click)="clickMenu.emit(category.FUN)"
-        (mouseenter)="enterMenu.emit(category.FUN)"
-        (mouseleave)="mouseLeave.emit()"
-      >
-        <mat-icon>mood</mat-icon>
-      </button>
-      <button
-        (click)="clickMenu.emit(category.OTHERS)"
-        (mouseenter)="enterMenu.emit(category.OTHERS)"
-        (mouseleave)="mouseLeave.emit()"
-      >
-        <mat-icon>more_horiz</mat-icon>
-      </button>
+      <ng-container *ngIf="(loading$ | async) === false">
+        <button
+          (click)="clickMenu.emit(category.TOP)"
+          (mouseenter)="enterMenu.emit(category.TOP)"
+          (mouseleave)="mouseLeave.emit()"
+        >
+          <mat-icon>star</mat-icon>
+        </button>
+        <button
+          (click)="clickMenu.emit(category.CODING)"
+          (mouseenter)="enterMenu.emit(category.CODING)"
+          (mouseleave)="mouseLeave.emit()"
+        >
+          <mat-icon>code</mat-icon>
+        </button>
+        <button
+          (click)="clickMenu.emit(category.GOOGLE)"
+          (mouseenter)="enterMenu.emit(category.GOOGLE)"
+          (mouseleave)="mouseLeave.emit()"
+        >
+          <mat-icon svgIcon="google" class="google"></mat-icon>
+        </button>
+        <button
+          (click)="clickMenu.emit(category.FUN)"
+          (mouseenter)="enterMenu.emit(category.FUN)"
+          (mouseleave)="mouseLeave.emit()"
+        >
+          <mat-icon>mood</mat-icon>
+        </button>
+        <button
+          (click)="clickMenu.emit(category.OTHERS)"
+          (mouseenter)="enterMenu.emit(category.OTHERS)"
+          (mouseleave)="mouseLeave.emit()"
+        >
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+      </ng-container>
+      <mat-spinner *ngIf="loading$ | async" diameter="40" color="accent"></mat-spinner>
     </div>
   `,
   styles: [
@@ -55,6 +59,7 @@ import { ShortcutCategory } from '@pk-start/common'
         padding: 0.5rem 1rem;
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 0.5rem;
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
@@ -94,6 +99,7 @@ export class ShortcutsMenuComponent {
   @Output() public enterMenu = new EventEmitter<ShortcutCategory>()
 
   public category = ShortcutCategory
+  public loading$ = this.shortcutsService.loading$
 
-  constructor() {}
+  constructor(private shortcutsService: ShortcutsService) {}
 }
