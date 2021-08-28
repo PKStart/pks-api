@@ -1,11 +1,24 @@
 import * as request from 'supertest'
 import { Test } from '@nestjs/testing'
 import { getRepository, Repository } from 'typeorm'
+import { cleanup } from '../seeding'
 import { AppModule } from '../src/app.module'
 import { INestApplication } from '@nestjs/common'
 import { CustomApiError, CustomValidationError, UUID } from '@pk-start/common'
+import { NoteEntity } from '../src/notes/note.entity'
+import { PersonalDataEntity } from '../src/personal-data/personal-data.entity'
+import { ShortcutEntity } from '../src/shortcuts/shortcut.entity'
 import { UserEntity } from '../src/users/user.entity'
-import { testUser } from './test-data'
+import {
+  data1,
+  data2,
+  note1,
+  note2,
+  shortcut1,
+  shortcut2,
+  testUser,
+  userSettings,
+} from './test-data'
 
 describe('UserController (e2e)', () => {
   let app: INestApplication
@@ -28,6 +41,7 @@ describe('UserController (e2e)', () => {
   })
 
   afterAll(async () => {
+    await cleanup()
     await app.close()
   })
 
@@ -108,7 +122,11 @@ describe('UserController (e2e)', () => {
         expect(res.body).toHaveProperty('expiresAt')
         expect(res.body).toHaveProperty('email')
         expect(res.body).toHaveProperty('id')
+        expect(res.body).toHaveProperty('settings')
         expect(res.body.email).toEqual(testUser.email)
+        expect(res.body.settings.weatherApiKey).toBeNull()
+        expect(res.body.settings.locationApiKey).toBeNull()
+        expect(res.body.settings.shortcutIconBaseUrl).toBeNull()
         expect(res.body.id).toEqual(userId)
         token = res.body.token
       })
@@ -180,11 +198,93 @@ describe('UserController (e2e)', () => {
       })
   })
 
+  it('Should be able to add user settings', async () => {
+    return request(app.getHttpServer())
+      .post('/users/settings')
+      .auth(token, { type: 'bearer' })
+      .send({ ...userSettings })
+      .expect(201)
+      .expect(res => {
+        expect(res.body).toHaveProperty('weatherApiKey')
+        expect(res.body).toHaveProperty('shortcutIconBaseUrl')
+        expect(res.body.weatherApiKey).toEqual('weatherApiKey')
+        expect(res.body.locationApiKey).toEqual('locationApiKey')
+        expect(res.body.shortcutIconBaseUrl).toEqual('https://icons.com')
+      })
+  })
+
+  it('Should get new settings after login', async () => {
+    const user = await userRepository.findOne({ id: userId })
+    await userRepository.update(
+      { id: userId },
+      {
+        ...user,
+        loginCodeExpires: new Date('2099.06.25.'),
+      }
+    )
+    return request(app.getHttpServer())
+      .post('/users/login')
+      .send({ email: testUser.email, loginCode })
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toHaveProperty('settings')
+        expect(res.body.settings.weatherApiKey).toEqual('weatherApiKey')
+        expect(res.body.settings.shortcutIconBaseUrl).toEqual('https://icons.com')
+      })
+  })
+
   it('Should fail to delete a user if not authenticated', () => {
     return request(app.getHttpServer()).delete('/users').expect(401)
   })
 
-  it('Should delete a user', () => {
+  it('Should delete a user and all its related entities', async () => {
+    const shortcutRepository = getRepository(ShortcutEntity)
+    const numberOfShortcutsBefore = await shortcutRepository.count({ userId })
+    const noteRepository = getRepository(NoteEntity)
+    const numberOfNotesBefore = await noteRepository.count({ userId })
+    const personalDataRepository = getRepository(PersonalDataEntity)
+    const numberOfDataBefore = await personalDataRepository.count({ userId })
+
+    await request(app.getHttpServer())
+      .post('/shortcuts')
+      .auth(token, { type: 'bearer' })
+      .send(shortcut1)
+      .expect(201)
+    await request(app.getHttpServer())
+      .post('/shortcuts')
+      .auth(token, { type: 'bearer' })
+      .send(shortcut2)
+      .expect(201)
+
+    await request(app.getHttpServer())
+      .post('/notes')
+      .auth(token, { type: 'bearer' })
+      .send(note1)
+      .expect(201)
+    await request(app.getHttpServer())
+      .post('/notes')
+      .auth(token, { type: 'bearer' })
+      .send(note2)
+      .expect(201)
+
+    await request(app.getHttpServer())
+      .post('/personal-data')
+      .auth(token, { type: 'bearer' })
+      .send(data1)
+      .expect(201)
+    await request(app.getHttpServer())
+      .post('/personal-data')
+      .auth(token, { type: 'bearer' })
+      .send(data2)
+      .expect(201)
+
+    const numberOfShortcutsAfterAdd = await shortcutRepository.count({ userId })
+    expect(numberOfShortcutsAfterAdd).toEqual(numberOfShortcutsBefore + 2)
+    const numberOfNotesAfterAdd = await noteRepository.count({ userId })
+    expect(numberOfNotesAfterAdd).toEqual(numberOfNotesBefore + 2)
+    const numberOfDataAfterAdd = await personalDataRepository.count({ userId })
+    expect(numberOfDataAfterAdd).toEqual(numberOfDataBefore + 2)
+
     return request(app.getHttpServer())
       .delete('/users')
       .auth(token, { type: 'bearer' })
@@ -194,6 +294,13 @@ describe('UserController (e2e)', () => {
         expect(user).toBeUndefined()
         const count = await userRepository.count()
         expect(count).toEqual(countBeforeSignup)
+
+        const numberOfShortcutsAfter = await shortcutRepository.count({ userId })
+        expect(numberOfShortcutsAfter).toEqual(numberOfShortcutsBefore)
+        const numberOfNotesAfter = await noteRepository.count({ userId })
+        expect(numberOfNotesAfter).toEqual(numberOfNotesBefore)
+        const numberOfDataAfter = await personalDataRepository.count({ userId })
+        expect(numberOfDataAfter).toEqual(numberOfDataBefore)
       })
   })
 })

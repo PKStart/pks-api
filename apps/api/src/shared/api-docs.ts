@@ -1,5 +1,12 @@
+import { NoteDto, NoteIdResponseDto } from '../notes/note.dto'
+import { PersonalDataDto, PersonalDataIdResponseDto } from '../personal-data/personal-data.dto'
 import { ShortcutDto, ShortcutIdResponseDto } from '../shortcuts/shortcut.dto'
-import { LoginResponseDto, SignupResponseDto, TokenResponseDto } from '../users/user.dto'
+import {
+  LoginResponseDto,
+  SignupResponseDto,
+  TokenResponseDto,
+  UserSettings,
+} from '../users/user.dto'
 
 export const apiDocs = {
   wakeUp: {
@@ -48,6 +55,10 @@ export const apiDocs = {
       },
       ok: { type: TokenResponseDto, description: 'New token is generated' },
     },
+    addSettings: {
+      operation: { summary: '[Users] Add settings', description: 'Add/update settings of a user' },
+      created: { type: UserSettings, description: 'Settings added successfully' },
+    },
     delete: {
       operation: {
         summary: '[Users] Delete',
@@ -95,6 +106,74 @@ export const apiDocs = {
         description: 'Delete a shortcut',
       },
       ok: { type: ShortcutIdResponseDto, description: 'Shortcut deleted' },
+    },
+  },
+  notes: {
+    getAll: {
+      operation: {
+        summary: '[Notes] Get all',
+        description: 'Get all notes for a user',
+      },
+      ok: {
+        type: NoteDto,
+        isArray: true,
+        description: 'An array of Notes',
+      },
+    },
+    create: {
+      operation: {
+        summary: '[Notes] Create',
+        description: 'Create a note',
+      },
+      created: { type: NoteIdResponseDto, description: 'Shortcut created' },
+    },
+    update: {
+      operation: {
+        summary: '[Notes] Update',
+        description: 'Update a note',
+      },
+      ok: { type: NoteIdResponseDto, description: 'Note updated' },
+    },
+    delete: {
+      operation: {
+        summary: '[Notes] Delete',
+        description: 'Delete a note',
+      },
+      ok: { type: NoteIdResponseDto, description: 'Note deleted' },
+    },
+  },
+  personalData: {
+    getAll: {
+      operation: {
+        summary: '[PersonalData] Get all',
+        description: 'Get all personal data for a user',
+      },
+      ok: {
+        type: PersonalDataDto,
+        isArray: true,
+        description: 'An array of Personal Data objects',
+      },
+    },
+    create: {
+      operation: {
+        summary: '[PersonalData] Create',
+        description: 'Create a personal data object',
+      },
+      created: { type: PersonalDataIdResponseDto, description: 'Personal data object created' },
+    },
+    update: {
+      operation: {
+        summary: '[PersonalData] Update',
+        description: 'Update a personal data object',
+      },
+      ok: { type: PersonalDataIdResponseDto, description: 'Personal data object updated' },
+    },
+    delete: {
+      operation: {
+        summary: '[PersonalData] Delete',
+        description: 'Delete a personal data object',
+      },
+      ok: { type: PersonalDataIdResponseDto, description: 'Personal data object deleted' },
     },
   },
 }

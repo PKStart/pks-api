@@ -8,7 +8,6 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common'
-import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -21,6 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { apiDocs } from '../shared/api-docs'
+import { PkAuthGuard } from './pk-auth-guard'
 import {
   LoginCodeRequestDto,
   LoginRequestDto,
@@ -29,6 +29,7 @@ import {
   SignupResponseDto,
   TokenRefreshRequestDto,
   TokenResponseDto,
+  UserSettings,
 } from './user.dto'
 import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
@@ -70,7 +71,7 @@ export class UsersController {
 
   @Post('/token-refresh')
   @HttpCode(200)
-  @UseGuards(AuthGuard())
+  @UseGuards(PkAuthGuard)
   @ApiBearerAuth()
   @ApiOperation(apiDocs.users.tokenRefresh.operation)
   @ApiOkResponse(apiDocs.users.tokenRefresh.ok)
@@ -84,9 +85,25 @@ export class UsersController {
     return this.userService.refreshToken(request.userId)
   }
 
+  @Post('/settings')
+  @HttpCode(201)
+  @UseGuards(PkAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation(apiDocs.users.addSettings.operation)
+  @ApiOkResponse(apiDocs.users.addSettings.created)
+  @ApiNotFoundResponse(apiDocs.generic.userNotFound)
+  @ApiBadRequestResponse(apiDocs.generic.validationError)
+  @ApiForbiddenResponse(apiDocs.generic.forbidden)
+  public async addSettings(
+    @Body(ValidationPipe) request: UserSettings,
+    @GetUser() user: UserEntity
+  ): Promise<UserSettings> {
+    return this.userService.updateSettings(user.id, request)
+  }
+
   @Delete()
   @HttpCode(200)
-  @UseGuards(AuthGuard())
+  @UseGuards(PkAuthGuard)
   @ApiBearerAuth()
   @ApiOperation(apiDocs.users.delete.operation)
   @ApiOkResponse(apiDocs.users.delete.ok)

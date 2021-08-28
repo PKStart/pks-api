@@ -2,8 +2,11 @@ import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { NoteEntity } from '../notes/note.entity'
+import { PersonalDataEntity } from '../personal-data/personal-data.entity'
 import { EmailService } from '../shared/email.service'
 import { PkLoggerModule } from '../shared/pk-logger.module'
+import { ShortcutEntity } from '../shortcuts/shortcut.entity'
 import { UsersController } from './user.controller'
 import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
@@ -21,7 +24,7 @@ getDotEnv()
       },
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, ShortcutEntity, NoteEntity, PersonalDataEntity]),
     PkLoggerModule,
   ],
   providers: [UserService, JwtStrategy, EmailService],

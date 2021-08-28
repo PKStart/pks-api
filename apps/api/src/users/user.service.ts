@@ -9,6 +9,8 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BulkWriteError } from 'mongodb'
+import { NoteEntity } from '../notes/note.entity'
+import { PersonalDataEntity } from '../personal-data/personal-data.entity'
 import { EmailService } from '../shared/email.service'
 import { EntityNotFoundError, Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
@@ -16,6 +18,7 @@ import * as bcrypt from 'bcrypt'
 import { add, isBefore } from 'date-fns'
 import { CustomApiError, UUID } from '@pk-start/common'
 import { PkLogger } from '../shared/pk-logger.service'
+import { ShortcutEntity } from '../shortcuts/shortcut.entity'
 import {
   JwtDecodedToken,
   LoginCodeRequestDto,
@@ -24,6 +27,7 @@ import {
   SignupRequestDto,
   SignupResponseDto,
   TokenResponseDto,
+  UserSettings,
 } from './user.dto'
 import { UserEntity } from './user.entity'
 import { getDotEnv } from '../utils'
@@ -35,6 +39,12 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(ShortcutEntity)
+    private readonly shortcutRepository: Repository<ShortcutEntity>,
+    @InjectRepository(NoteEntity)
+    private readonly noteRepository: Repository<NoteEntity>,
+    @InjectRepository(PersonalDataEntity)
+    private readonly personalDataRepository: Repository<PersonalDataEntity>,
     private readonly logger: PkLogger,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService
@@ -48,6 +58,11 @@ export class UserService {
       createdAt: new Date(),
       email,
       name,
+      settings: {
+        locationApiKey: null,
+        weatherApiKey: null,
+        shortcutIconBaseUrl: null,
+      },
     }
     try {
       const user = await this.userRepository.save(this.userRepository.create(data))
@@ -106,7 +121,7 @@ export class UserService {
       throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
     }
 
-    const { id, name } = user
+    const { id, name, settings } = user
     const loginCodeMatch = await this.validateLoginCode(loginCode, user.salt, user.loginCode)
     const loginCodeValid = isBefore(new Date(), new Date(user.loginCodeExpires))
 
@@ -126,10 +141,11 @@ export class UserService {
       name,
       token,
       expiresAt,
+      settings,
     }
   }
 
-  public async refreshToken(id: string): Promise<TokenResponseDto> {
+  public async refreshToken(id: UUID): Promise<TokenResponseDto> {
     const user = await this.userRepository.findOne({ id })
 
     if (!user) {
@@ -143,14 +159,42 @@ export class UserService {
     }
   }
 
-  public async deleteUser(id: string): Promise<void> {
+  public async updateSettings(id: UUID, settings: UserSettings): Promise<UserSettings> {
     const user = await this.userRepository.findOne({ id })
 
     if (!user) {
       throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
     }
 
-    // TODO Add cleanup from other collections
+    const updated: UserEntity = {
+      ...user,
+      settings,
+    }
+
+    await this.userRepository.update({ id }, updated)
+    return settings
+  }
+
+  public async deleteUser(id: UUID): Promise<void> {
+    const user = await this.userRepository.findOne({ id })
+
+    if (!user) {
+      throw new NotFoundException(CustomApiError.USER_NOT_FOUND)
+    }
+
+    const shortcuts = await this.shortcutRepository.find({ userId: id })
+    if (shortcuts.length) {
+      await this.shortcutRepository.remove(shortcuts)
+    }
+    const notes = await this.noteRepository.find({ userId: id })
+    if (notes.length) {
+      await this.noteRepository.remove(notes)
+    }
+    const personalData = await this.personalDataRepository.find({ userId: id })
+    if (personalData.length) {
+      await this.personalDataRepository.remove(personalData)
+    }
+    // TODO Add cleanup from other collections later
     await this.userRepository.delete({ id })
   }
 

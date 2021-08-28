@@ -14,7 +14,7 @@ export class AppController {
   @Get('/wakeup')
   @ApiOperation(apiDocs.wakeUp.operation)
   @ApiOkResponse(apiDocs.wakeUp.ok)
-  public async wakeUp(): Promise<string> {
-    return 'API is up and running!'
+  public async wakeUp(): Promise<{ result: string }> {
+    return { result: 'API is up and running!' }
   }
 }

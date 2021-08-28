@@ -1,0 +1,19 @@
+name: API e2e tests
+
+on:
+  push:
+    branches: [ develop, master ]
+  pull_request:
+    branches: [ develop, master ]
+  workflow_dispatch:
+
+jobs:
+  api-e2e:
+    name: API e2e tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run API e2e tests
+        run: docker-compose -f ./docker/api-test/docker-compose.api-test.yml up --build --exit-code-from api-test

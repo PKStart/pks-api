@@ -9,7 +9,6 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common'
-import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -21,8 +20,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { apiDocs } from '../shared/api-docs'
+import { PkAuthGuard } from '../users/pk-auth-guard'
 import { UserEntity } from '../users/user.entity'
-import { GetUser, UserInBody } from '../utils'
+import { GetUser } from '../utils'
 import {
   CreateShortcutRequestDto,
   DeleteShortcutRequestDto,
@@ -38,7 +38,7 @@ export class ShortcutController {
   constructor(private readonly shortcutService: ShortcutService) {}
 
   @Get()
-  @UseGuards(AuthGuard())
+  @UseGuards(PkAuthGuard)
   @ApiBearerAuth()
   @ApiOperation(apiDocs.shortcuts.getAll.operation)
   @ApiOkResponse(apiDocs.shortcuts.getAll.ok)
@@ -48,7 +48,7 @@ export class ShortcutController {
   }
 
   @Post()
-  @UseGuards(AuthGuard())
+  @UseGuards(PkAuthGuard)
   @ApiBearerAuth()
   @ApiOperation(apiDocs.shortcuts.create.operation)
   @ApiCreatedResponse(apiDocs.shortcuts.create.created)
@@ -61,7 +61,7 @@ export class ShortcutController {
   }
 
   @Put()
-  @UseGuards(AuthGuard())
+  @UseGuards(PkAuthGuard)
   @HttpCode(200)
   @ApiBearerAuth()
   @ApiOperation(apiDocs.shortcuts.update.operation)
@@ -70,14 +70,14 @@ export class ShortcutController {
   @ApiBadRequestResponse(apiDocs.generic.validationError)
   @ApiForbiddenResponse(apiDocs.generic.forbidden)
   public async update(
-    @UserInBody() _user: UserEntity,
+    @GetUser() user: UserEntity,
     @Body(ValidationPipe) request: UpdateShortcutRequestDto
   ): Promise<ShortcutIdResponseDto> {
-    return this.shortcutService.updateShortcut(request)
+    return this.shortcutService.updateShortcut(request, user.id)
   }
 
   @Delete()
-  @UseGuards(AuthGuard())
+  @UseGuards(PkAuthGuard)
   @HttpCode(200)
   @ApiBearerAuth()
   @ApiOperation(apiDocs.shortcuts.delete.operation)

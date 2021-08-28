@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { getDotEnv } from 'src/utils'
+import { getDotEnv } from './utils'
 import { AppModule } from './app.module'
 
 getDotEnv()
@@ -17,8 +17,8 @@ async function bootstrap() {
     .addBearerAuth()
     .addServer('http://localhost:8100')
     .build()
-  const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('api', app, document)
+  const document = SwaggerModule.createDocument(app as any, config)
+  SwaggerModule.setup('api', app as any, document)
 
   const port = process.env.PORT || 8100
 

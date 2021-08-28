@@ -1,0 +1,52 @@
+version: '3.7'
+services:
+  mongodb_server:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: pkstartdev
+      MONGO_INITDB_ROOT_USERNAME: pkstartdev
+      MONGO_INITDB_ROOT_PASSWORD: pkstartdev
+    ports:
+      - 27017:27017
+    logging:
+      driver: none
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+  api:
+    build:
+      context: "../../"
+      dockerfile: ./docker/main-test/Dockerfile.api
+    environment:
+      PK_ENV: development
+      PK_DB_CONNECTION_STRING: mongodb://pkstartdev:pkstartdev@mongodb_server:27017/pkstartdev
+      PK_EMAIL_HOST: smtp.gmail.com
+      PK_EMAIL_USER: xz@gmail.com
+      PK_EMAIL_PASS: abc
+      PK_JWT_SECRET: test-secret
+      PK_LOGIN_CODE_EXPIRY: 15
+      PK_TOKEN_EXPIRY: 7d
+      PK_NOTIFICATION_EMAIL: xz@gmail.com
+    ports:
+      - 8100:8100
+    depends_on:
+      - mongodb_server
+
+  main:
+    build:
+      context: "../../"
+      dockerfile: ./docker/main-test/Dockerfile.main
+    environment:
+      PK_API_URL_PROD: http://api:8100
+      PK_API_URL_DEV: http://api:8100
+    depends_on:
+      - api
+
+  cypress:
+    build:
+      context: "../../"
+      dockerfile: ./docker/main-test/Dockerfile.cypress
+    environment:
+      CYPRESS_baseUrl: http://main
+    depends_on:
+      - main

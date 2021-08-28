@@ -1,38 +1,38 @@
 const { writeFile } = require("fs");
-const { argv } = require("yargs");
 
-// read environment variables from .env file
 require("dotenv").config({ path: ".env" });
 
-// read the command line arguments passed with yargs
-const env = argv.env;
-const isProduction = env === "prod";
-const targetPath = isProduction
-  ? `./apps/main/src/environments/environment.prod.ts`
-  : `./apps/main/src/environments/environment.ts`;
+const environments = ["DEV", "PROD"];
 
-const testVar = isProduction
-  ? process.env.PK_TEST_PROD
-  : process.env.PK_TEST_DEV;
+const variables = ["PK_TEST", "PK_API_URL"];
 
-const apiUrl = isProduction
-  ? process.env.PK_API_URL_PROD
-  : process.env.PK_API_URL_DEV;
+const paths = {
+  DEV: "./apps/main/src/environments/environment.ts",
+  PROD: "./apps/main/src/environments/environment.prod.ts",
+};
 
-// we have access to our environment variables
-// in the process.env object thanks to dotenv
-const environmentFileContent = `
+// PK_TEST: '${process.env[isProd ? "PK_TEST_PROD" : "PK_TEST_DEV"]}',
+//   PK_API_URL: '${process.env[isProd ? "PK_API_URL_PROD" : "PK_API_URL_DEV"]}'
+
+environments.forEach((env) => {
+  const isProd = env === "PROD";
+  let variableList = "";
+  variables.forEach((key) => {
+    variableList += `  ${key}: '${process.env[key + "_" + env]}',\n`;
+  });
+  const content = `
 export const environment = {
-   production: ${isProduction},
-   PK_TEST: '${testVar}',
-   PK_API_URL: '${apiUrl}'
+  production: ${isProd},
+${variableList}
 }
-`;
-
-// write the content to the respective file
-writeFile(targetPath, environmentFileContent, (err) => {
-  if (err) {
-    console.log("Error while setting frontend environment variables:", err);
-  }
-  console.log(`Wrote environment variables to ${targetPath}`);
+  `;
+  writeFile(paths[env], content, (err) => {
+    if (err) {
+      console.log(
+        `[setenv] Error while setting frontend ${env} environment variables:`,
+        err
+      );
+    }
+    console.log(`[setenv] Wrote ${env} environment variables to ${paths[env]}`);
+  });
 });

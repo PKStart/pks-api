@@ -26,6 +26,7 @@ services:
       ME_CONFIG_MONGODB_AUTH_PASSWORD: pkstartdev
     depends_on:
       - mongodb_server
+    restart: unless-stopped
 
 volumes:
   mongodb_data_container:

@@ -10,6 +10,7 @@ import {
   TokenRefreshRequest,
   TokenResponse,
   UUID,
+  UserSettings as IUserSettings,
 } from '@pk-start/common'
 import { IsEmail, IsString, IsUUID, Matches, MaxLength, MinLength } from 'class-validator'
 
@@ -57,6 +58,17 @@ export class TokenResponseDto implements TokenResponse {
   expiresAt: Date
 }
 
+export class UserSettings implements IUserSettings {
+  @ApiProperty()
+  locationApiKey: string | null
+
+  @ApiProperty()
+  weatherApiKey: string | null
+
+  @ApiProperty()
+  shortcutIconBaseUrl: string | null
+}
+
 export class LoginResponseDto extends TokenResponseDto implements LoginResponse {
   @ApiProperty()
   email: string
@@ -66,10 +78,13 @@ export class LoginResponseDto extends TokenResponseDto implements LoginResponse 
 
   @ApiProperty()
   name: string
+
+  @ApiProperty()
+  settings: UserSettings
 }
 export interface JwtPayload {
   email: string
-  userId: string
+  userId: UUID
 }
 
 export interface JwtDecodedToken {
