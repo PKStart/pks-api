@@ -8,6 +8,8 @@ const initialState: UserSettings = {
   shortcutIconBaseUrl: null,
   weatherApiKey: null,
   locationApiKey: null,
+  birthdaysUrl: null,
+  koreanUrl: null,
 }
 
 @Injectable({ providedIn: 'root' })
@@ -27,6 +29,14 @@ export class SettingsStore extends LocalStore<UserSettings> {
 
   public get shortcutIconBaseUrl(): string | null {
     return this.state.shortcutIconBaseUrl
+  }
+
+  public get birthdaysUrl(): string | null {
+    return this.state.birthdaysUrl
+  }
+
+  public get koreanUrl(): string | null {
+    return this.state.koreanUrl
   }
 
   public setSettings(settings: UserSettings): void {
