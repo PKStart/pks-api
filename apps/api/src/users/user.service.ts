@@ -62,6 +62,8 @@ export class UserService {
         locationApiKey: null,
         weatherApiKey: null,
         shortcutIconBaseUrl: null,
+        birthdaysUrl: null,
+        koreanUrl: null,
       },
     }
     try {

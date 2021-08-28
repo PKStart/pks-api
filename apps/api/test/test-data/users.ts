@@ -15,4 +15,6 @@ export const userSettings: UserSettings = {
   shortcutIconBaseUrl: 'https://icons.com',
   weatherApiKey: 'weatherApiKey',
   locationApiKey: 'locationApiKey',
+  birthdaysUrl: 'birthdaysUrl',
+  koreanUrl: 'koreanUrl',
 }

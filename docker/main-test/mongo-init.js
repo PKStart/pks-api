@@ -29,6 +29,8 @@ db.getCollection('users').insertOne({
     weatherApiKey: null,
     locationApiKey: null,
     shortcutIconBaseUrl: 'https://stuff.p-kin.com/start-tile-icons/',
+    birthdaysUrl: null,
+    koreanUrl: null,
   },
 })
 

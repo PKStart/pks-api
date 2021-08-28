@@ -44,4 +44,6 @@ export interface UserSettings {
   weatherApiKey: string | null
   locationApiKey: string | null
   shortcutIconBaseUrl: string | null
+  birthdaysUrl: string | null
+  koreanUrl: string | null
 }

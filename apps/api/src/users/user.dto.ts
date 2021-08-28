@@ -67,6 +67,12 @@ export class UserSettings implements IUserSettings {
 
   @ApiProperty()
   shortcutIconBaseUrl: string | null
+
+  @ApiProperty()
+  birthdaysUrl: string | null
+
+  @ApiProperty()
+  koreanUrl: string | null
 }
 
 export class LoginResponseDto extends TokenResponseDto implements LoginResponse {
