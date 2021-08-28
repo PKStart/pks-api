@@ -15,6 +15,7 @@ import { MatMenuModule } from '@angular/material/menu'
 import { MatRadioModule } from '@angular/material/radio'
 import { MatSelectModule } from '@angular/material/select'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatSliderModule } from '@angular/material/slider'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatTooltipModule } from '@angular/material/tooltip'
@@ -62,6 +63,7 @@ import {
     MatCheckboxModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    MatSliderModule,
   ],
   exports: [
     MatButtonModule,
@@ -84,6 +86,7 @@ import {
     MatCheckboxModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    MatSliderModule,
   ],
   providers: [],
 })

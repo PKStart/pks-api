@@ -17,10 +17,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
       div[mat-dialog-content] {
         margin-bottom: 0.5rem;
       }
-
-      div[mat-dialog-actions] {
-        justify-content: flex-end;
-      }
     `,
   ],
 })

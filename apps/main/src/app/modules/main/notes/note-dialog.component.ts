@@ -49,10 +49,6 @@ import { CustomValidators } from '../../../utils/validators'
   styles: [
     // language=scss
     `
-      .text-field {
-        width: 100%;
-      }
-
       .link-row {
         display: flex;
         align-items: center;
@@ -62,18 +58,10 @@ import { CustomValidators } from '../../../utils/validators'
           flex-wrap: wrap;
         }
 
-        mat-form-field {
-          width: 100%;
-        }
-
         .link-delete-btn {
           position: relative;
           top: -12px;
         }
-      }
-
-      div[mat-dialog-actions] {
-        justify-content: flex-end;
       }
     `,
   ],

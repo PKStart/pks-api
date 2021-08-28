@@ -1,8 +1,11 @@
 import { Component } from '@angular/core'
+import { MatDialog } from '@angular/material/dialog'
 import { ShortcutCategory, UUID } from '@pk-start/common'
 import { filter, switchMap } from 'rxjs/operators'
+import { defaultDialogConfig } from '../../../constants/constants'
 import { ConfirmationService } from '../../shared/services/confirmation.service'
 import { NotificationService } from '../../shared/services/notification.service'
+import { ShortcutDialogComponent } from './shortcut-dialog.component'
 import { ShortcutsService } from './shortcuts.service'
 
 @Component({
@@ -12,6 +15,7 @@ import { ShortcutsService } from './shortcuts.service'
       (clickMenu)="onClickMenu($event)"
       (enterMenu)="onEnterMenu($event)"
       (mouseLeave)="onMouseLeave()"
+      (addNew)="onAddShortcut()"
     ></pk-shortcuts-menu>
     <div *ngIf="showShortcuts" class="shortcuts-backdrop" (click)="onClickBackdrop()"></div>
     <div class="shortcuts" *ngIf="showShortcuts && (shortcuts | async)">
@@ -69,7 +73,8 @@ export class ShortcutsComponent {
   constructor(
     private shortcutsService: ShortcutsService,
     private confirmationService: ConfirmationService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private matDialog: MatDialog
   ) {}
 
   public onClickMenu(category: ShortcutCategory): void {
@@ -99,9 +104,35 @@ export class ShortcutsComponent {
     this.mouseHover = false
   }
 
+  public onAddShortcut(): void {
+    this.matDialog
+      .open(ShortcutDialogComponent, defaultDialogConfig)
+      .afterClosed()
+      .pipe(
+        filter(values => values),
+        switchMap(request => this.shortcutsService.createShortcut(request))
+      )
+      .subscribe({
+        next: () => this.shortcutsService.fetchShortcuts(),
+        error: e =>
+          this.notificationService.showError('Could not create shortcut. ' + e.error.message),
+      })
+  }
+
   public onClickEdit(id: UUID): void {
     const shortcut = this.shortcutsService.getById(id)
-    console.log('edit', shortcut)
+    this.matDialog
+      .open(ShortcutDialogComponent, { ...defaultDialogConfig, data: shortcut })
+      .afterClosed()
+      .pipe(
+        filter(values => values),
+        switchMap(request => this.shortcutsService.updateShortcut({ ...request, id }))
+      )
+      .subscribe({
+        next: () => this.shortcutsService.fetchShortcuts(),
+        error: e =>
+          this.notificationService.showError('Could not update shortcut. ' + e.error.message),
+      })
   }
 
   public onClickDelete(id: UUID): void {

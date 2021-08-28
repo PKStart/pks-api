@@ -22,12 +22,12 @@ import { AppBarService } from './app-bar.service'
       >
         <mat-icon>notes</mat-icon>
       </button>
-      <button mat-icon-button matTooltip="Korean">
-        <mat-icon svgIcon="hangul"></mat-icon>
-      </button>
-      <button mat-icon-button matTooltip="Birthdays">
-        <mat-icon matBadge="1" matBadgeColor="accent" matBadgeSize="small">today</mat-icon>
-      </button>
+      <!--      <button mat-icon-button matTooltip="Korean">-->
+      <!--        <mat-icon svgIcon="hangul"></mat-icon>-->
+      <!--      </button>-->
+      <!--      <button mat-icon-button matTooltip="Birthdays">-->
+      <!--        <mat-icon matBadge="1" matBadgeColor="accent" matBadgeSize="small">today</mat-icon>-->
+      <!--      </button>-->
       <pk-notifications></pk-notifications>
       <button mat-icon-button matTooltip="More..." [matMenuTriggerFor]="menu">
         <mat-icon>more_horiz</mat-icon>

@@ -51,3 +51,12 @@ $light-theme: mat.define-light-theme(
   //@include mat.core-color($light-theme);
   //@include mat.button-color($light-theme);
 }
+
+// Material theme global overrides
+div[mat-dialog-actions] {
+  justify-content: flex-end;
+}
+
+mat-form-field {
+  width: 100%;
+}

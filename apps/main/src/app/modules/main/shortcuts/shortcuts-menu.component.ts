@@ -1,11 +1,13 @@
-import { Component, Output, EventEmitter } from '@angular/core'
+import { Component, Output, EventEmitter, ViewChild } from '@angular/core'
+import { MatMenuTrigger } from '@angular/material/menu'
 import { ShortcutCategory } from '@pk-start/common'
 import { ShortcutsService } from './shortcuts.service'
 
 @Component({
   selector: 'pk-shortcuts-menu',
   template: `
-    <div class="shortcuts-menu">
+    <div class="shortcuts-menu" (contextmenu)="onRightClick($event)">
+      <div class="menu-trigger" [matMenuTriggerFor]="shortcutMenu"></div>
       <ng-container *ngIf="(loading$ | async) === false">
         <button
           (click)="clickMenu.emit(category.TOP)"
@@ -45,6 +47,12 @@ import { ShortcutsService } from './shortcuts.service'
       </ng-container>
       <mat-spinner *ngIf="loading$ | async" diameter="40" color="accent"></mat-spinner>
     </div>
+    <mat-menu #shortcutMenu="matMenu">
+      <button mat-menu-item (click)="addNew.emit()">
+        <mat-icon>add</mat-icon>
+        <span>Add shortcut</span>
+      </button>
+    </mat-menu>
   `,
   styles: [
     // language=scss
@@ -89,17 +97,31 @@ import { ShortcutsService } from './shortcuts.service'
           width: 34px;
           height: 34px;
         }
+
+        .menu-trigger {
+          position: relative;
+          top: -30px;
+          left: 70px;
+        }
       }
     `,
   ],
 })
 export class ShortcutsMenuComponent {
+  @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger
+
   @Output() public mouseLeave = new EventEmitter<void>()
   @Output() public clickMenu = new EventEmitter<ShortcutCategory>()
   @Output() public enterMenu = new EventEmitter<ShortcutCategory>()
+  @Output() public addNew = new EventEmitter<void>()
 
   public category = ShortcutCategory
   public loading$ = this.shortcutsService.loading$
 
   constructor(private shortcutsService: ShortcutsService) {}
+
+  public onRightClick(e: MouseEvent): void {
+    e.preventDefault()
+    this.trigger.openMenu()
+  }
 }
