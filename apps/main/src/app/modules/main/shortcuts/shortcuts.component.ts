@@ -1,6 +1,7 @@
-import { Component, OnDestroy } from '@angular/core'
-import { ShortcutCategory } from '@pk-start/common'
-import { Subscription } from 'rxjs'
+import { Component } from '@angular/core'
+import { ShortcutCategory, UUID } from '@pk-start/common'
+import { filter, switchMap } from 'rxjs/operators'
+import { ConfirmationService } from '../../shared/services/confirmation.service'
 import { NotificationService } from '../../shared/services/notification.service'
 import { ShortcutsService } from './shortcuts.service'
 
@@ -18,6 +19,8 @@ import { ShortcutsService } from './shortcuts.service'
         *ngFor="let sc of (shortcuts | async)![selectedCategory]"
         [shortcut]="sc"
         (clicked)="onClickBackdrop()"
+        (edit)="onClickEdit($event)"
+        (delete)="onClickDelete($event)"
       ></pk-shortcut>
     </div>
   `,
@@ -57,28 +60,17 @@ import { ShortcutsService } from './shortcuts.service'
     `,
   ],
 })
-export class ShortcutsComponent implements OnDestroy {
+export class ShortcutsComponent {
   public showShortcuts = false
   public mouseHover = false
   public selectedCategory: ShortcutCategory = ShortcutCategory.TOP
   public shortcuts = this.shortcutsService.shortcuts$
 
-  private subscription = new Subscription()
-
   constructor(
     private shortcutsService: ShortcutsService,
+    private confirmationService: ConfirmationService,
     private notificationService: NotificationService
-  ) {
-    this.subscription.add(
-      this.shortcutsService.shortcuts$.subscribe(shortcuts => {
-        console.log('shortcuts', shortcuts)
-      })
-    )
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe()
-  }
+  ) {}
 
   public onClickMenu(category: ShortcutCategory): void {
     this.selectedCategory = category
@@ -105,5 +97,25 @@ export class ShortcutsComponent implements OnDestroy {
 
   public onMouseLeave(): void {
     this.mouseHover = false
+  }
+
+  public onClickEdit(id: UUID): void {
+    const shortcut = this.shortcutsService.getById(id)
+    console.log('edit', shortcut)
+  }
+
+  public onClickDelete(id: UUID): void {
+    const shortcut = this.shortcutsService.getById(id)
+    this.confirmationService
+      .question(`Do you really want to delete the shortcut of ${shortcut.name}?`)
+      .pipe(
+        filter(isConfirmed => isConfirmed),
+        switchMap(() => this.shortcutsService.deleteShortcut(id))
+      )
+      .subscribe({
+        next: () => this.shortcutsService.fetchShortcuts(),
+        error: e =>
+          this.notificationService.showError('Could not delete shortcut. ' + e.error.message),
+      })
   }
 }

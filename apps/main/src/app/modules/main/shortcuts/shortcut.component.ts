@@ -1,32 +1,26 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { Shortcut } from '@pk-start/common'
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core'
+import { MatMenuTrigger } from '@angular/material/menu'
+import { Shortcut, UUID } from '@pk-start/common'
 import { SettingsStore } from '../../shared/services/settings.store'
 
 @Component({
   selector: 'pk-shortcut',
   template: `
-    <button
-      class="shortcut"
-      (click)="onOpen()"
-      (mouseenter)="hovered = true"
-      (mouseleave)="hovered = false"
-    >
+    <button class="shortcut" (click)="onOpen()" (contextmenu)="onRightClick($event)">
       <img [src]="iconUrl" [alt]="shortcut.name" />
       <p>{{ shortcut.name }}</p>
+      <div class="menu-trigger" [matMenuTriggerFor]="shortcutMenu"></div>
     </button>
-    <!--    <button *ngIf="hovered" class="menu-trigger" mat-icon-button [matMenuTriggerFor]="shortcutMenu">-->
-    <!--      <mat-icon>more_vert</mat-icon>-->
-    <!--    </button>-->
-    <!--    <mat-menu #shortcutMenu="matMenu">-->
-    <!--      <button mat-menu-item>-->
-    <!--        <mat-icon>edit</mat-icon>-->
-    <!--        <span>Edit shortcut</span>-->
-    <!--      </button>-->
-    <!--      <button mat-menu-item>-->
-    <!--        <mat-icon>delete</mat-icon>-->
-    <!--        <span>Delete shortcut</span>-->
-    <!--      </button>-->
-    <!--    </mat-menu>-->
+    <mat-menu #shortcutMenu="matMenu">
+      <button mat-menu-item (click)="edit.emit(shortcut.id)">
+        <mat-icon>edit</mat-icon>
+        <span>Edit shortcut</span>
+      </button>
+      <button mat-menu-item (click)="delete.emit(shortcut.id)">
+        <mat-icon>delete</mat-icon>
+        <span>Delete shortcut</span>
+      </button>
+    </mat-menu>
   `,
   styles: [
     // language=scss
@@ -64,29 +58,21 @@ import { SettingsStore } from '../../shared/services/settings.store'
         }
       }
 
-      //button.menu-trigger {
-      //  width: 24px;
-      //  height: 24px;
-      //  line-height: 24px;
-      //  top: -30px;
-      //  right: 0;
-      //
-      //  mat-icon {
-      //    font-size: 18px;
-      //    width: 18px;
-      //    height: 18px;
-      //    line-height: 18px;
-      //  }
-      //}
+      .menu-trigger {
+        position: relative;
+        top: -40px;
+      }
     `,
   ],
 })
 export class ShortcutComponent {
+  @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger
+
   @Input() shortcut!: Shortcut
 
   @Output() clicked = new EventEmitter<void>()
-
-  public hovered = false
+  @Output() edit = new EventEmitter<UUID>()
+  @Output() delete = new EventEmitter<UUID>()
 
   constructor(private settingsStore: SettingsStore) {}
 
@@ -102,5 +88,10 @@ export class ShortcutComponent {
     setTimeout(() => {
       window.open(this.shortcut.url, '_blank')
     })
+  }
+
+  public onRightClick(e: MouseEvent): void {
+    e.preventDefault()
+    this.trigger.openMenu()
   }
 }

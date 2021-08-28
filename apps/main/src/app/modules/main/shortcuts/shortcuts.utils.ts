@@ -1,8 +1,12 @@
-import { Shortcut, ShortcutCategory } from '@pk-start/common'
+import { Shortcut, ShortcutCategory, UUID } from '@pk-start/common'
 import { ShortcutsByCategory } from './shortcuts.types'
 
-export function distributeShortcuts(shortcuts: Shortcut[]): ShortcutsByCategory {
-  const result: ShortcutsByCategory = {
+export function distributeShortcuts(shortcuts: Shortcut[]): {
+  byCategory: ShortcutsByCategory
+  byId: Record<UUID, Shortcut>
+} {
+  const byId: Record<UUID, Shortcut> = {}
+  const byCategory: ShortcutsByCategory = {
     [ShortcutCategory.TOP]: [],
     [ShortcutCategory.CODING]: [],
     [ShortcutCategory.GOOGLE]: [],
@@ -10,10 +14,11 @@ export function distributeShortcuts(shortcuts: Shortcut[]): ShortcutsByCategory 
     [ShortcutCategory.OTHERS]: [],
   }
   shortcuts.forEach(s => {
-    result[s.category].push(s)
+    byId[s.id] = s
+    byCategory[s.category].push(s)
   })
-  Object.values(result).forEach((list: Shortcut[]) => {
+  Object.values(byCategory).forEach((list: Shortcut[]) => {
     list.sort((a, b) => a.priority - b.priority)
   })
-  return result
+  return { byId, byCategory }
 }
