@@ -1,6 +1,9 @@
 import { Component, Renderer2 } from '@angular/core'
 import { LIGHT_THEME_CLASS } from '../../../constants/constants'
 import { AuthService } from '../../auth/auth.service'
+import { BirthdaysService } from '../birthdays/birthdays.service'
+import { DataBackupService } from '../data-backup/data-backup.service'
+import { SettingsService } from '../settings/settings-service'
 import { AppBarService } from './app-bar.service'
 
 @Component({
@@ -22,12 +25,32 @@ import { AppBarService } from './app-bar.service'
       >
         <mat-icon>notes</mat-icon>
       </button>
-      <!--      <button mat-icon-button matTooltip="Korean">-->
-      <!--        <mat-icon svgIcon="hangul"></mat-icon>-->
-      <!--      </button>-->
-      <!--      <button mat-icon-button matTooltip="Birthdays">-->
-      <!--        <mat-icon matBadge="1" matBadgeColor="accent" matBadgeSize="small">today</mat-icon>-->
-      <!--      </button>-->
+      <button
+        mat-icon-button
+        matTooltip="Korean"
+        *ngIf="(appBarService.koreanOpen$ | async) === false"
+        (click)="appBarService.toggleKorean()"
+      >
+        <mat-icon svgIcon="hangul"></mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        matTooltip="Personal data"
+        *ngIf="(appBarService.personalDataOpen$ | async) === false"
+        (click)="appBarService.togglePersonalData()"
+      >
+        <mat-icon>find_in_page</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        matTooltip="Birthdays"
+        *ngIf="(appBarService.birthdaysOpen$ | async) === false"
+        (click)="appBarService.toggleBirthdays()"
+      >
+        <mat-icon [matBadge]="birthdaysToday$ | async" matBadgeColor="accent" matBadgeSize="small">
+          today
+        </mat-icon>
+      </button>
       <pk-notifications></pk-notifications>
       <button mat-icon-button matTooltip="More..." [matMenuTriggerFor]="menu">
         <mat-icon>more_horiz</mat-icon>
@@ -37,11 +60,11 @@ import { AppBarService } from './app-bar.service'
           <mat-icon>{{ isLightTheme ? 'dark_mode' : 'light_mode' }}</mat-icon>
           <span>{{ isLightTheme ? 'Dark theme' : 'Light theme' }}</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="requestBackup()">
           <mat-icon>cloud_download</mat-icon>
           <span>Data backup</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="openSettings()">
           <mat-icon>settings</mat-icon>
           <span>Settings</span>
         </button>
@@ -69,9 +92,13 @@ import { AppBarService } from './app-bar.service'
 })
 export class AppBarComponent {
   public isLightTheme = false
+  public birthdaysToday$ = this.birthdaysService.hasBirthdaysToday$
 
   constructor(
     private authService: AuthService,
+    private dataBackupService: DataBackupService,
+    private birthdaysService: BirthdaysService,
+    private settingsService: SettingsService,
     public appBarService: AppBarService,
     private renderer: Renderer2
   ) {}
@@ -88,5 +115,13 @@ export class AppBarComponent {
   public logout(): void {
     this.authService.logout()
     location.reload()
+  }
+
+  public requestBackup(): void {
+    this.dataBackupService.sendBackupRequest()
+  }
+
+  public openSettings(): void {
+    this.settingsService.openDialog()
   }
 }

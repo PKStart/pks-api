@@ -7,6 +7,7 @@ import { PersonalDataEntity } from '../personal-data/personal-data.entity'
 import { EmailService } from '../shared/email.service'
 import { PkLoggerModule } from '../shared/pk-logger.module'
 import { ShortcutEntity } from '../shortcuts/shortcut.entity'
+import { DataBackupService } from './data-backup.service'
 import { UsersController } from './user.controller'
 import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
@@ -27,7 +28,7 @@ getDotEnv()
     TypeOrmModule.forFeature([UserEntity, ShortcutEntity, NoteEntity, PersonalDataEntity]),
     PkLoggerModule,
   ],
-  providers: [UserService, JwtStrategy, EmailService],
+  providers: [UserService, JwtStrategy, EmailService, DataBackupService],
   exports: [JwtStrategy, PassportModule, UserService],
   controllers: [UsersController],
 })

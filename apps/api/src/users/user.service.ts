@@ -62,6 +62,8 @@ export class UserService {
         locationApiKey: null,
         weatherApiKey: null,
         shortcutIconBaseUrl: null,
+        birthdaysUrl: null,
+        koreanUrl: null,
       },
     }
     try {
@@ -194,7 +196,6 @@ export class UserService {
     if (personalData.length) {
       await this.personalDataRepository.remove(personalData)
     }
-    // TODO Add cleanup from other collections later
     await this.userRepository.delete({ id })
   }
 

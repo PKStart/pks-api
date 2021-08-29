@@ -4,6 +4,7 @@ import ormConfig from '../ormconfig'
 import { AppController } from './app.controller'
 import { NoteModule } from './notes/note.module'
 import { PersonalDataModule } from './personal-data/personal-data.module'
+import { ProxyModule } from './proxy/proxy.module'
 import { ShortcutModule } from './shortcuts/shortcut.module'
 import { UserModule } from './users/user.module'
 
@@ -14,6 +15,7 @@ import { UserModule } from './users/user.module'
     ShortcutModule,
     NoteModule,
     PersonalDataModule,
+    ProxyModule,
   ],
   controllers: [AppController],
   providers: [],

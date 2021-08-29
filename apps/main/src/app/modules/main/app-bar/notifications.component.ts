@@ -28,7 +28,7 @@ import { Notification, NotificationService } from '../../shared/services/notific
         <mat-icon *ngIf="item.type === SnackbarType.SUCCESS" style="color: var(--color-primary)">
           check_circle
         </mat-icon>
-        <span>{{ item.date | date: 'yyyy.M.d H:m' }}</span>
+        <span>{{ item.date | date: 'yyyy.M.d HH:mm' }}</span>
       </div>
       <button class="pk-notifications__clear-btn" mat-button (click)="onClear()">
         <mat-icon>delete_outline</mat-icon>

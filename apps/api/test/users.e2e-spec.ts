@@ -127,6 +127,8 @@ describe('UserController (e2e)', () => {
         expect(res.body.settings.weatherApiKey).toBeNull()
         expect(res.body.settings.locationApiKey).toBeNull()
         expect(res.body.settings.shortcutIconBaseUrl).toBeNull()
+        expect(res.body.settings.birthdaysUrl).toBeNull()
+        expect(res.body.settings.koreanUrl).toBeNull()
         expect(res.body.id).toEqual(userId)
         token = res.body.token
       })
@@ -210,6 +212,8 @@ describe('UserController (e2e)', () => {
         expect(res.body.weatherApiKey).toEqual('weatherApiKey')
         expect(res.body.locationApiKey).toEqual('locationApiKey')
         expect(res.body.shortcutIconBaseUrl).toEqual('https://icons.com')
+        expect(res.body.birthdaysUrl).toEqual('birthdaysUrl')
+        expect(res.body.koreanUrl).toEqual('koreanUrl')
       })
   })
 

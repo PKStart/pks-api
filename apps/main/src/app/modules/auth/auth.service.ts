@@ -10,9 +10,11 @@ import {
   UUID,
 } from '@pk-start/common'
 import { tap } from 'rxjs/operators'
+import { StoreKeys } from '../../constants/constants'
 import { omit } from '../../utils/objects'
 import { ApiRoutes } from '../shared/services/api-routes'
 import { ApiService } from '../shared/services/api.service'
+import { NotificationService } from '../shared/services/notification.service'
 import { SettingsStore } from '../shared/services/settings.store'
 import { AuthState, AuthStore } from './auth.store'
 
@@ -24,6 +26,7 @@ export class AuthService {
   constructor(
     private authStore: AuthStore,
     private api: ApiService,
+    private notificationService: NotificationService,
     private settingsStore: SettingsStore
   ) {}
 
@@ -62,6 +65,7 @@ export class AuthService {
     this.authStore.setLogout()
     this.settingsStore.clearSettings()
     this.unscheduleTokenRefresh()
+    localStorage.removeItem(StoreKeys.BIRTHDAYS)
   }
 
   public autoLogin(): void {
@@ -104,8 +108,7 @@ export class AuthService {
           this.scheduleTokenRefresh(expires, this.authStore.current.id!)
         },
         error: err => {
-          console.log('Token refresh error', err)
-          // TODO handle error properly
+          this.notificationService.showError('Token refresh error: ' + err.error.message)
         },
       })
   }

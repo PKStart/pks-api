@@ -163,7 +163,11 @@ Main frontend
 Frontend is hosted on a static private server.
 
 ### Main automatic deployment
-Todo
+Automatic deployment is set up using Github Actions in the `main-deploy.yml` file under the workflows folder.
+
+The process will automatically run by pushing to the `master` branch or can be started manually on Github with the dispatch action.
+
+Environment variables are stored on Github as repository secrets.
 
 ### Main manual deployment
 Simply use FTP as usual :) 

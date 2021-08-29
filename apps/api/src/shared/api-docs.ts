@@ -1,5 +1,6 @@
 import { NoteDto, NoteIdResponseDto } from '../notes/note.dto'
 import { PersonalDataDto, PersonalDataIdResponseDto } from '../personal-data/personal-data.dto'
+import { BirthdayItemDto, KoreanDictItemDto } from '../proxy/proxy.dto'
 import { ShortcutDto, ShortcutIdResponseDto } from '../shortcuts/shortcut.dto'
 import {
   LoginResponseDto,
@@ -65,6 +66,13 @@ export const apiDocs = {
         description: 'Delete a user by the id parsed from the JWT token',
       },
       ok: { description: 'User deleted' },
+    },
+    backup: {
+      operation: {
+        summary: '[Users] Data backup',
+        description: 'Send a full backup of the user data in email',
+      },
+      ok: { description: 'Backup email sent successfully' },
     },
     debugLoginCode: {
       operation: {
@@ -174,6 +182,26 @@ export const apiDocs = {
         description: 'Delete a personal data object',
       },
       ok: { type: PersonalDataIdResponseDto, description: 'Personal data object deleted' },
+    },
+  },
+  proxy: {
+    birthdays: {
+      operation: {
+        summary: '[Proxy] Birthdays',
+        description: 'Fetch birthdays from google sheet',
+      },
+      ok: { type: BirthdayItemDto, isArray: true, description: 'An array of birthday items' },
+    },
+    korean: {
+      operation: {
+        summary: '[Proxy] Korean word list',
+        description: 'Fetch korean word list from google sheet',
+      },
+      ok: {
+        type: KoreanDictItemDto,
+        isArray: true,
+        description: 'An array of korean word list entries',
+      },
     },
   },
 }
