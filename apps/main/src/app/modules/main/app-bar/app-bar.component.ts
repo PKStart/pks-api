@@ -25,10 +25,20 @@ import { AppBarService } from './app-bar.service'
       >
         <mat-icon>notes</mat-icon>
       </button>
-      <button mat-icon-button matTooltip="Korean">
+      <button
+        mat-icon-button
+        matTooltip="Korean"
+        *ngIf="(appBarService.koreanOpen$ | async) === false"
+        (click)="appBarService.toggleKorean()"
+      >
         <mat-icon svgIcon="hangul"></mat-icon>
       </button>
-      <button mat-icon-button matTooltip="Personal data">
+      <button
+        mat-icon-button
+        matTooltip="Personal data"
+        *ngIf="(appBarService.personalDataOpen$ | async) === false"
+        (click)="appBarService.togglePersonalData()"
+      >
         <mat-icon>find_in_page</mat-icon>
       </button>
       <button

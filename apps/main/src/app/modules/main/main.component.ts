@@ -10,6 +10,8 @@ import { AppBarService } from './app-bar/app-bar.service'
         <pk-notes *ngIf="appBarService.notesOpen$ | async"></pk-notes>
       </div>
       <div class="main-center">
+        <pk-personal-data *ngIf="appBarService.personalDataOpen$ | async"></pk-personal-data>
+        <pk-korean *ngIf="appBarService.koreanOpen$ | async"></pk-korean>
         <pk-birthdays *ngIf="appBarService.birthdaysOpen$ | async"></pk-birthdays>
       </div>
       <div class="main-right">
@@ -43,17 +45,13 @@ import { AppBarService } from './app-bar/app-bar.service'
         .main-center {
           flex: 1 1 auto;
           display: flex;
-          justify-content: flex-end;
-          flex-wrap: wrap;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-end;
+          gap: 1rem;
+          max-height: 100%;
+          overflow-y: auto;
         }
-
-        //.main-right {
-        //  display: flex;
-        //  flex-direction: column;
-        //  flex-wrap: wrap-reverse;
-        //  gap: 1rem;
-        //  max-height: 100%;
-        //}
       }
     `,
   ],
