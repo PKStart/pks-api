@@ -3,6 +3,7 @@ import { LIGHT_THEME_CLASS } from '../../../constants/constants'
 import { AuthService } from '../../auth/auth.service'
 import { BirthdaysService } from '../birthdays/birthdays.service'
 import { DataBackupService } from '../data-backup/data-backup.service'
+import { SettingsService } from '../settings/settings-service'
 import { AppBarService } from './app-bar.service'
 
 @Component({
@@ -53,7 +54,7 @@ import { AppBarService } from './app-bar.service'
           <mat-icon>cloud_download</mat-icon>
           <span>Data backup</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="openSettings()">
           <mat-icon>settings</mat-icon>
           <span>Settings</span>
         </button>
@@ -87,6 +88,7 @@ export class AppBarComponent {
     private authService: AuthService,
     private dataBackupService: DataBackupService,
     private birthdaysService: BirthdaysService,
+    private settingsService: SettingsService,
     public appBarService: AppBarService,
     private renderer: Renderer2
   ) {}
@@ -107,5 +109,9 @@ export class AppBarComponent {
 
   public requestBackup(): void {
     this.dataBackupService.sendBackupRequest()
+  }
+
+  public openSettings(): void {
+    this.settingsService.openDialog()
   }
 }

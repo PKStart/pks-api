@@ -7,6 +7,7 @@ import { AppBarComponent } from './app-bar/app-bar.component'
 import { NoteCardComponent } from './notes/note-card.component'
 import { NoteDialogComponent } from './notes/note-dialog.component'
 import { NotesComponent } from './notes/notes.component'
+import { SettingsDialogComponent } from './settings/settings-dialog.component'
 import { ShortcutDialogComponent } from './shortcuts/shortcut-dialog.component'
 import { ShortcutComponent } from './shortcuts/shortcut.component'
 import { ShortcutsMenuComponent } from './shortcuts/shortcuts-menu.component'
@@ -37,6 +38,7 @@ import { WeatherComponent } from './weather/weather.component'
     ShortcutComponent,
     ShortcutDialogComponent,
     BirthdaysComponent,
+    SettingsDialogComponent,
   ],
   providers: [],
 })

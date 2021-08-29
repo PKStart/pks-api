@@ -39,6 +39,10 @@ export class SettingsStore extends LocalStore<UserSettings> {
     return this.state.koreanUrl
   }
 
+  public get allState(): UserSettings {
+    return { ...this.state }
+  }
+
   public setSettings(settings: UserSettings): void {
     this.setState(settings)
   }
