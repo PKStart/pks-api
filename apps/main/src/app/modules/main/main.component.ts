@@ -49,7 +49,7 @@ import { AppBarService } from './app-bar/app-bar.service'
           justify-content: flex-start;
           align-items: flex-end;
           gap: 1rem;
-          max-height: 100%;
+          max-height: calc(100% - 58px);
           overflow-y: auto;
         }
       }
