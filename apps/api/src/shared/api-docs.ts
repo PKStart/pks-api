@@ -67,6 +67,13 @@ export const apiDocs = {
       },
       ok: { description: 'User deleted' },
     },
+    backup: {
+      operation: {
+        summary: '[Users] Data backup',
+        description: 'Send a full backup of the user data in email',
+      },
+      ok: { description: 'Backup email sent successfully' },
+    },
     debugLoginCode: {
       operation: {
         summary: '[Users/Testing] Instant Login Code',

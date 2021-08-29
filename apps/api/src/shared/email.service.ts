@@ -1,6 +1,7 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common'
 import { CustomApiError } from '@pk-start/common'
 import { createTransport, Transporter } from 'nodemailer'
+import { DataBackup } from '../users/user.dto'
 
 class EmailData {
   public from = `"P-Kin.com" <${process.env.PK_EMAIL_USER}>`
@@ -8,7 +9,8 @@ class EmailData {
     public to: string,
     public subject: string,
     public text: string,
-    public html: string
+    public html: string,
+    public attachments?: { filename: string; content: string }[]
   ) {}
 }
 
@@ -50,6 +52,19 @@ export class EmailService {
     return await this.sendMail(data)
   }
 
+  public async sendDataBackup(name: string, email: string, backup: DataBackup): Promise<any> {
+    const now = new Date()
+    const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
+    const subject = `Data backup for Start`
+    const { html, text } = this.getDataBackupTemplates(name)
+    const backupFile = {
+      filename: `start-backup-${date}.json`,
+      content: JSON.stringify(backup, null, 2),
+    }
+    const data = new EmailData(email, subject, text, html, [backupFile])
+    return await this.sendMail(data)
+  }
+
   private async sendMail(emailData: EmailData): Promise<any> {
     try {
       return await this.transporter.sendMail(emailData)
@@ -85,6 +100,18 @@ export class EmailService {
     A user just signed up to Startpage:
     Name: ${name}
     Email: ${email}
+    `
+    return { html, text }
+  }
+
+  private getDataBackupTemplates(name: string) {
+    const html = `
+    <h3>Hey ${name}!</h3>
+    <p>As requested, please find attached the backup file of your Startpage data.</p>
+    `
+    const text = `
+    Hey ${name}!
+    As requested, please find attached the backup file of your Startpage data.
     `
     return { html, text }
   }

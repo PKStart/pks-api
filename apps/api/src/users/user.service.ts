@@ -196,7 +196,6 @@ export class UserService {
     if (personalData.length) {
       await this.personalDataRepository.remove(personalData)
     }
-    // TODO Add cleanup from other collections later
     await this.userRepository.delete({ id })
   }
 

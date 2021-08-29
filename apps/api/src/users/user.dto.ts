@@ -11,6 +11,10 @@ import {
   TokenResponse,
   UUID,
   UserSettings as IUserSettings,
+  User,
+  Note,
+  Shortcut,
+  PersonalData,
 } from '@pk-start/common'
 import { IsEmail, IsString, IsUUID, Matches, MaxLength, MinLength } from 'class-validator'
 
@@ -97,4 +101,11 @@ export interface JwtDecodedToken {
   email: string
   iat: number
   exp: number
+}
+
+export interface DataBackup {
+  user: User
+  notes: Note[]
+  shortcuts: Shortcut[]
+  personalData: PersonalData[]
 }

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   ForbiddenException,
+  Get,
   HttpCode,
   Post,
   UseGuards,
@@ -20,6 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { apiDocs } from '../shared/api-docs'
+import { DataBackupService } from './data-backup.service'
 import { PkAuthGuard } from './pk-auth-guard'
 import {
   LoginCodeRequestDto,
@@ -38,7 +40,10 @@ import { GetUser, UserInBody } from '../utils'
 @ApiTags('Users & Auth')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private dataBackupService: DataBackupService
+  ) {}
 
   @Post('/signup')
   @ApiOperation(apiDocs.users.signup.operation)
@@ -110,6 +115,18 @@ export class UsersController {
   @ApiNotFoundResponse(apiDocs.generic.userNotFound)
   public async deleteUser(@GetUser() user: UserEntity): Promise<void> {
     return this.userService.deleteUser(user.id)
+  }
+
+  @Get('/data-backup')
+  @HttpCode(200)
+  @UseGuards(PkAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation(apiDocs.users.backup.operation)
+  @ApiOkResponse(apiDocs.users.backup.ok)
+  @ApiNotFoundResponse(apiDocs.generic.userNotFound)
+  public async getDataBackup(@GetUser() user: UserEntity): Promise<{ result: string }> {
+    await this.dataBackupService.backupDataForUser(user.id)
+    return { result: 'Backup email sent successfully' }
   }
 
   /**
