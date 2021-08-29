@@ -7,6 +7,7 @@ export interface AppBarState {
   notesOpen: boolean
   birthdaysOpen: boolean
   koreanOpen: boolean
+  personalDataOpen: boolean
 }
 
 const initialState: AppBarState = {
@@ -14,6 +15,7 @@ const initialState: AppBarState = {
   koreanOpen: false,
   notesOpen: true,
   weatherOpen: false,
+  personalDataOpen: false,
 }
 
 @Injectable({ providedIn: 'root' })

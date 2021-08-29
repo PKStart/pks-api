@@ -4,9 +4,11 @@ export enum ApiRoutes {
   USERS_LOGIN_CODE = '/users/login-code',
   USERS_LOGIN = '/users/login',
   USERS_TOKEN_REFRESH = '/users/token-refresh',
+  USERS_DATA_BACKUP = '/users/data-backup',
   SHORTCUTS = '/shortcuts',
   NOTES = '/notes',
   PERSONAL_DATA = '/personal-data',
+  PROXY = '/proxy',
   WAKEUP = '/wakeup',
 }
 
@@ -20,7 +22,9 @@ export const publicApiRoutes = [
 export const authenticatedApiRoutes = [
   ApiRoutes.USERS,
   ApiRoutes.USERS_TOKEN_REFRESH,
+  ApiRoutes.USERS_DATA_BACKUP,
   ApiRoutes.SHORTCUTS,
   ApiRoutes.NOTES,
   ApiRoutes.PERSONAL_DATA,
+  ApiRoutes.PROXY,
 ]

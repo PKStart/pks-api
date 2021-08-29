@@ -1,6 +1,7 @@
 import { Component, Renderer2 } from '@angular/core'
 import { LIGHT_THEME_CLASS } from '../../../constants/constants'
 import { AuthService } from '../../auth/auth.service'
+import { DataBackupService } from '../data-backup/data-backup.service'
 import { AppBarService } from './app-bar.service'
 
 @Component({
@@ -22,12 +23,15 @@ import { AppBarService } from './app-bar.service'
       >
         <mat-icon>notes</mat-icon>
       </button>
-      <!--      <button mat-icon-button matTooltip="Korean">-->
-      <!--        <mat-icon svgIcon="hangul"></mat-icon>-->
-      <!--      </button>-->
-      <!--      <button mat-icon-button matTooltip="Birthdays">-->
-      <!--        <mat-icon matBadge="1" matBadgeColor="accent" matBadgeSize="small">today</mat-icon>-->
-      <!--      </button>-->
+      <button mat-icon-button matTooltip="Korean">
+        <mat-icon svgIcon="hangul"></mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Personal data">
+        <mat-icon>find_in_page</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Birthdays">
+        <mat-icon matBadge="1" matBadgeColor="accent" matBadgeSize="small">today</mat-icon>
+      </button>
       <pk-notifications></pk-notifications>
       <button mat-icon-button matTooltip="More..." [matMenuTriggerFor]="menu">
         <mat-icon>more_horiz</mat-icon>
@@ -37,7 +41,7 @@ import { AppBarService } from './app-bar.service'
           <mat-icon>{{ isLightTheme ? 'dark_mode' : 'light_mode' }}</mat-icon>
           <span>{{ isLightTheme ? 'Dark theme' : 'Light theme' }}</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="requestBackup()">
           <mat-icon>cloud_download</mat-icon>
           <span>Data backup</span>
         </button>
@@ -72,6 +76,7 @@ export class AppBarComponent {
 
   constructor(
     private authService: AuthService,
+    private dataBackupService: DataBackupService,
     public appBarService: AppBarService,
     private renderer: Renderer2
   ) {}
@@ -88,5 +93,9 @@ export class AppBarComponent {
   public logout(): void {
     this.authService.logout()
     location.reload()
+  }
+
+  public requestBackup(): void {
+    this.dataBackupService.sendBackupRequest()
   }
 }
