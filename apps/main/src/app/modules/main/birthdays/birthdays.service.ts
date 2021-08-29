@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core'
 import { BirthdayItem, ProxyRequest } from '@pk-start/common'
 import { differenceInDays, parse, isSameDay, setYear } from 'date-fns'
-import { set } from 'husky'
 import { StoreKeys } from '../../../constants/constants'
 import { Store } from '../../../utils/store'
 import { ApiRoutes } from '../../shared/services/api-routes'
