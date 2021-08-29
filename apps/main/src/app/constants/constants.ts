@@ -6,6 +6,7 @@ export enum StoreKeys {
   AUTH = 'pk-start-auth',
   SETTINGS = 'pk-start-settings',
   APP_BAR = 'pk-start-app-bar',
+  BIRTHDAYS = 'pk-start-birthdays',
 }
 
 export const defaultDialogConfig: MatDialogConfig = {

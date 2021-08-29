@@ -26,6 +26,9 @@ export class AppBarService extends LocalStore<AppBarState> {
 
   public weatherOpen$ = this.select(state => state.weatherOpen)
   public notesOpen$ = this.select(state => state.notesOpen)
+  public birthdaysOpen$ = this.select(state => state.birthdaysOpen)
+  public personalDataOpen$ = this.select(state => state.personalDataOpen)
+  public koreanOpen$ = this.select(state => state.koreanOpen)
 
   public toggleWeather(): void {
     this.setState({ weatherOpen: !this.state.weatherOpen })
@@ -33,5 +36,17 @@ export class AppBarService extends LocalStore<AppBarState> {
 
   public toggleNotes(): void {
     this.setState({ notesOpen: !this.state.notesOpen })
+  }
+
+  public toggleBirthdays(): void {
+    this.setState({ birthdaysOpen: !this.state.birthdaysOpen })
+  }
+
+  public togglePersonalData(): void {
+    this.setState({ personalDataOpen: !this.state.personalDataOpen })
+  }
+
+  public toggleKorean(): void {
+    this.setState({ koreanOpen: !this.state.koreanOpen })
   }
 }

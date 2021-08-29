@@ -1,6 +1,7 @@
 import { Component, Renderer2 } from '@angular/core'
 import { LIGHT_THEME_CLASS } from '../../../constants/constants'
 import { AuthService } from '../../auth/auth.service'
+import { BirthdaysService } from '../birthdays/birthdays.service'
 import { DataBackupService } from '../data-backup/data-backup.service'
 import { AppBarService } from './app-bar.service'
 
@@ -29,8 +30,15 @@ import { AppBarService } from './app-bar.service'
       <button mat-icon-button matTooltip="Personal data">
         <mat-icon>find_in_page</mat-icon>
       </button>
-      <button mat-icon-button matTooltip="Birthdays">
-        <mat-icon matBadge="1" matBadgeColor="accent" matBadgeSize="small">today</mat-icon>
+      <button
+        mat-icon-button
+        matTooltip="Birthdays"
+        *ngIf="(appBarService.birthdaysOpen$ | async) === false"
+        (click)="appBarService.toggleBirthdays()"
+      >
+        <mat-icon [matBadge]="birthdaysToday$ | async" matBadgeColor="accent" matBadgeSize="small">
+          today
+        </mat-icon>
       </button>
       <pk-notifications></pk-notifications>
       <button mat-icon-button matTooltip="More..." [matMenuTriggerFor]="menu">
@@ -73,10 +81,12 @@ import { AppBarService } from './app-bar.service'
 })
 export class AppBarComponent {
   public isLightTheme = false
+  public birthdaysToday$ = this.birthdaysService.hasBirthdaysToday$
 
   constructor(
     private authService: AuthService,
     private dataBackupService: DataBackupService,
+    private birthdaysService: BirthdaysService,
     public appBarService: AppBarService,
     private renderer: Renderer2
   ) {}

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core'
 import { SharedModule } from '../shared/shared.module'
 import { NotificationsComponent } from './app-bar/notifications.component'
+import { BirthdaysComponent } from './birthdays/birthdays.component'
 import { MainComponent } from './main.component'
 import { AppBarComponent } from './app-bar/app-bar.component'
 import { NoteCardComponent } from './notes/note-card.component'
@@ -35,6 +36,7 @@ import { WeatherComponent } from './weather/weather.component'
     ShortcutsMenuComponent,
     ShortcutComponent,
     ShortcutDialogComponent,
+    BirthdaysComponent,
   ],
   providers: [],
 })

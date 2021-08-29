@@ -9,7 +9,9 @@ import { AppBarService } from './app-bar/app-bar.service'
       <div class="main-left">
         <pk-notes *ngIf="appBarService.notesOpen$ | async"></pk-notes>
       </div>
-      <div class="main-center"></div>
+      <div class="main-center">
+        <pk-birthdays *ngIf="appBarService.birthdaysOpen$ | async"></pk-birthdays>
+      </div>
       <div class="main-right">
         <pk-weather *ngIf="appBarService.weatherOpen$ | async"></pk-weather>
       </div>
@@ -40,6 +42,9 @@ import { AppBarService } from './app-bar/app-bar.service'
 
         .main-center {
           flex: 1 1 auto;
+          display: flex;
+          justify-content: flex-end;
+          flex-wrap: wrap;
         }
 
         //.main-right {

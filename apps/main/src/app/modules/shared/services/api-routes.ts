@@ -8,7 +8,8 @@ export enum ApiRoutes {
   SHORTCUTS = '/shortcuts',
   NOTES = '/notes',
   PERSONAL_DATA = '/personal-data',
-  PROXY = '/proxy',
+  PROXY_BIRTHDAYS = '/proxy/birthdays',
+  PROXY_KOREAN = '/proxy/korean',
   WAKEUP = '/wakeup',
 }
 
@@ -26,5 +27,6 @@ export const authenticatedApiRoutes = [
   ApiRoutes.SHORTCUTS,
   ApiRoutes.NOTES,
   ApiRoutes.PERSONAL_DATA,
-  ApiRoutes.PROXY,
+  ApiRoutes.PROXY_BIRTHDAYS,
+  ApiRoutes.PROXY_KOREAN,
 ]

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, UseGuards, ValidationPipe } from '@nestjs/common'
+import { Body, Controller, Post, UseGuards, ValidationPipe } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -16,7 +16,7 @@ import { ProxyService } from './proxy.service'
 export class ProxyController {
   constructor(private proxyService: ProxyService) {}
 
-  @Get('/birthdays')
+  @Post('/birthdays')
   @UseGuards(PkAuthGuard)
   @ApiBearerAuth()
   @ApiOperation(apiDocs.proxy.birthdays.operation)
@@ -28,7 +28,7 @@ export class ProxyController {
     return this.proxyService.getBirthdays(request.url)
   }
 
-  @Get('/korean')
+  @Post('/korean')
   @UseGuards(PkAuthGuard)
   @ApiBearerAuth()
   @ApiOperation(apiDocs.proxy.korean.operation)
