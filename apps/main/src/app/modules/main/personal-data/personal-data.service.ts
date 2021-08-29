@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core'
-import { PersonalData } from '@pk-start/common'
+import {
+  CreatePersonalDataRequest,
+  DeletePersonalDataRequest,
+  PersonalData,
+  PersonalDataIdResponse,
+  UpdatePersonalDataRequest,
+  UUID,
+} from '@pk-start/common'
+import { Observable } from 'rxjs'
+import { tap } from 'rxjs/operators'
 import { Store } from '../../../utils/store'
 import { ApiRoutes } from '../../shared/services/api-routes'
 import { ApiService } from '../../shared/services/api.service'
@@ -39,5 +48,47 @@ export class PersonalDataService extends Store<PersonalDataState> {
         this.setState({ loading: false })
       },
     })
+  }
+
+  public createPersonalData(
+    request: CreatePersonalDataRequest
+  ): Observable<PersonalDataIdResponse> {
+    this.setState({ loading: true })
+    return this.apiService
+      .post<CreatePersonalDataRequest, PersonalDataIdResponse>(ApiRoutes.PERSONAL_DATA, request)
+      .pipe(
+        tap(
+          () => this.setState({ loading: false }),
+          () => this.setState({ loading: false })
+        )
+      )
+  }
+
+  public updatePersonalData(
+    request: UpdatePersonalDataRequest
+  ): Observable<PersonalDataIdResponse> {
+    this.setState({ loading: true })
+    return this.apiService
+      .put<UpdatePersonalDataRequest, PersonalDataIdResponse>(ApiRoutes.PERSONAL_DATA, request)
+      .pipe(
+        tap(
+          () => this.setState({ loading: false }),
+          () => this.setState({ loading: false })
+        )
+      )
+  }
+
+  public deletePersonalData(id: UUID): Observable<PersonalDataIdResponse> {
+    this.setState({ loading: true })
+    return this.apiService
+      .delete<DeletePersonalDataRequest, PersonalDataIdResponse>(ApiRoutes.PERSONAL_DATA, {
+        id,
+      })
+      .pipe(
+        tap(
+          () => this.setState({ loading: false }),
+          () => this.setState({ loading: false })
+        )
+      )
   }
 }

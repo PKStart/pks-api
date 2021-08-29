@@ -2,10 +2,13 @@ import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { PersonalData, UUID } from '@pk-start/common'
 import { fromEvent, Subscription } from 'rxjs'
-import { debounceTime, delay, distinctUntilChanged, filter, switchMap } from 'rxjs/operators'
+import { debounceTime, delay, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators'
+import { defaultDialogConfig } from '../../../constants/constants'
+import { omit } from '../../../utils/objects'
 import { ConfirmationService } from '../../shared/services/confirmation.service'
 import { NotificationService } from '../../shared/services/notification.service'
 import { AppBarService } from '../app-bar/app-bar.service'
+import { PersonalDataDialogComponent } from './personal-data-dialog.component'
 import { PersonalDataService } from './personal-data.service'
 
 @Component({
@@ -79,6 +82,7 @@ export class PersonalDataComponent implements OnDestroy {
     this.subscription.add(
       this.personalDataService.data$.subscribe(data => {
         this.data = data
+        this.results = []
       })
     )
     this.subscription.add(
@@ -107,9 +111,58 @@ export class PersonalDataComponent implements OnDestroy {
     this.subscription.unsubscribe()
   }
 
-  public onAdd(): void {}
+  public onAdd(): void {
+    this.matDialog
+      .open(PersonalDataDialogComponent, defaultDialogConfig)
+      .afterClosed()
+      .pipe(
+        filter(value => value),
+        switchMap(value => this.personalDataService.createPersonalData(value))
+      )
+      .subscribe({
+        next: () => this.personalDataService.fetchData(),
+        error: e =>
+          this.notificationService.showError('Could not create document. ' + e.error.message),
+      })
+  }
 
-  public onEdit(id: UUID): void {}
+  public onEdit(id: UUID): void {
+    const doc = this.data.find(d => d.id === id)
+    if (!doc) return
+    this.matDialog
+      .open(PersonalDataDialogComponent, {
+        ...defaultDialogConfig,
+        data: doc,
+      })
+      .afterClosed()
+      .pipe(
+        filter(value => value),
+        map(value => ({
+          id,
+          ...omit(value, ['userId', 'createdAt']),
+        })),
+        switchMap(value => this.personalDataService.updatePersonalData(value))
+      )
+      .subscribe({
+        next: () => this.personalDataService.fetchData(),
+        error: e =>
+          this.notificationService.showError('Could not update document. ' + e.error.message),
+      })
+  }
 
-  public onDelete(id: UUID): void {}
+  public onDelete(id: UUID): void {
+    const doc = this.data.find(d => d.id === id)
+    if (!doc) return
+    this.confirmationService
+      .question(`Do you really want to delete the document "${doc.name}"?`)
+      .pipe(
+        filter(isConfirmed => isConfirmed),
+        switchMap(() => this.personalDataService.deletePersonalData(id))
+      )
+      .subscribe({
+        next: () => this.personalDataService.fetchData(),
+        error: e =>
+          this.notificationService.showError('Could not delete document. ' + e.error.message),
+      })
+  }
 }
