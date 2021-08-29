@@ -53,7 +53,7 @@ export class BirthdaysService extends Store<BirthdaysState> {
       this.fetchBirthdays()
     } else {
       const parsed = JSON.parse(stored) as StoredBirthdays
-      if (differenceInDays(parse(parsed.lastFetch), new Date()) > 6) {
+      if (differenceInDays(new Date(), parse(parsed.lastFetch)) > 6) {
         this.fetchBirthdays()
       } else {
         this.checkBirthdays(parsed.birthdays)
