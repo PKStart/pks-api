@@ -176,7 +176,7 @@ describe('NoteController (e2e)', () => {
         text: 'Some text',
         links: [
           { name: 'asd', url: 'www.google.com' },
-          { nam: 'asd', url: 123 },
+          { nam: 'asd', url: 'not-a-link' },
         ],
         archived: false,
         pinned: true,
