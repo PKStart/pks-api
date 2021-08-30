@@ -55,6 +55,7 @@ export class KoreanService extends Store<KoreanState> {
         this.fetchWordlist()
       } else {
         this.createLists(parsed.items)
+        this.getRandomWord()
       }
     }
   }
@@ -79,6 +80,7 @@ export class KoreanService extends Store<KoreanState> {
           )
           this.setState({ loading: false })
           this.createLists(res)
+          this.getRandomWord()
         },
         error: err => {
           this.setState({ loading: false })
