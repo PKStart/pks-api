@@ -21,6 +21,7 @@ import { NoteEntity } from './note.entity'
 
 @Injectable()
 export class NoteService {
+  private readonly urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
   constructor(
     @InjectRepository(NoteEntity)
     private readonly noteRepository: Repository<NoteEntity>,
@@ -90,8 +91,7 @@ export class NoteService {
         if (!link.name || typeof link.name !== 'string') {
           errors.push(CustomValidationError.STRING_REQUIRED)
         }
-        if (!link.url || typeof link.url !== 'string') {
-          // FIXME validate URL
+        if (!link.url || typeof link.url !== 'string' || !this.urlRegex.test(link.url.trim())) {
           errors.push(CustomValidationError.INVALID_URL)
         }
       }

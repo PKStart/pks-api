@@ -49,4 +49,8 @@ export class AppBarService extends LocalStore<AppBarState> {
   public toggleKorean(): void {
     this.setState({ koreanOpen: !this.state.koreanOpen })
   }
+
+  public resetState(): void {
+    this.setState({ ...initialState })
+  }
 }

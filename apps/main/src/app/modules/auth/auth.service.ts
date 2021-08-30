@@ -12,6 +12,7 @@ import {
 import { tap } from 'rxjs/operators'
 import { StoreKeys } from '../../constants/constants'
 import { omit } from '../../utils/objects'
+import { AppBarService } from '../main/app-bar/app-bar.service'
 import { ApiRoutes } from '../shared/services/api-routes'
 import { ApiService } from '../shared/services/api.service'
 import { NotificationService } from '../shared/services/notification.service'
@@ -26,6 +27,7 @@ export class AuthService {
   constructor(
     private authStore: AuthStore,
     private api: ApiService,
+    private appBarService: AppBarService,
     private notificationService: NotificationService,
     private settingsStore: SettingsStore
   ) {}
@@ -64,8 +66,10 @@ export class AuthService {
   public logout(): void {
     this.authStore.setLogout()
     this.settingsStore.clearSettings()
+    this.appBarService.resetState()
     this.unscheduleTokenRefresh()
     localStorage.removeItem(StoreKeys.BIRTHDAYS)
+    localStorage.removeItem(StoreKeys.KOREAN)
   }
 
   public autoLogin(): void {
