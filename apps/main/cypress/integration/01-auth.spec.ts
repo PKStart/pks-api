@@ -28,7 +28,7 @@ describe('Auth page', () => {
   })
 
   it('Should fail to login with wrong email', () => {
-    cy.visit('/auth')
+    cy.visit('/')
     po.emailInput().type('someone@test.com')
     po.getLoginCodeButton().click()
     cy.get('.pk-snackbar')
@@ -38,7 +38,7 @@ describe('Auth page', () => {
   })
 
   it('Should fail to login with login code', () => {
-    cy.visit('/auth')
+    cy.visit('/')
     po.emailInput().type('main@test.com')
     po.getLoginCodeButton().click()
     po.loginCodeInput().type('123123')

@@ -21,7 +21,7 @@ import po from './page-objects/auth.po'
 // -- This is a parent command --
 
 export function login() {
-  cy.visit('/auth')
+  cy.visit('/')
   po.emailInput().type('main@test.com')
   po.getLoginCodeButton().click()
   po.loginCodeInput().type('509950')
