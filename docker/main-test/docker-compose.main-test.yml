@@ -36,9 +36,6 @@ services:
     build:
       context: "../../"
       dockerfile: ./docker/main-test/Dockerfile.main
-    environment:
-      PK_API_URL_PROD: http://api:8100
-      PK_API_URL_DEV: http://api:8100
     depends_on:
       - api
 
