@@ -26,4 +26,30 @@ describe('Auth page', () => {
     po.haveLoginCodeLink().should('be.visible').click()
     po.loginCodeInput().should('be.visible').should('not.be.disabled')
   })
+
+  it('Should fail to login with wrong email', () => {
+    cy.visit('/auth')
+    po.emailInput().type('someone@test.com')
+    po.getLoginCodeButton().click()
+    cy.get('.pk-snackbar')
+      .should('be.visible')
+      .should('have.class', 'error')
+      .should('contain', 'Could not request login code')
+  })
+
+  it('Should fail to login with login code', () => {
+    cy.visit('/auth')
+    po.emailInput().type('main@test.com')
+    po.getLoginCodeButton().click()
+    po.loginCodeInput().type('123123')
+    po.loginButton().click()
+    cy.get('.pk-snackbar')
+      .should('be.visible')
+      .should('have.class', 'error')
+      .should('contain', 'Login failed')
+  })
+
+  it('Should be able to log in', () => {
+    cy.login()
+  })
 })
