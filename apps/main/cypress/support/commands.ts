@@ -1,13 +1,4 @@
-// ***********************************************
-// This example namespace declaration will help
-// with Intellisense and code completion in your
-// IDE or Text Editor.
-// ***********************************************
-// declare namespace Cypress {
-//   interface Chainable<Subject = any> {
-//     customCommand(param: any): typeof customCommand;
-//   }
-// }
+import po from './page-objects/auth.po'
 //
 // function customCommand(param: any): void {
 //   console.warn(param);
@@ -28,8 +19,19 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
+
+export function login() {
+  cy.visit('/')
+  po.emailInput().type('main@test.com')
+  po.getLoginCodeButton().click()
+  po.loginCodeInput().type('509950')
+  po.loginButton().click().wait(500)
+  cy.get('pk-app-bar').should('be.visible')
+  cy.get('pk-shortcuts').should('be.visible')
+}
+
+Cypress.Commands.add('login', login)
+
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })

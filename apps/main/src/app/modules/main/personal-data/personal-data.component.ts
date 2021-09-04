@@ -98,6 +98,8 @@ export class PersonalDataComponent implements OnDestroy {
           const value = this.input.nativeElement.value
           if (!value) {
             this.results = []
+          } else if (value === 'all') {
+            this.results = [...this.data]
           } else {
             this.results = this.data.filter(({ name }) =>
               name.toLowerCase().includes(value.toLowerCase())

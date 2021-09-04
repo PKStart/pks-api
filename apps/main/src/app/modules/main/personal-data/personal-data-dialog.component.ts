@@ -20,6 +20,7 @@ import { PersonalData } from '@pk-start/common'
         <mat-form-field appearance="fill">
           <mat-label>Date of expiry</mat-label>
           <input formControlName="expiry" matInput type="text" />
+          <mat-hint>Format: YYYY-MM-DD</mat-hint>
         </mat-form-field>
       </form>
     </div>

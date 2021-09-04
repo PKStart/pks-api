@@ -50,6 +50,7 @@ export class NotificationService extends Store<NotificationState> {
     })
     this.snackBar.openFromComponent(SnackbarComponent, {
       ...snackbarDefaultOptions,
+      duration: 6000,
       panelClass: ['pk-snackbar', 'error'],
       data: {
         message,
@@ -92,7 +93,6 @@ export class NotificationService extends Store<NotificationState> {
     })
     this.snackBar.openFromComponent(SnackbarComponent, {
       ...snackbarDefaultOptions,
-      duration: 6000,
       panelClass: ['pk-snackbar', 'success'],
       data: {
         message,
