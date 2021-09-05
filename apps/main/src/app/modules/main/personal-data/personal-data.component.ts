@@ -40,7 +40,7 @@ import { PersonalDataService } from './personal-data.service'
           <mat-form-field appearance="fill">
             <mat-label>Search</mat-label>
             <input #searchInput matInput type="text" class="search-input" />
-            <button mat-icon-button matSuffix class="search-btn" (click)="search()">
+            <button mat-icon-button matSuffix class="search-btn" (click)="onSearch()">
               <mat-icon>search</mat-icon>
             </button>
           </mat-form-field>
@@ -61,6 +61,10 @@ import { PersonalDataService } from './personal-data.service'
     `
       .main-box {
         padding-bottom: 0;
+      }
+
+      .search-btn {
+        margin-right: -0.5rem;
       }
     `,
   ],
@@ -96,7 +100,7 @@ export class PersonalDataComponent implements OnDestroy {
           distinctUntilChanged(),
           debounceTime(500)
         )
-        .subscribe(() => this.search())
+        .subscribe(() => this.onSearch())
     )
   }
 
@@ -159,7 +163,7 @@ export class PersonalDataComponent implements OnDestroy {
       })
   }
 
-  public search(): void {
+  public onSearch(): void {
     const value = this.input.nativeElement.value
     if (!value) {
       this.results = []
