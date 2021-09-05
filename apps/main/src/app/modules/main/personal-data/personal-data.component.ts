@@ -39,8 +39,10 @@ import { PersonalDataService } from './personal-data.service'
         <ng-container *ngIf="(loading$ | async) === false">
           <mat-form-field appearance="fill">
             <mat-label>Search</mat-label>
-            <input #searchInput matInput type="text" />
-            <mat-icon matSuffix>search</mat-icon>
+            <input #searchInput matInput type="text" class="search-input" />
+            <button mat-icon-button matSuffix class="search-btn" (click)="search()">
+              <mat-icon>search</mat-icon>
+            </button>
           </mat-form-field>
           <ng-container *ngIf="results.length">
             <pk-personal-data-card
@@ -94,18 +96,7 @@ export class PersonalDataComponent implements OnDestroy {
           distinctUntilChanged(),
           debounceTime(500)
         )
-        .subscribe(() => {
-          const value = this.input.nativeElement.value
-          if (!value) {
-            this.results = []
-          } else if (value === 'all') {
-            this.results = [...this.data]
-          } else {
-            this.results = this.data.filter(({ name }) =>
-              name.toLowerCase().includes(value.toLowerCase())
-            )
-          }
-        })
+        .subscribe(() => this.search())
     )
   }
 
@@ -166,5 +157,18 @@ export class PersonalDataComponent implements OnDestroy {
         error: e =>
           this.notificationService.showError('Could not delete document. ' + e.error.message),
       })
+  }
+
+  public search(): void {
+    const value = this.input.nativeElement.value
+    if (!value) {
+      this.results = []
+    } else if (value === 'all') {
+      this.results = [...this.data]
+    } else {
+      this.results = this.data.filter(({ name }) =>
+        name.toLowerCase().includes(value.toLowerCase())
+      )
+    }
   }
 }
