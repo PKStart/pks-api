@@ -11,7 +11,7 @@ import { SettingsStore } from '../../shared/services/settings.store'
       <p>{{ shortcut.name }}</p>
       <div class="menu-trigger" [matMenuTriggerFor]="shortcutMenu"></div>
     </button>
-    <mat-menu #shortcutMenu="matMenu">
+    <mat-menu #shortcutMenu="matMenu" class="shortcut-context-menu">
       <button mat-menu-item (click)="edit.emit(shortcut.id)">
         <mat-icon>edit</mat-icon>
         <span>Edit shortcut</span>

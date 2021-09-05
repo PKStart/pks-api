@@ -47,7 +47,7 @@ import { ShortcutsService } from './shortcuts.service'
       </ng-container>
       <mat-spinner *ngIf="loading$ | async" diameter="40" color="accent"></mat-spinner>
     </div>
-    <mat-menu #shortcutMenu="matMenu">
+    <mat-menu #shortcutMenu="matMenu" class="add-shortcut-context-menu">
       <button mat-menu-item (click)="addNew.emit()">
         <mat-icon>add</mat-icon>
         <span>Add shortcut</span>
