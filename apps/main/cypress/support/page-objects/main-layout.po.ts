@@ -7,4 +7,13 @@ export const appBarPo = {
   personalDataBtn: () => cy.get('pk-app-bar button[mattooltip="Personal data"]'),
   birthdaysBtn: () => cy.get('pk-app-bar button[mattooltip="Birthdays"]'),
   moreBtn: () => cy.get('pk-app-bar button[mattooltip="More..."]'),
+  notificationsBtn: () => cy.get('pk-notifications button'),
+  notificationsMenu: () => cy.get('.mat-menu-panel.pk-notifications'),
+  notificationItem: () => cy.get('.mat-menu-content .pk-notifications__item'),
+  notificationsClearBtn: () => cy.get('.mat-menu-content button.pk-notifications__clear-btn'),
+  snackbar: () => cy.get('snack-bar-container.pk-snackbar'),
+  snackbarCloseBtn: () => cy.get('pk-snackbar button'),
+  moreMenu: () => cy.get('.app-bar__more-menu'),
+  moreMenuButtons: () => cy.get('.app-bar__more-menu button'),
+  moreMenuBtn: (i: number) => cy.get('.app-bar__more-menu button').eq(i),
 }

@@ -55,7 +55,7 @@ import { AppBarService } from './app-bar.service'
       <button mat-icon-button matTooltip="More..." [matMenuTriggerFor]="menu">
         <mat-icon>more_horiz</mat-icon>
       </button>
-      <mat-menu #menu="matMenu">
+      <mat-menu #menu="matMenu" class="app-bar__more-menu">
         <button mat-menu-item (click)="switchTheme()">
           <mat-icon>{{ isLightTheme ? 'dark_mode' : 'light_mode' }}</mat-icon>
           <span>{{ isLightTheme ? 'Dark theme' : 'Light theme' }}</span>
