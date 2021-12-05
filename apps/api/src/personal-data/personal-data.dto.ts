@@ -47,7 +47,8 @@ export class CreatePersonalDataRequestDto implements CreatePersonalDataRequest {
 
 export class UpdatePersonalDataRequestDto
   extends CreatePersonalDataRequestDto
-  implements UpdatePersonalDataRequest {
+  implements UpdatePersonalDataRequest
+{
   @ApiProperty()
   @IsNotEmpty({ message: CustomValidationError.STRING_REQUIRED })
   @IsUUID('4', { message: CustomValidationError.INVALID_UUID })
