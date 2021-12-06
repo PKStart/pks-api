@@ -1,4 +1,5 @@
-import { HttpService, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { BirthdayItem, KoreanDictItem } from '@pk-start/common'
 
 @Injectable()

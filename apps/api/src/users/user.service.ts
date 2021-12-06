@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
-import { BulkWriteError } from 'mongodb'
 import { NoteEntity } from '../notes/note.entity'
 import { PersonalDataEntity } from '../personal-data/personal-data.entity'
 import { EmailService } from '../shared/email.service'
@@ -75,7 +74,7 @@ export class UserService {
       return { id: user.id }
     } catch (error) {
       this.logger.error(error)
-      if (error instanceof BulkWriteError && error.message?.includes('duplicate key')) {
+      if (error.message?.includes('duplicate key')) {
         throw new ConflictException(CustomApiError.EMAIL_REGISTERED)
       }
       throw new InternalServerErrorException(error.message)

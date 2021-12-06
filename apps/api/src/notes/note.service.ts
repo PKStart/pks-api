@@ -21,7 +21,8 @@ import { NoteEntity } from './note.entity'
 
 @Injectable()
 export class NoteService {
-  private readonly urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
+  private readonly urlRegex =
+    /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
   constructor(
     @InjectRepository(NoteEntity)
     private readonly noteRepository: Repository<NoteEntity>,

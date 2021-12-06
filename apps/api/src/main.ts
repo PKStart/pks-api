@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common'
+import { ConsoleLogger } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { getDotEnv } from './utils'
@@ -22,7 +22,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 8100
 
-  const logger = new Logger()
+  const logger = new ConsoleLogger()
   logger.setContext('NestApplication')
 
   await app.listen(port, () => {
