@@ -76,7 +76,8 @@ export class CreateShortcutRequestDto implements CreateShortcutRequest {
 
 export class UpdateShortcutRequestDto
   extends CreateShortcutRequestDto
-  implements UpdateShortcutRequest {
+  implements UpdateShortcutRequest
+{
   @ApiProperty()
   @IsNotEmpty({ message: CustomValidationError.STRING_REQUIRED })
   @IsUUID('4', { message: CustomValidationError.INVALID_UUID })

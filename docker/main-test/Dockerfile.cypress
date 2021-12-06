@@ -1,9 +1,10 @@
-FROM cypress/included:7.4.0
+FROM cypress/included:9.1.1
 
 WORKDIR /
-COPY ./apps/main/cypress/ ./cypress/
-COPY ./apps/main/cypress.json ./cypress.json
-COPY ./apps/main/tsconfig.json ./tsconfig.json
-RUN npm install typescript
+COPY ./apps/main/cypress/ ./app/cypress/
+COPY ./apps/main/cypress.json ./app/cypress.json
+COPY ./apps/main/tsconfig.json ./app/tsconfig.json
+WORKDIR /app
+RUN npm install typescript@4.2.3
 
 CMD ["npx", "cypress", "run", "--browser", "chrome", "--headless"]
