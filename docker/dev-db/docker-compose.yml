@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   mongodb_server:
-    image: mongo:latest
+    image: mongo:5.0
     environment:
       MONGO_INITDB_DATABASE: pkstartdev
       MONGO_INITDB_ROOT_USERNAME: pkstartdev
