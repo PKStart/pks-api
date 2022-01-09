@@ -15,7 +15,7 @@ import { NoteToggleEvent } from './notes.types'
           </li>
         </ul>
         <footer>
-          <span class="date">{{ note.createdAt | date: 'yyyy.M.d H:m' }}</span>
+          <span class="date">{{ note.createdAt | date: 'yyyy.MM.dd H:mm' }}</span>
           <div class="actions">
             <button mat-icon-button (click)="edit.emit(note.id)">
               <mat-icon>edit_note</mat-icon>
