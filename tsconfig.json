@@ -1,35 +1,16 @@
 {
   "compilerOptions": {
-    "incremental": true,
-    "outDir": "./dist",
-    "baseUrl": ".",
-    "moduleResolution": "Node",
-    "module": "CommonJS",
-    "target": "ES2018",
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
     "sourceMap": true,
-    "lib": ["esnext"],
-    "esModuleInterop": true,
-    "alwaysStrict": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "resolveJsonModule": true,
-    "paths": {
-      "@pk-start/common": ["libs/common/*"]
-    }
-  },
-  "references": [
-    {
-      "path": "apps/api"
-    },
-    {
-      "path": "apps/main"
-    },
-    {
-      "path": "libs/common"
-    }
-  ],
-  "exclude": ["node_modules", "dist", "*.d.ts"]
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "composite": true
+  }
 }

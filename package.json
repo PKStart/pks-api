@@ -1,54 +1,113 @@
 {
-  "name": "@pk-start/monorepo",
+  "name": "pks-api",
   "version": "1.0.0",
-  "description": "Personal startpage/dashboard with notes",
+  "description": "Backend API for PKStart",
   "main": "-",
   "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.{ts,json}\" \"test/**/*.{ts,json}\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/src/main",
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
     "start:db": "docker-compose -f docker/dev-db/docker-compose.yml up",
     "clear:db": "docker-compose -f docker/dev-db/docker-compose.yml down -v",
-    "seed:db": "npm run db:seed -w apps/api",
-    "cleanup:db": "npm run db:clean -w apps/api",
-    "dev:api": "npm run start:dev -w apps/api",
-    "dev:main": "npm run setenv && npm run start -w apps/main",
-    "build:common": "npm run build -w libs/common",
-    "build:api": "npm run build -w apps/api",
-    "build:main": "npm run setenv && npm run build -w apps/main",
-    "start:api": "npm run start -w apps/api",
+    "db:seed": "ts-node ./seeding/seed.ts",
+    "db:clean": "ts-node ./seeding/cleanup.ts",
     "docker:build": "docker build -t kinpeter/start-api -f Dockerfile.prod-local .",
     "docker:run": "docker run -p 8100:8100 --name start-api kinpeter/start-api",
     "heroku:build": "mv ./Dockerfile ./Dockerfile.temp && mv ./Dockerfile.prod-local ./Dockerfile && heroku container:push web --app pk-start && mv ./Dockerfile ./Dockerfile.prod-local && mv ./Dockerfile.temp ./Dockerfile",
     "heroku:deploy": "heroku container:release web --app pk-start",
-    "setenv": "node scripts/setenv.js",
-    "format:check": "npm run format:check --workspaces",
-    "lint": "npm run lint --workspaces",
-    "test": "-",
-    "test:api": "npm run test:e2e -w apps/api",
-    "test:api:docker": "docker-compose -f ./docker/api-test/docker-compose.api-test.yml up --build --exit-code-from api-test && docker-compose -f ./docker/api-test/docker-compose.api-test.yml down -v",
-    "test:e2e:watch": "npm run e2e:watch -w apps/main",
-    "test:e2e:docker": "docker-compose -f ./docker/main-test/docker-compose.main-test.yml up --build --exit-code-from cypress && docker-compose -f ./docker/main-test/docker-compose.main-test.yml down -v",
-    "postinstall": "npm run build -w libs/common",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest -i --config ./test/jest-e2e.json",
+    "test:docker": "docker-compose -f ./docker/api-test/docker-compose.api-test.yml up --build --exit-code-from api-test && docker-compose -f ./docker/api-test/docker-compose.api-test.yml down -v",
+    "test:main-e2e:watch": "npm run e2e:watch -w apps/main",
+    "test:main-e2e:docker": "docker-compose -f ./docker/main-test/docker-compose.main-test.yml up --build --exit-code-from cypress && docker-compose -f ./docker/main-test/docker-compose.main-test.yml down -v",
     "prepare": "husky install"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/KinPeter/PK-Start"
+    "url": "https://github.com/PKStart/pks-api"
   },
-  "keywords": [
-    "start",
-    "dashboard",
-    "notes"
-  ],
   "author": "Peter Kin",
   "license": "ISC",
-  "workspaces": [
-    "./apps/*",
-    "./libs/*"
-  ],
   "engines": {
-    "node": "16"
+    "node": "16.13.1"
+  },
+  "dependencies": {
+    "@nestjs/axios": "^0.1.0",
+    "@nestjs/common": "^9.0.0",
+    "@nestjs/core": "^9.0.0",
+    "@nestjs/jwt": "^9.0.0",
+    "@nestjs/passport": "^9.0.0",
+    "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.0.5",
+    "@nestjs/typeorm": "^9.0.1",
+    "@types/bcrypt": "^5.0.0",
+    "@types/nodemailer": "^6.4.5",
+    "@types/passport-jwt": "^3.0.6",
+    "bcrypt": "^5.0.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
+    "date-fns": "^2.29.1",
+    "dotenv": "^16.0.1",
+    "husky": "^8.0.1",
+    "mongodb": "^3.7.3",
+    "nodemailer": "^6.7.8",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
+    "pks-common": "github:PKStart/pks-common",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
+    "rxjs": "^7.5.5",
+    "swagger-ui-express": "^4.5.0",
+    "typeorm": "^0.3.7",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "dotenv": "^10.0.0",
-    "husky": "^6.0.0"
+    "@nestjs/cli": "^9.0.0",
+    "@nestjs/schematics": "^9.0.0",
+    "@nestjs/testing": "^9.0.0",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^28.1.4",
+    "@types/node": "^18.0.3",
+    "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
+    "eslint": "^8.19.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^28.1.2",
+    "prettier": "^2.7.1",
+    "source-map-support": "^0.5.21",
+    "supertest": "^6.2.4",
+    "ts-jest": "^28.0.5",
+    "ts-loader": "^9.3.1",
+    "ts-node": "^10.8.2",
+    "tsconfig-paths": "^4.0.0",
+    "typescript": "^4.7.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
   }
 }
