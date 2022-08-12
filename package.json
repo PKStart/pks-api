@@ -21,14 +21,9 @@
     "docker:run": "docker run -p 8100:8100 --name start-api kinpeter/start-api",
     "heroku:build": "mv ./Dockerfile ./Dockerfile.temp && mv ./Dockerfile.prod-local ./Dockerfile && heroku container:push web --app pk-start && mv ./Dockerfile ./Dockerfile.prod-local && mv ./Dockerfile.temp ./Dockerfile",
     "heroku:deploy": "heroku container:release web --app pk-start",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest -i --config ./test/jest-e2e.json",
     "test:docker": "docker-compose -f ./docker/api-test/docker-compose.api-test.yml up --build --exit-code-from api-test && docker-compose -f ./docker/api-test/docker-compose.api-test.yml down -v",
     "test:main-e2e:watch": "npm run e2e:watch -w apps/main",
-    "test:main-e2e:docker": "docker-compose -f ./docker/main-test/docker-compose.main-test.yml up --build --exit-code-from cypress && docker-compose -f ./docker/main-test/docker-compose.main-test.yml down -v",
     "prepare": "husky install"
   },
   "repository": {
