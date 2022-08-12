@@ -7,23 +7,23 @@ import { useConnection } from './use-connection'
 
 async function seed(): Promise<void> {
   const { connection } = useConnection()
-  await connection.connect()
+  await connection.initialize()
 
-  await cleanup({ verbose: true })
+  await cleanup(connection, { verbose: true })
 
-  const { userId } = await seedUser()
+  const { userId } = await seedUser(connection)
   console.log('[Seed] Seeded USERS.')
 
-  await seedShortcuts(userId)
+  await seedShortcuts(connection, userId)
   console.log('[Seed] Seeded SHORTCUTS.')
 
-  await seedNotes(userId)
+  await seedNotes(connection, userId)
   console.log('[Seed] Seeded NOTES.')
 
-  await seedPersonalData(userId)
+  await seedPersonalData(connection, userId)
   console.log('[Seed] Seeded PERSONAL DATA.')
 
-  await connection.close()
+  await connection.destroy()
 }
 
 seed().then(() => {

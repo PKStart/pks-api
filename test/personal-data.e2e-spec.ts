@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
-import { getRepository, Repository } from 'typeorm'
+import { DataSource, DataSourceOptions, Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
 import { cleanup } from '../seeding'
 import { AppModule } from '../src/app.module'
@@ -9,9 +9,11 @@ import { PersonalDataEntity } from '../src/personal-data/personal-data.entity'
 import { signupAndLogin } from './commands/handle-user'
 import { CustomApiError, CustomValidationError } from 'pks-common'
 import { data1, data2, data3, testUser, testUser2 } from './test-data'
+import ormConfig from '../ormconfig'
 
 describe('PersonalDataController (e2e)', () => {
   let app: INestApplication
+  let dataSource: DataSource
   let personalDataRepository: Repository<PersonalDataEntity>
   let token: string
   let tokenOther: string
@@ -27,7 +29,9 @@ describe('PersonalDataController (e2e)', () => {
     app = moduleFixture.createNestApplication()
     await app.init()
 
-    personalDataRepository = getRepository(PersonalDataEntity)
+    dataSource = new DataSource(ormConfig as DataSourceOptions)
+    await dataSource.initialize()
+    personalDataRepository = dataSource.getRepository(PersonalDataEntity)
 
     countBeforeAll = await personalDataRepository.count()
 
@@ -39,7 +43,8 @@ describe('PersonalDataController (e2e)', () => {
   })
 
   afterAll(async () => {
-    await cleanup()
+    await cleanup(dataSource)
+    await dataSource.destroy()
     await app.close()
   })
 

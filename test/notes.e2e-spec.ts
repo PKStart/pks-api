@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
-import { getRepository, Repository } from 'typeorm'
+import { DataSource, DataSourceOptions, Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
 import { cleanup } from '../seeding'
 import { AppModule } from '../src/app.module'
@@ -9,9 +9,11 @@ import { NoteEntity } from '../src/notes/note.entity'
 import { signupAndLogin } from './commands/handle-user'
 import { CustomApiError, CustomValidationError } from 'pks-common'
 import { note1, note2, note3, note4, testUser, testUser2 } from './test-data'
+import ormConfig from '../ormconfig'
 
 describe('NoteController (e2e)', () => {
   let app: INestApplication
+  let dataSource: DataSource
   let noteRepository: Repository<NoteEntity>
   let token: string
   let tokenOther: string
@@ -27,7 +29,9 @@ describe('NoteController (e2e)', () => {
     app = moduleFixture.createNestApplication()
     await app.init()
 
-    noteRepository = getRepository(NoteEntity)
+    dataSource = new DataSource(ormConfig as DataSourceOptions)
+    await dataSource.initialize()
+    noteRepository = dataSource.getRepository(NoteEntity)
 
     countBeforeAll = await noteRepository.count()
 
@@ -39,7 +43,8 @@ describe('NoteController (e2e)', () => {
   })
 
   afterAll(async () => {
-    await cleanup()
+    await cleanup(dataSource)
+    await dataSource.destroy()
     await app.close()
   })
 

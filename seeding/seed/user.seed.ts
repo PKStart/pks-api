@@ -1,13 +1,13 @@
 import { UUID } from 'pks-common'
-import { getRepository } from 'typeorm'
+import { DataSource } from 'typeorm'
 import { v4 as uuid } from 'uuid'
 import { UserEntity } from '../../src/users/user.entity'
 import { useSeedData } from '../use-seed-data'
 
-export async function seedUser(): Promise<{ userId: UUID }> {
+export async function seedUser(dataSource: DataSource): Promise<{ userId: UUID }> {
   try {
     const { users } = useSeedData()
-    const userRepository = getRepository(UserEntity)
+    const userRepository = dataSource.getRepository(UserEntity)
     const userId = uuid()
     await userRepository.save(
       userRepository.create({

@@ -1,13 +1,16 @@
-import { getRepository } from 'typeorm'
+import { DataSource } from 'typeorm'
 import { entities } from '../entity-record'
 
 type CleanUpOptions = { verbose: boolean }
 const defaultOptions = { verbose: false }
 
-export async function cleanup({ verbose }: CleanUpOptions = defaultOptions): Promise<void> {
+export async function cleanup(
+  dataSource: DataSource,
+  { verbose }: CleanUpOptions = defaultOptions
+): Promise<void> {
   for (const [name, entity] of Object.entries(entities)) {
     try {
-      const repository = await getRepository(entity)
+      const repository = await dataSource.getRepository(entity)
       if ((await repository.count()) > 0) {
         await repository.clear()
       }

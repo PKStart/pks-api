@@ -1,6 +1,6 @@
 import * as request from 'supertest'
 import { Test } from '@nestjs/testing'
-import { getRepository, Repository } from 'typeorm'
+import { DataSource, DataSourceOptions, Repository } from 'typeorm'
 import { cleanup } from '../seeding'
 import { AppModule } from '../src/app.module'
 import { INestApplication } from '@nestjs/common'
@@ -19,9 +19,11 @@ import {
   testUser,
   userSettings,
 } from './test-data'
+import ormConfig from '../ormconfig'
 
 describe('UserController (e2e)', () => {
   let app: INestApplication
+  let dataSource: DataSource
   let loginCode: string
   let token: string
   let userId: UUID
@@ -36,12 +38,15 @@ describe('UserController (e2e)', () => {
     app = moduleFixture.createNestApplication()
     await app.init()
 
-    userRepository = getRepository(UserEntity)
+    dataSource = new DataSource(ormConfig as DataSourceOptions)
+    await dataSource.initialize()
+    userRepository = dataSource.getRepository(UserEntity)
     countBeforeSignup = await userRepository.count()
   })
 
   afterAll(async () => {
-    await cleanup()
+    await cleanup(dataSource)
+    await dataSource.destroy()
     await app.close()
   })
 
@@ -242,11 +247,11 @@ describe('UserController (e2e)', () => {
   })
 
   it('Should delete a user and all its related entities', async () => {
-    const shortcutRepository = getRepository(ShortcutEntity)
+    const shortcutRepository = dataSource.getRepository(ShortcutEntity)
     const numberOfShortcutsBefore = await shortcutRepository.count({ where: { userId } })
-    const noteRepository = getRepository(NoteEntity)
+    const noteRepository = dataSource.getRepository(NoteEntity)
     const numberOfNotesBefore = await noteRepository.count({ where: { userId } })
-    const personalDataRepository = getRepository(PersonalDataEntity)
+    const personalDataRepository = dataSource.getRepository(PersonalDataEntity)
     const numberOfDataBefore = await personalDataRepository.count({ where: { userId } })
 
     await request(app.getHttpServer())
@@ -282,11 +287,15 @@ describe('UserController (e2e)', () => {
       .send(data2)
       .expect(201)
 
-    const numberOfShortcutsAfterAdd = await shortcutRepository.count({ where: { userId } })
+    // For some strange reason repository.count() did not work here... ¯\_(ツ)_/¯
+    const shortcuts = await shortcutRepository.find({ where: { userId } })
+    const notes = await noteRepository.find({ where: { userId } })
+    const data = await personalDataRepository.find({ where: { userId } })
+    const numberOfShortcutsAfterAdd = shortcuts.length
     expect(numberOfShortcutsAfterAdd).toEqual(numberOfShortcutsBefore + 2)
-    const numberOfNotesAfterAdd = await noteRepository.count({ where: { userId } })
+    const numberOfNotesAfterAdd = notes.length
     expect(numberOfNotesAfterAdd).toEqual(numberOfNotesBefore + 2)
-    const numberOfDataAfterAdd = await personalDataRepository.count({ where: { userId } })
+    const numberOfDataAfterAdd = data.length
     expect(numberOfDataAfterAdd).toEqual(numberOfDataBefore + 2)
 
     return request(app.getHttpServer())
@@ -295,7 +304,7 @@ describe('UserController (e2e)', () => {
       .expect(200)
       .then(async () => {
         const user = await userRepository.findOne({ where: { email: testUser.email } })
-        expect(user).toBeUndefined()
+        expect(user).toBeNull()
         const count = await userRepository.count()
         expect(count).toEqual(countBeforeSignup)
 

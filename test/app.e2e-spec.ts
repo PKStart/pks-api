@@ -3,9 +3,12 @@ import { Test } from '@nestjs/testing'
 import { cleanup } from '../seeding'
 import { AppModule } from '../src/app.module'
 import { INestApplication } from '@nestjs/common'
+import { DataSource, DataSourceOptions } from 'typeorm'
+import ormconfig from '../ormconfig'
 
 describe('AppController (e2e)', () => {
   let app: INestApplication
+  let dataSource: DataSource
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
@@ -14,10 +17,14 @@ describe('AppController (e2e)', () => {
 
     app = moduleFixture.createNestApplication()
     await app.init()
+
+    dataSource = new DataSource(ormconfig as DataSourceOptions)
+    await dataSource.initialize()
   })
 
   afterAll(async () => {
-    await cleanup()
+    await cleanup(dataSource)
+    await dataSource.destroy()
     await app.close()
   })
 

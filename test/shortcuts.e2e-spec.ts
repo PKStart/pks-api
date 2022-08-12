@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
-import { getRepository, Repository } from 'typeorm'
+import { DataSource, DataSourceOptions, Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
 import { cleanup } from '../seeding'
 import { AppModule } from '../src/app.module'
@@ -9,9 +9,11 @@ import { ShortcutEntity } from '../src/shortcuts/shortcut.entity'
 import { signupAndLogin } from './commands/handle-user'
 import { CustomApiError, CustomValidationError } from 'pks-common'
 import { shortcut1, shortcut2, shortcut3, testUser, testUser2 } from './test-data'
+import ormConfig from '../ormconfig'
 
 describe('ShortcutController (e2e)', () => {
   let app: INestApplication
+  let dataSource: DataSource
   let shortcutRepository: Repository<ShortcutEntity>
   let token: string
   let tokenOther: string
@@ -27,7 +29,9 @@ describe('ShortcutController (e2e)', () => {
     app = moduleFixture.createNestApplication()
     await app.init()
 
-    shortcutRepository = getRepository(ShortcutEntity)
+    dataSource = new DataSource(ormConfig as DataSourceOptions)
+    await dataSource.initialize()
+    shortcutRepository = dataSource.getRepository(ShortcutEntity)
 
     countBeforeAll = await shortcutRepository.count()
 
@@ -39,7 +43,8 @@ describe('ShortcutController (e2e)', () => {
   })
 
   afterAll(async () => {
-    await cleanup()
+    await cleanup(dataSource)
+    await dataSource.destroy()
     await app.close()
   })
 

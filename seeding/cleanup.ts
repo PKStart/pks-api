@@ -3,11 +3,11 @@ import { useConnection } from './use-connection'
 
 async function processCleanup(): Promise<void> {
   const { connection } = useConnection()
-  await connection.connect()
+  await connection.initialize()
 
-  await cleanup({ verbose: true })
+  await cleanup(connection, { verbose: true })
 
-  await connection.close()
+  await connection.destroy()
 }
 
 processCleanup().then(() => {

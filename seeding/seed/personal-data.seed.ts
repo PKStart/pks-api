@@ -1,13 +1,13 @@
 import { UUID } from 'pks-common'
-import { getRepository } from 'typeorm'
+import { DataSource } from 'typeorm'
 import { v4 as uuid } from 'uuid'
 import { PersonalDataEntity } from '../../src/personal-data/personal-data.entity'
 import { useSeedData } from '../use-seed-data'
 
-export async function seedPersonalData(userId: UUID): Promise<void> {
+export async function seedPersonalData(dataSource: DataSource, userId: UUID): Promise<void> {
   try {
     const { personalData } = useSeedData()
-    const noteRepository = getRepository(PersonalDataEntity)
+    const noteRepository = dataSource.getRepository(PersonalDataEntity)
     for (const data of personalData) {
       await noteRepository.save(
         noteRepository.create({
