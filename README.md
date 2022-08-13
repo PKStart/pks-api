@@ -93,7 +93,13 @@ The process will automatically run by pushing to the `master` branch or can be s
 Environment variables are stored on Github as repository secrets.
 
 ### Heroku Manual deployment
-To make a deploy, use the Heroku CLI. First, log in to both Heroku and the Heroku Container Registry as described [here](https://devcenter.heroku.com/articles/container-registry-and-runtime). 
+To make a deployment, use the Heroku CLI, which can be downloaded from [here](https://devcenter.heroku.com/categories/command-line). 
+First, log in to both Heroku and the Heroku Container Registry: 
+```
+heroku login
+heroku container:login
+```
+More info [here](https://devcenter.heroku.com/articles/container-registry-and-runtime). 
 
 Make sure the backend Docker image is working by running it locally as described above. Also make sure the production environment variables are all there in the `.env.prod` file.
 
