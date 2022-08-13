@@ -1,10 +1,7 @@
-FROM node:16-alpine
+FROM node:16.13.1-alpine
 
 WORKDIR /app
-COPY ./apps/api/ ./apps/api/
-COPY ./libs/common/ ./libs/common/
-COPY ./package*.json ./
-COPY ./tsconfig.json ./
+COPY . .
 RUN npm ci
 
 ARG ARG_PK_ENV
@@ -27,7 +24,6 @@ ENV PK_LOGIN_CODE_EXPIRY=$ARG_PK_LOGIN_CODE_EXPIRY
 ENV PK_TOKEN_EXPIRY=$ARG_PK_TOKEN_EXPIRY
 ENV PK_NOTIFICATION_EMAIL=$ARG_PK_NOTIFICATION_EMAIL
 
-WORKDIR /app/apps/api
 RUN npm run build
 
 CMD ["npm", "run", "start:prod"]
