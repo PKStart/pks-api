@@ -7,16 +7,17 @@ import {
   Note,
   NoteIdResponse,
   UpdateNoteRequest,
+  UrlRegex,
   UUID,
 } from 'pks-common'
 import {
   IsString,
   IsArray,
-  IsUrl,
   IsBoolean,
   IsNotEmpty,
   IsUUID,
   IsOptional,
+  Matches,
 } from 'class-validator'
 
 export class NoteDto implements Note {
@@ -48,7 +49,8 @@ export class LinkDto implements Link {
   name: string
 
   @ApiProperty()
-  @IsUrl(null, { message: CustomValidationError.INVALID_URL })
+  @IsString({ message: CustomValidationError.STRING_REQUIRED })
+  @Matches(UrlRegex, { message: CustomValidationError.INVALID_URL })
   url: string
 }
 

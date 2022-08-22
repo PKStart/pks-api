@@ -11,7 +11,10 @@ export const note2: Partial<Note> = {
   text: 'Hello Again!',
   links: [
     { name: 'Google', url: 'https://www.google.com' },
-    { name: 'Facebook', url: 'https://www.facebook.com' },
+    {
+      name: 'Facebook',
+      url: 'https://www.facebook.com?key=value&something{weirdMi%21soft}syntax.here',
+    },
   ],
   archived: false,
   pinned: false,

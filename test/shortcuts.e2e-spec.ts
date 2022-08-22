@@ -139,13 +139,14 @@ describe('ShortcutController (e2e)', () => {
       .expect(400)
       .expect(res => {
         expect(Array.isArray(res.body.message)).toBeTruthy()
-        expect(res.body.message.length).toEqual(7)
+        expect(res.body.message.length).toEqual(8)
         expect(res.body.message).toContain(CustomValidationError.MIN_LENGTH)
         expect(res.body.message).toContain(CustomValidationError.INVALID_URL)
         expect(res.body.message).toContain(CustomValidationError.INVALID_CATEGORY)
         expect(res.body.message).toContain(CustomValidationError.MAX_VALUE)
         expect(res.body.message).toContain(CustomValidationError.MAX_VALUE)
         expect(res.body.message).toContain(CustomValidationError.NUMBER_REQUIRED)
+        expect(res.body.message).toContain(CustomValidationError.STRING_REQUIRED)
       })
   })
 

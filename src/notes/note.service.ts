@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { v4 as uuid } from 'uuid'
-import { CustomApiError, CustomValidationError, UUID } from 'pks-common'
+import { CustomApiError, CustomValidationError, UrlRegex, UUID } from 'pks-common'
 import { PkLogger } from '../shared/pk-logger.service'
 import { omitObjectId } from '../utils'
 import {
@@ -21,8 +21,6 @@ import { NoteEntity } from './note.entity'
 
 @Injectable()
 export class NoteService {
-  private readonly urlRegex =
-    /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
   constructor(
     @InjectRepository(NoteEntity)
     private readonly noteRepository: Repository<NoteEntity>,
@@ -92,7 +90,7 @@ export class NoteService {
         if (!link.name || typeof link.name !== 'string') {
           errors.push(CustomValidationError.STRING_REQUIRED)
         }
-        if (!link.url || typeof link.url !== 'string' || !this.urlRegex.test(link.url.trim())) {
+        if (!link.url || typeof link.url !== 'string' || !UrlRegex.test(link.url.trim())) {
           errors.push(CustomValidationError.INVALID_URL)
         }
       }

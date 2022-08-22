@@ -7,6 +7,7 @@ import {
   ShortcutCategory,
   ShortcutIdResponse,
   UpdateShortcutRequest,
+  UrlRegex,
   UUID,
 } from 'pks-common'
 import {
@@ -14,8 +15,8 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
-  IsUrl,
   IsUUID,
+  Matches,
   Max,
   MaxLength,
   Min,
@@ -56,11 +57,13 @@ export class CreateShortcutRequestDto implements CreateShortcutRequest {
   name: string
 
   @ApiProperty()
-  @IsUrl({}, { message: CustomValidationError.INVALID_URL })
+  @IsString({ message: CustomValidationError.STRING_REQUIRED })
+  @Matches(UrlRegex, { message: CustomValidationError.INVALID_URL })
   url: string
 
   @ApiProperty()
-  @IsUrl({}, { message: CustomValidationError.INVALID_URL })
+  @IsString({ message: CustomValidationError.STRING_REQUIRED })
+  @Matches(UrlRegex, { message: CustomValidationError.INVALID_URL })
   iconUrl: string
 
   @ApiProperty({ enum: ShortcutCategory, enumName: 'ShortcutCategory' })

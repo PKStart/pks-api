@@ -1,10 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsUrl } from 'class-validator'
-import { BirthdayItem, CustomValidationError, KoreanDictItem, ProxyRequest } from 'pks-common'
+import { IsString, Matches } from 'class-validator'
+import {
+  BirthdayItem,
+  CustomValidationError,
+  KoreanDictItem,
+  ProxyRequest,
+  UrlRegex,
+} from 'pks-common'
 
 export class ProxyRequestDto implements ProxyRequest {
   @ApiProperty()
-  @IsUrl({}, { message: CustomValidationError.INVALID_URL })
+  @IsString({ message: CustomValidationError.STRING_REQUIRED })
+  @Matches(UrlRegex, { message: CustomValidationError.INVALID_URL })
   url: string
 }
 
