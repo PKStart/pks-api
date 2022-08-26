@@ -73,8 +73,8 @@ For production environment the database is provided by [MongoDB Atlas](https://c
 Backend API
 -----------
 
-### Docker, Heroku
-Production backend is hosted on [Heroku](https://dashboard.heroku.com/apps/pk-start/) as a Docker based application named `pk-start`, and currently using a free dyno.
+### Docker, Fly.io
+Production backend is hosted on [Fly.io](https://fly.io/apps/pk-start) as a Docker based application named `pk-start`, and currently using a free plan.
 
 The backend project is configured to run as a Docker container. Its configuration is in the root `Dockerfile.prod-local`.
 
@@ -83,24 +83,23 @@ Building the Docker image needs the production environment variables which shoul
 Before deploy, it's possible to build and run it locally, but actually not necessary.
 To build and run the backend in Docker locally use the `npm run docker:build` and `npm run docker:run` scripts.
 
-### Heroku Automatic deployment
+### Fly.io Automatic deployment
 Automatic deployment is set up using Github Actions in the `api-deploy.yml` file under the workflows folder. For simplicity this action uses the root `Dockerfile` to build the API image. 
 
 The process will automatically run by pushing to the `master` branch or can be started manually on Github with the dispatch action. 
 
-Environment variables are stored on Github as repository secrets.
+Non-sensitive environment variables are stored in the `fly.toml` config file, others are on Fly.io under the app's secrets. For more info about setting up secrets see the [Fly.io docs](https://fly.io/docs/reference/secrets/).
 
-### Heroku Manual deployment
-To make a deployment, use the Heroku CLI, which can be downloaded from [here](https://devcenter.heroku.com/categories/command-line). 
-First, log in to both Heroku and the Heroku Container Registry: 
+### Fly.io Manual deployment
+To make a deployment, use the Fly.io `flyctl` CLI, which can be downloaded from [here](https://fly.io/docs/getting-started/installing-flyctl/). 
+Don't forget to log in to Fly.io (using Github OAuth): 
 ```
-heroku login
-heroku container:login
+flyctl auth login
 ```
-More info [here](https://devcenter.heroku.com/articles/container-registry-and-runtime). 
+More info [here](https://fly.io/docs/flyctl/). 
 
 Make sure the backend Docker image is working by running it locally as described above. Also make sure the production environment variables are all there in the `.env.prod` file.
 
-To process the deployment, use the `npm run heroku:build` command to build and push the image to the container registry, and then the `npm run heroku:deploy` command to finish the deployment.
+To process the deployment, use the `npm run fly:deploy` command. This will use the `fly.local.toml` configuration file which is a bit different from the one used by Github actions.
 
 

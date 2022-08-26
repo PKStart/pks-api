@@ -13,30 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: pk-start
-          heroku_email: kinpeter85@gmail.com
-          usedocker: true
-          docker_build_args: |
-            ARG_PK_ENV
-            ARG_PK_DB_CONNECTION_STRING
-            ARG_PK_EMAIL_HOST
-            ARG_PK_EMAIL_USER
-            ARG_PK_EMAIL_PASS
-            ARG_PK_JWT_SECRET
-            ARG_PK_LOGIN_CODE_EXPIRY
-            ARG_PK_TOKEN_EXPIRY
-            ARG_PK_NOTIFICATION_EMAIL
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only
         env:
-          ARG_PK_ENV: production
-          ARG_PK_DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
-          ARG_PK_EMAIL_HOST: ${{ secrets.API_EMAIL_HOST }}
-          ARG_PK_EMAIL_USER: ${{ secrets.API_EMAIL_USER }}
-          ARG_PK_EMAIL_PASS: ${{ secrets.API_EMAIL_PASS }}
-          ARG_PK_JWT_SECRET: ${{ secrets.API_JWT_SECRET }}
-          ARG_PK_LOGIN_CODE_EXPIRY: 15
-          ARG_PK_TOKEN_EXPIRY: 7d
-          ARG_PK_NOTIFICATION_EMAIL: kinpeter85@gmail.com
-
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

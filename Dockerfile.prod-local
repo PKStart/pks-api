@@ -1,5 +1,5 @@
 # !!!
-# Use this Dockerfile for deployment using the Heroku cli locally
+# Use this Dockerfile for deployment using the flyctl cli locally
 
 FROM node:16.13.1-alpine
 

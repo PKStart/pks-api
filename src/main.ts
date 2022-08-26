@@ -25,7 +25,7 @@ async function bootstrap() {
   const logger = new ConsoleLogger()
   logger.setContext('NestApplication')
 
-  await app.listen(port, () => {
+  await app.listen(port, '0.0.0.0', () => {
     logger.log(`Listening on port ${port}`)
   })
 }
