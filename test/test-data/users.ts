@@ -17,4 +17,7 @@ export const userSettings: UserSettings = {
   locationApiKey: 'locationApiKey',
   birthdaysUrl: 'birthdaysUrl',
   koreanUrl: 'koreanUrl',
+  stravaClientId: '123123',
+  stravaClientSecret: 'stravaClientSecret',
+  stravaRedirectUri: 'https://redirect.uri',
 }

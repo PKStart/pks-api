@@ -63,6 +63,9 @@ export class UserService {
         shortcutIconBaseUrl: null,
         birthdaysUrl: null,
         koreanUrl: null,
+        stravaClientId: null,
+        stravaClientSecret: null,
+        stravaRedirectUri: null,
       },
     }
     try {

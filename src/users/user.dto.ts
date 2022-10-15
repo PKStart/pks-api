@@ -77,6 +77,15 @@ export class UserSettings implements IUserSettings {
 
   @ApiProperty()
   koreanUrl: string | null
+
+  @ApiProperty()
+  stravaClientId: string | null
+
+  @ApiProperty()
+  stravaClientSecret: string | null
+
+  @ApiProperty()
+  stravaRedirectUri: string | null
 }
 
 export class LoginResponseDto extends TokenResponseDto implements LoginResponse {

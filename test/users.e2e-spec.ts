@@ -134,6 +134,9 @@ describe('UserController (e2e)', () => {
         expect(res.body.settings.shortcutIconBaseUrl).toBeNull()
         expect(res.body.settings.birthdaysUrl).toBeNull()
         expect(res.body.settings.koreanUrl).toBeNull()
+        expect(res.body.settings.stravaClientId).toBeNull()
+        expect(res.body.settings.stravaClientSecret).toBeNull()
+        expect(res.body.settings.stravaRedirectUri).toBeNull()
         expect(res.body.id).toEqual(userId)
         token = res.body.token
       })
@@ -219,6 +222,9 @@ describe('UserController (e2e)', () => {
         expect(res.body.shortcutIconBaseUrl).toEqual('https://icons.com')
         expect(res.body.birthdaysUrl).toEqual('birthdaysUrl')
         expect(res.body.koreanUrl).toEqual('koreanUrl')
+        expect(res.body.stravaClientId).toEqual('123123')
+        expect(res.body.stravaClientSecret).toEqual('stravaClientSecret')
+        expect(res.body.stravaRedirectUri).toEqual('https://redirect.uri')
       })
   })
 

@@ -31,6 +31,9 @@ db.getCollection('users').insertOne({
     shortcutIconBaseUrl: 'https://stuff.p-kin.com/start-tile-icons/',
     birthdaysUrl: null,
     koreanUrl: null,
+    stravaClientId: null,
+    stravaClientSecret: null,
+    stravaRedirectUri: null,
   },
 })
 
