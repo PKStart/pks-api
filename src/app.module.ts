@@ -7,6 +7,7 @@ import { PersonalDataModule } from './personal-data/personal-data.module'
 import { ProxyModule } from './proxy/proxy.module'
 import { ShortcutModule } from './shortcuts/shortcut.module'
 import { UserModule } from './users/user.module'
+import { CyclingModule } from './cycling/cycling.module'
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserModule } from './users/user.module'
     ShortcutModule,
     NoteModule,
     PersonalDataModule,
+    CyclingModule,
     ProxyModule,
   ],
   controllers: [AppController],
