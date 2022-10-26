@@ -8,6 +8,7 @@ import {
   TokenResponseDto,
   UserSettings,
 } from '../users/user.dto'
+import { CyclingDto } from '../cycling/cycling.dto'
 
 export const apiDocs = {
   wakeUp: {
@@ -201,6 +202,55 @@ export const apiDocs = {
         type: KoreanDictItemDto,
         isArray: true,
         description: 'An array of korean word list entries',
+      },
+    },
+  },
+  cycling: {
+    get: {
+      operation: {
+        summary: '[Cycling] Get data for a user',
+        description: 'Get all cycling data for a user',
+      },
+      ok: {
+        type: CyclingDto,
+        description: 'Cycling data object',
+      },
+    },
+    setWeeklyGoal: {
+      operation: {
+        summary: '[Cycling] Set weekly goal',
+        description: 'Update the weekly goal',
+      },
+      ok: { type: CyclingDto, description: 'Weekly goal updated' },
+    },
+    setMonthlyGoal: {
+      operation: {
+        summary: '[Cycling] Set monthly goal',
+        description: 'Update the monthly goal',
+      },
+      ok: { type: CyclingDto, description: 'Monthly goal updated' },
+    },
+    chore: {
+      create: {
+        operation: {
+          summary: '[Cycling] Create chore',
+          description: 'Create a Cycling chore',
+        },
+        created: { type: CyclingDto, description: 'Cycling chore created' },
+      },
+      update: {
+        operation: {
+          summary: '[Cycling] Update chore',
+          description: 'Update a Cycling chore',
+        },
+        ok: { type: CyclingDto, description: 'Cycling chore updated' },
+      },
+      delete: {
+        operation: {
+          summary: '[Cycling] Delete chore',
+          description: 'Delete a Cycling chore',
+        },
+        ok: { type: CyclingDto, description: 'Cycling chore deleted' },
       },
     },
   },
