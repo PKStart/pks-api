@@ -9,6 +9,7 @@ import { PkLogger } from '../shared/pk-logger.service'
 import { ShortcutEntity } from '../shortcuts/shortcut.entity'
 import { DataBackup } from './user.dto'
 import { UserEntity } from './user.entity'
+import { CyclingEntity } from '../cycling/cycling.entity'
 
 @Injectable()
 export class DataBackupService {
@@ -21,6 +22,8 @@ export class DataBackupService {
     private readonly noteRepository: Repository<NoteEntity>,
     @InjectRepository(PersonalDataEntity)
     private readonly personalDataRepository: Repository<PersonalDataEntity>,
+    @InjectRepository(CyclingEntity)
+    private readonly cyclingRepository: Repository<CyclingEntity>,
     private readonly logger: PkLogger,
     private readonly emailService: EmailService
   ) {
@@ -41,6 +44,7 @@ export class DataBackupService {
     result.shortcuts = await this.shortcutRepository.find({ where: { userId: id } })
     result.notes = await this.noteRepository.find({ where: { userId: id } })
     result.personalData = await this.personalDataRepository.find({ where: { userId: id } })
+    result.cycling = await this.cyclingRepository.findOne({ where: { userId: id } })
 
     this.logger.log(
       `Found ${result.shortcuts.length} shortcuts, ${result.notes.length} notes and ${result.personalData.length} personal data entries.`

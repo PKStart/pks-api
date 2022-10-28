@@ -15,6 +15,7 @@ import {
   Note,
   Shortcut,
   PersonalData,
+  Cycling,
 } from 'pks-common'
 import { IsEmail, IsString, IsUUID, Matches, MaxLength, MinLength } from 'class-validator'
 
@@ -117,4 +118,5 @@ export interface DataBackup {
   notes: Note[]
   shortcuts: Shortcut[]
   personalData: PersonalData[]
+  cycling: Cycling
 }

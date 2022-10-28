@@ -13,6 +13,7 @@ import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
 import { getDotEnv } from '../utils'
 import { JwtStrategy } from './jwt.strategy'
+import { CyclingEntity } from '../cycling/cycling.entity'
 
 getDotEnv()
 
@@ -25,7 +26,13 @@ getDotEnv()
       },
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    TypeOrmModule.forFeature([UserEntity, ShortcutEntity, NoteEntity, PersonalDataEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      ShortcutEntity,
+      NoteEntity,
+      PersonalDataEntity,
+      CyclingEntity,
+    ]),
     PkLoggerModule,
   ],
   providers: [UserService, JwtStrategy, EmailService, DataBackupService],

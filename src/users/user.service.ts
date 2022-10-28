@@ -29,6 +29,7 @@ import {
   UserSettings,
 } from './user.dto'
 import { UserEntity } from './user.entity'
+import { CyclingEntity } from '../cycling/cycling.entity'
 import { getDotEnv } from '../utils'
 
 getDotEnv()
@@ -44,6 +45,8 @@ export class UserService {
     private readonly noteRepository: Repository<NoteEntity>,
     @InjectRepository(PersonalDataEntity)
     private readonly personalDataRepository: Repository<PersonalDataEntity>,
+    @InjectRepository(CyclingEntity)
+    private readonly cyclingRepository: Repository<CyclingEntity>,
     private readonly logger: PkLogger,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService
@@ -197,6 +200,10 @@ export class UserService {
     const personalData = await this.personalDataRepository.find({ where: { userId: id } })
     if (personalData.length) {
       await this.personalDataRepository.remove(personalData)
+    }
+    const cyclingData = await this.cyclingRepository.findOne({ where: { userId: id } })
+    if (cyclingData) {
+      await this.cyclingRepository.remove(cyclingData)
     }
     await this.userRepository.delete({ id })
   }

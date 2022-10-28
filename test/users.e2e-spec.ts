@@ -20,6 +20,7 @@ import {
   userSettings,
 } from './test-data'
 import ormConfig from '../ormconfig'
+import { CyclingEntity } from '../src/cycling/cycling.entity'
 
 describe('UserController (e2e)', () => {
   let app: INestApplication
@@ -259,6 +260,9 @@ describe('UserController (e2e)', () => {
     const numberOfNotesBefore = await noteRepository.count({ where: { userId } })
     const personalDataRepository = dataSource.getRepository(PersonalDataEntity)
     const numberOfDataBefore = await personalDataRepository.count({ where: { userId } })
+    const cyclingRepository = dataSource.getRepository(CyclingEntity)
+    const hasCyclingData = !!(await cyclingRepository.findOne({ where: { userId } }))
+    expect(hasCyclingData).toBeFalsy()
 
     await request(app.getHttpServer())
       .post('/shortcuts')
@@ -293,10 +297,18 @@ describe('UserController (e2e)', () => {
       .send(data2)
       .expect(201)
 
+    await request(app.getHttpServer())
+      .put('/cycling/weekly-goal')
+      .auth(token, { type: 'bearer' })
+      .send({ weeklyGoal: 70 })
+      .expect(200)
+
     // For some strange reason repository.count() did not work here... ¯\_(ツ)_/¯
     const shortcuts = await shortcutRepository.find({ where: { userId } })
     const notes = await noteRepository.find({ where: { userId } })
     const data = await personalDataRepository.find({ where: { userId } })
+    const hasCyclingDataAfterAdd = !!(await cyclingRepository.findOne({ where: { userId } }))
+    expect(hasCyclingDataAfterAdd).toBeTruthy()
     const numberOfShortcutsAfterAdd = shortcuts.length
     expect(numberOfShortcutsAfterAdd).toEqual(numberOfShortcutsBefore + 2)
     const numberOfNotesAfterAdd = notes.length
@@ -320,6 +332,8 @@ describe('UserController (e2e)', () => {
         expect(numberOfNotesAfter).toEqual(numberOfNotesBefore)
         const numberOfDataAfter = await personalDataRepository.count({ where: { userId } })
         expect(numberOfDataAfter).toEqual(numberOfDataBefore)
+        const hasCyclingDataAfterDelete = !!(await cyclingRepository.findOne({ where: { userId } }))
+        expect(hasCyclingDataAfterDelete).toBeFalsy()
       })
   })
 })
