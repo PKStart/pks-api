@@ -15,6 +15,7 @@ async function bootstrap() {
     .setDescription('The Startpage v3 API documentation')
     .setVersion('1.0')
     .addBearerAuth()
+    .addServer(process.env.PK_SERVER_SELF_URL)
     .addServer('http://localhost:8100')
     .build()
   const document = SwaggerModule.createDocument(app as any, config)
